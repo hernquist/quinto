@@ -1,9 +1,9 @@
 <script>
-	import Board from "$lib/components/board/Board.svelte";
+	import Game from "$lib/components/game/Game.svelte";
 </script>
 
 <div style="margin: 100px 20px;">
-    <Board/>
+    <Game/>
 </div>
 
 <style lang="postcss">
