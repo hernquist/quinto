@@ -23,7 +23,6 @@
 	},
 	"devDependencies": {
 		"@chromatic-com/storybook": "^3",
-		"@dnd-kit-svelte/core": "^0.0.8",
 		"@eslint/compat": "^1.2.5",
 		"@eslint/js": "^9.18.0",
 		"@storybook/addon-essentials": "^8.6.12",
