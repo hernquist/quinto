@@ -1,2 +1,11 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script>
+	import Board from "$lib/components/board/Board.svelte";
+</script>
+
+<div style="margin: 100px 20px;">
+    <Board/>
+</div>
+
+<style lang="postcss">
+    @reference "tailwindcss";
+</style>
