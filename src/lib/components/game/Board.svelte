@@ -1,34 +1,32 @@
 <script lang="ts">
-	import initBoard from "./board";
-    import { dropzone, draggable } from "./dnd";
+	import { gameState } from "../../../state/state.svelte";
 	import Square from "./Square.svelte";
-	import Tile from "./Tile.svelte";
-	import type { ITile } from "./types";
+	import Tile from "../tile/Tile.svelte";
+	import type { ITile, ITiles } from "./types";
+    import { Players } from "../../../state/types";
 
-// move to runes
-
-    export let rows: number;
-    export let columns: number;
-
-    $: board = initBoard(rows, columns);
-    let tiles = [];
-
-
-        
+    const { Top, Bottom } = Players;
+    const { activePlayer }: { Players } = gameState;
 </script>
 
 <div class="game__container">
+    <div class="tiles__container">
+        {#each gameState[Top].tiles as tile}
+            <Tile tile={tile} isActive={activePlayer === Top}></Tile>
+        {/each}
+    </div>
+
     <div class="board__container">
-        {#each board as column, x}
+        {#each gameState.board as column, x}
             <div class="board_row">
                 {#each column as square, y}
                     {@const onDropzone = (tileId: number): void => {
-                        const foundTile: ITile | null = tiles.find(tile => tile.id == tileId) || null;
-                        board[x][y] = { ...board[x][y], tile: foundTile };
-                        const newTiles = tiles.filter(tile => {
+                        const foundTile: ITile | null = gameState[activePlayer].tiles.find(tile => tile.id == tileId) || null;
+                        gameState.board[x][y] = { ...gameState.board[x][y], tile: foundTile };
+                        const newTiles = gameState[activePlayer].tiles.filter(tile => {
                             return tile.id != tileId
                         });
-                        tiles = newTiles;
+                        gameState[activePlayer].tiles = newTiles;
                     }}
                     <Square {square} {onDropzone}/>
                 {/each}
@@ -36,10 +34,9 @@
         {/each}
     </div>
 
-
     <div class="tiles__container">
-        {#each tiles as tile}
-            <Tile tile={tile}></Tile>
+        {#each gameState[Bottom].tiles as tile}
+            <Tile tile={tile} isActive={activePlayer === Bottom}></Tile>
         {/each}
     </div>
 </div>
