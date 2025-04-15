@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { gameState } from "../../../state/state.svelte";
 	import Square from "./Square.svelte";
-	import Tile from "./Tile.svelte";
+	import Tile from "../tile/Tile.svelte";
 	import type { ITile, ITiles } from "./types";
     import { Players } from "../../../state/types";
 
