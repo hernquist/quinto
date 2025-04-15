@@ -1,2 +1,11 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script>
+	import Game from "$lib/components/game/Game.svelte";
+</script>
+
+<div style="margin: 100px 20px;">
+    <Game/>
+</div>
+
+<style lang="postcss">
+    @reference "tailwindcss";
+</style>
