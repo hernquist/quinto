@@ -5,37 +5,16 @@
 	import Tile from "./Tile.svelte";
 	import type { ITile } from "./types";
 
-    const rows = 7;
-    const colums = 6;
+// move to runes
 
-    $: board = initBoard(rows, colums);
-    $: tiles = [
-        {
-            id:12,
-            text:4,
-            value: 4
-        },
-        {
-            id:13,
-            text:3,
-            value: 3
-        },
-        {
-            id:14,
-            text: 2,
-            value: 2
-        },
-        {
-            id:15,
-            text: 5,
-            value: 5
-        },
-        {
-            id:16,
-            text: 9,
-            value: 9
-        }
-    ]
+    export let rows: number;
+    export let columns: number;
+
+    $: board = initBoard(rows, columns);
+    let tiles = [];
+
+
+        
 </script>
 
 <div class="game__container">
