@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { gameState } from "../../../state/state.svelte";
-	import Square from "./Square.svelte";
+	import Square from "../square/Square.svelte";
 	import Tile from "../tile/Tile.svelte";
-	import type { ITile, ITiles } from "./types";
     import { Players } from "../../../state/types";
+	import type { ITile } from "../game/types";
 
     const { Top, Bottom } = Players;
-    const { activePlayer }: { Players } = gameState;
+    const { activePlayer } = gameState;
 </script>
 
 <div class="game__container">

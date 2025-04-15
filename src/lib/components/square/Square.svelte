@@ -1,13 +1,15 @@
 <script lang="ts">
-	import type { ISquare } from "./types";
-    import { dropzone } from "./dnd";
+	import type { ISquare } from "../game/types";
+    import { dropzone } from "../../utils/dnd";
 
+    // make runey
     export let square: ISquare;
     export let onDropzone
-
 </script>
 
+
 {#if square?.tile}
+<!-- is div the right type for this? -->
     <div 
         class="board__square" 
         id={String(square.id)} 
