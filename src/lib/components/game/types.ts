@@ -11,4 +11,10 @@ interface ISquare {
     tile: ITile | null;
 }
 
-export type { ITile, ISquare };
+type ITiles = ITile[];
+
+type IRow = ISquare[];
+type IColumn = ISquare[];
+type IBoard = ISquare[][];
+
+export type { ITile, ISquare, ITiles, IRow, IColumn, IBoard };
