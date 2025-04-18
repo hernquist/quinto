@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { gameState } from "../../../state/state.svelte";
+    import { updateBoardDimensions } from "../../../state/state.svelte";
 	import generateGameTiles from "./utils/generateGameTiles";
 	import initializePlayers from "./utils/initializePlayers";
 	import initializeBoard from "./utils/initializeBoard";
@@ -8,9 +8,7 @@
     const COLUMNS = 6;
 
     // initialize
-    gameState.rows = ROWS;
-    gameState.columns = COLUMNS;
-    gameState.totalSquares = ROWS * COLUMNS;
+    updateBoardDimensions(ROWS, COLUMNS);
     generateGameTiles();
     initializePlayers();
     initializeBoard();
