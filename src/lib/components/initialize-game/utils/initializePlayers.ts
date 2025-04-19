@@ -1,17 +1,19 @@
-import { getGameTiles, updateActivePlayer, updatePlayer, updateTiles } from "../../../../lib/state/state.svelte";
+import { getGameState, updatePlayer } from "../../../../lib/state/state.svelte";
 import { Players, type IPlayer } from "../../../../lib/state/types";
 
 function initializePlayers() {
+    const gameState = getGameState();
+
     const topPlayerFirst = Math.random() >= 0.5;
     const bottomPlayerFirst = !topPlayerFirst;
     const { Top, Bottom } = Players;
 
     const activePlayer = topPlayerFirst ? Top : Bottom;
-    updateActivePlayer(activePlayer);
+    gameState.updateActivePlayer(activePlayer);
 
-    const gameTiles = getGameTiles();
+    const gameTiles = gameState.game.tiles;
     const topPlayerTiles = gameTiles.splice(0, 5);
-    updateTiles(gameTiles);
+    gameState.updateTiles(gameTiles);
     
     const top: IPlayer = {
         goesFirst: topPlayerFirst,
@@ -20,9 +22,9 @@ function initializePlayers() {
 
     updatePlayer(Top, top);
 
-    const updatedGameTimes = getGameTiles();
+    const updatedGameTimes = gameState.game.tiles;
     const bottomPlayerTiles = updatedGameTimes.splice(0, 5);
-    updateTiles(updatedGameTimes);
+    gameState.updateTiles(updatedGameTimes);
 
     const bottom: IPlayer = {
         goesFirst: bottomPlayerFirst,

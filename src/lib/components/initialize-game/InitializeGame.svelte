@@ -1,9 +1,8 @@
 <script lang="ts">
-    import { updateBoardDimensions } from "../../state/state.svelte";
+    import { getGameState } from "../../state/state.svelte";
 	import generateGameTiles from "./utils/generateGameTiles";
 	import initializePlayers from "./utils/initializePlayers";
 	import initializeBoard from "./utils/initializeBoard";
-
     import { getPlayerTilesState } from "$lib/state/player.svelte";
 	import { Players } from "$lib/state/types";
 
@@ -11,16 +10,21 @@
     const COLUMNS = 6;
 
     const  { children } = $props();
+    const { Top, Bottom } = Players;
 
     // initialize
-    updateBoardDimensions(ROWS, COLUMNS);
-    generateGameTiles();
-    const { topPlayerTiles } = initializePlayers();
+    const gameState = getGameState();
 
-    const playerTileState = getPlayerTilesState()
-    
-    // updatePlayerTiles(Players.Top, topPlayerTiles);
-    playerTileState.update(topPlayerTiles)
+    gameState.updateBoardDimensions(ROWS, COLUMNS);
+    generateGameTiles();
+
+    // TODO: update initialize players
+    const { topPlayerTiles, bottomPlayerTiles } = initializePlayers();
+
+    // player tiles
+    const playerTileState = getPlayerTilesState();
+    playerTileState.update(Top, topPlayerTiles);
+    playerTileState.update(Bottom, bottomPlayerTiles)
     
     initializeBoard();
 </script>

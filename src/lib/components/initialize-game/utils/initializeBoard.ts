@@ -1,5 +1,5 @@
 import type { IBoard, IColumn } from "$lib/components/game/types";
-import { getGameState, updateBoard } from "../../../state/state.svelte";
+import { getGameState  } from "../../../state/state.svelte";
 
 
 function makeSquareId (x: number, y: number, columns: number): number {
@@ -7,7 +7,8 @@ function makeSquareId (x: number, y: number, columns: number): number {
 }
 
 function initializeBoard() {
-    const { rows, columns } = getGameState();
+    const gameState = getGameState();
+    const { rows, columns } = gameState.game;
 
     let board: IBoard = [];
 
@@ -19,8 +20,7 @@ function initializeBoard() {
         }
         board[x] = column;
     }
-    console.log("board", board)
-    updateBoard(board);
+    gameState.updateBoard(board);
 }
 
 export default initializeBoard;

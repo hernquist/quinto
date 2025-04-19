@@ -3,15 +3,15 @@
 	import Square from "../square/Square.svelte";
     
     const gameState = getGameState();
-    const { board } = gameState;
-
+    const { board } = gameState.game;
+    const { activePlayer } = $props();
 </script>
 
 <div class="board__container">
     {#each board as column, x}
         <div class="board_row">
             {#each column as square, y}
-                <Square {square} {x} {y}/>
+                <Square {square} {x} {y} {activePlayer}/>
             {/each}
         </div>
     {/each}
