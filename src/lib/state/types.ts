@@ -29,5 +29,15 @@ interface IGameState {
     board: IBoard;
 }
 
-export type { IPlayer, IGameState };
+interface IPlayerTiles {
+    [Players.Top]: ITiles;
+    [Players.Bottom]: ITiles;
+};
+
+interface IPlayers {
+    [Players.Top]: IPlayer;
+    [Players.Bottom]: IPlayer;
+}
+
+export type { IPlayer, IGameState, IPlayerTiles, IPlayers };
 export { Players, GameStatus }

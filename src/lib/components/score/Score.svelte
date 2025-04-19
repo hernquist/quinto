@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { getPlayer } from "../../state/state.svelte";
-	import { Players } from "../../state/types";
+    import { getPlayerState } from "$lib/state/player.svelte";
+	import { Players } from "$lib/state/types";
 
     const { Top, Bottom } = Players;
-    const topPlayer = getPlayer(Top);
-    const bottomPlayer = getPlayer(Bottom);
+    const playerState = getPlayerState()
+    const topPlayer = playerState.player[Top];
+    const bottomPlayer = playerState.player[Bottom];
 </script>
 
 <div>{topPlayer.score} scoreboard {bottomPlayer.score}</div>

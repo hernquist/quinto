@@ -3,7 +3,7 @@
 	import generateGameTiles from "./utils/generateGameTiles";
 	import initializePlayers from "./utils/initializePlayers";
 	import initializeBoard from "./utils/initializeBoard";
-    import { getPlayerTilesState } from "$lib/state/player.svelte";
+    import { getPlayerState } from "$lib/state/player.svelte";
 	import { Players } from "$lib/state/types";
 
     const ROWS = 7;
@@ -12,20 +12,19 @@
     const  { children } = $props();
     const { Top, Bottom } = Players;
 
-    // initialize
     const gameState = getGameState();
-
-    gameState.updateBoardDimensions(ROWS, COLUMNS);
-    generateGameTiles();
-
-    // TODO: update initialize players
-    const { topPlayerTiles, bottomPlayerTiles } = initializePlayers();
-
-    // player tiles
-    const playerTileState = getPlayerTilesState();
-    playerTileState.update(Top, topPlayerTiles);
-    playerTileState.update(Bottom, bottomPlayerTiles)
     
+    // initialize board
+    gameState.updateBoardDimensions(ROWS, COLUMNS);
+    // initialize game tiles
+    generateGameTiles();
+    // initialize player and produce initialze player tiles
+    const { topPlayerTiles, bottomPlayerTiles } = initializePlayers();
+    // update player tiles
+    const playerTileState = getPlayerState();
+    playerTileState.updateTiles(Top, topPlayerTiles);
+    playerTileState.updateTiles(Bottom, bottomPlayerTiles)
+    // finish initializing board
     initializeBoard();
 </script>
 
