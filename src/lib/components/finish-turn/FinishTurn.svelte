@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { getGameState, updateActivePlayer } from "../../../state/state.svelte";
-	import { Players } from "../../../state/types";
+    import { getGameState, updateActivePlayer } from "../../state/state.svelte";
+	import { Players } from "../../state/types";
     
     // this is repeated in PlayerTiles 
     const { isActive } = $props();
