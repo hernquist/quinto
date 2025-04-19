@@ -1,12 +1,13 @@
 import type { IBoard, IColumn } from "$lib/components/game/types";
-import { gameState } from "../../../../state/state.svelte";
+import { getGameState, updateBoard } from "../../../state/state.svelte";
+
 
 function makeSquareId (x: number, y: number, columns: number): number {
     return x + y * columns;
 }
 
 function initializeBoard() {
-    const { rows, columns } = gameState;
+    const { rows, columns } = getGameState();
 
     let board: IBoard = [];
 
@@ -19,7 +20,7 @@ function initializeBoard() {
         board[x] = column;
     }
     console.log("board", board)
-    gameState.board = board;
+    updateBoard(board);
 }
 
 export default initializeBoard;

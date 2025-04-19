@@ -1,0 +1,26 @@
+<script lang="ts">
+	import { getGameState } from "../../state/state.svelte";
+	import Square from "../square/Square.svelte";
+    
+    const gameState = getGameState();
+    const { board } = gameState;
+
+</script>
+
+<div class="board__container">
+    {#each board as column, x}
+        <div class="board_row">
+            {#each column as square, y}
+                <Square {square} {x} {y}/>
+            {/each}
+        </div>
+    {/each}
+</div>
+
+<style lang="postcss">
+    .board__container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+</style>

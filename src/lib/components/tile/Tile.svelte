@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { draggable } from "../game/dnd";
-	import type { ITile } from "./types";
+    import { draggable } from "../../utils/dnd";
+	import type { ITile } from "../game/types";
 
-    const { tile, isActive }: {ITile, Players} = $props();
+    const { tile, isActive } = $props();
 </script>
 
 {#if isActive}
@@ -15,7 +15,6 @@
     </div>
 {:else}
     <div 
-        disabled   
         class="tile disabled"
         id={String(tile.id)} 
     >

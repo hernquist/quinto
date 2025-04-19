@@ -1,4 +1,4 @@
-import type { IBoard, ITile, ITiles } from "$lib/components/game/types";
+import type { IBoard, ITiles } from "$lib/components/game/types";
 
 enum Players {
     Top = 'TOP',
@@ -15,15 +15,12 @@ enum GameStatus {
 interface IPlayer {
     score: number;
     goesFirst: boolean,
-    tiles: ITile[]
 }
 
 interface IGameState {
 	round: number;
 	status: GameStatus;
     activePlayer: Players;
-	[Players.Top]: IPlayer;
-	[Players.Bottom]: IPlayer;
 	tiles: ITiles;
 	rows: number;
 	columns: number;

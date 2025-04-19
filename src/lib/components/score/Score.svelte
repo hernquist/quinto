@@ -1,5 +1,10 @@
 <script lang="ts">
-	import { gameState } from "../../../state/state.svelte";
-	import { Players } from "../../../state/types";
+	import { getPlayer } from "../../state/state.svelte";
+	import { Players } from "../../state/types";
+
+    const { Top, Bottom } = Players;
+    const topPlayer = getPlayer(Top);
+    const bottomPlayer = getPlayer(Bottom);
 </script>
-<div>{gameState[Players.Top].score} scoreboard {gameState[Players.Bottom].score}</div>
+
+<div>{topPlayer.score} scoreboard {bottomPlayer.score}</div>

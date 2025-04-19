@@ -1,7 +1,7 @@
-import { gameState } from "../../../../state/state.svelte";
+import { getGameState, updateTiles } from "../../../state/state.svelte";
 
 function generateGameTiles( ){
-    const totalSquares = gameState.totalSquares;
+    const { totalSquares } = getGameState();
     const numberOfTiles = Math.round(totalSquares * 0.75);
     console.log("numberOfTiles", numberOfTiles);
 
@@ -18,7 +18,6 @@ function generateGameTiles( ){
     }
 
     console.log("gametiles", gameTiles)
-    gameState.tiles = gameTiles;
 } 
 
 export default generateGameTiles;
