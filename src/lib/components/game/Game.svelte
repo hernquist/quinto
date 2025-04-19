@@ -9,13 +9,17 @@
     const { Top, Bottom } = Players;
 
     const playerTileState = getPlayerTilesState();
+    $effect(() => {
+        console.log("playerTileState1", playerTileState.tiles);
+        console.log("playerTileState2", playerTileState.tiles[Top]);
+        console.log("playerTileState3", playerTileState.tiles[Bottom]);
+    })
 
 </script>
 
 <InitializeGame>
-    {playerTileState.tiles.length}
     <Score />
-    <PlayerRow playerPosition={Top} tiles={playerTileState.tiles}/>
+    <PlayerRow playerPosition={Top} tiles={playerTileState.tiles[Top]}/>
     <Board />
-    <!-- <PlayerRow playerPosition={Bottom}/> -->
+    <PlayerRow playerPosition={Bottom} tiles={playerTileState.tiles[Bottom]}/>
 </InitializeGame>

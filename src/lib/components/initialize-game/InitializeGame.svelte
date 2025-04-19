@@ -11,16 +11,18 @@
     const COLUMNS = 6;
 
     const  { children } = $props();
+    const { Top, Bottom } = Players;
 
     // initialize
     updateBoardDimensions(ROWS, COLUMNS);
     generateGameTiles();
-    const { topPlayerTiles } = initializePlayers();
+    const { topPlayerTiles, bottomPlayerTiles } = initializePlayers();
 
-    const playerTileState = getPlayerTilesState()
+    const playerTileState = getPlayerTilesState();
     
     // updatePlayerTiles(Players.Top, topPlayerTiles);
-    playerTileState.update(topPlayerTiles)
+    playerTileState.update(Top, topPlayerTiles);
+    playerTileState.update(Bottom, bottomPlayerTiles)
     
     initializeBoard();
 </script>

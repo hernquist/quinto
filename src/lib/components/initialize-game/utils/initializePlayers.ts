@@ -10,7 +10,9 @@ function initializePlayers() {
     updateActivePlayer(activePlayer);
 
     const gameTiles = getGameTiles();
+    console.log("topPlayerTiles-gameTiles", gameTiles);
     const topPlayerTiles = gameTiles.splice(0, 5);
+    console.log("topPlayerTiles-toptiles", topPlayerTiles);
     updateTiles(gameTiles);
     
     const top: IPlayer = {

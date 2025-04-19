@@ -3,7 +3,7 @@
 	import Square from "../square/Square.svelte";
     
     const gameState = getGameState();
-    const { board } = gameState;
+    const { board, activePlayer } = gameState;
 
 </script>
 
@@ -11,7 +11,7 @@
     {#each board as column, x}
         <div class="board_row">
             {#each column as square, y}
-                <Square {square} {x} {y}/>
+                <Square {square} {x} {y} {activePlayer}/>
             {/each}
         </div>
     {/each}

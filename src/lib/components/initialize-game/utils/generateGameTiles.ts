@@ -18,6 +18,7 @@ function generateGameTiles( ){
     }
 
     console.log("gametiles", gameTiles)
+    updateTiles(gameTiles);
 } 
 
 export default generateGameTiles;

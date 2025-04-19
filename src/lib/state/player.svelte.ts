@@ -1,22 +1,32 @@
 import type { ITile, ITiles } from '$lib/components/game/types';
 import { setContext, getContext } from 'svelte';
+import { Players } from './types';
+
+const { Top, Bottom } = Players;
   
-type IPlayerTiles = {
-    tiles: ITiles;
+interface IPlayerTiles {
+    [Top]: ITiles;
+    [Bottom]: ITiles;
 };
 
 export class PlayerTilesClass {
-    tiles = $state<ITiles>([]);
+    tiles = $state<IPlayerTiles>({
+        [Top]: [],
+        [Bottom]: []
+    });
 
     constructor() {
     }
 
-    update(topPlayerTiles: ITile[]) {
-		this.tiles = topPlayerTiles;
+    update(playerPosition: Players, playerTiles: ITile[]) {
+        console.log("playerPosition1", playerPosition, playerTiles)
+        console.log("playerPosition2", this.tiles[playerPosition])
+		this.tiles[playerPosition] = playerTiles;
+        console.log("playerPosition3", this.tiles[playerPosition])
 	}
 
-    remove(tileId: number) {
-        this.tiles = this.tiles.filter(tile => tile.id != tileId);
+    remove(playerPosition: Players, tileId: number) {
+        this.tiles[playerPosition] = this.tiles[playerPosition].filter(tile => tile.id != tileId);
     }
 }
 
