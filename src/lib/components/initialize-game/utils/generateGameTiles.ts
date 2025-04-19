@@ -1,4 +1,4 @@
-import { getGameState, updateTiles } from "../../../../state/state.svelte";
+import { getGameState, updateTiles } from "../../../state/state.svelte";
 
 function generateGameTiles( ){
     const { totalSquares } = getGameState();
@@ -18,7 +18,6 @@ function generateGameTiles( ){
     }
 
     console.log("gametiles", gameTiles)
-    updateTiles(gameTiles);
 } 
 
 export default generateGameTiles;
