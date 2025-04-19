@@ -1,5 +1,5 @@
-import { getGameTiles, updateActivePlayer, updatePlayer, updateTiles } from "../../../../state/state.svelte";
-import { Players, type IPlayer } from "../../../../state/types";
+import { getGameTiles, updateActivePlayer, updatePlayer, updateTiles } from "../../../../lib/state/state.svelte";
+import { Players, type IPlayer } from "../../../../lib/state/types";
 
 function initializePlayers() {
     const topPlayerFirst = Math.random() >= 0.5;
@@ -16,7 +16,6 @@ function initializePlayers() {
     const top: IPlayer = {
         goesFirst: topPlayerFirst,
         score: 0,
-        tiles: topPlayerTiles
     };
 
     updatePlayer(Top, top);
@@ -28,10 +27,13 @@ function initializePlayers() {
     const bottom: IPlayer = {
         goesFirst: bottomPlayerFirst,
         score: 0,
-        tiles: bottomPlayerTiles
     };
 
     updatePlayer(Bottom, bottom);
+    return {
+        topPlayerTiles,
+        bottomPlayerTiles
+    }
 } 
 
 export default initializePlayers;
