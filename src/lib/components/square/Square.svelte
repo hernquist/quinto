@@ -1,15 +1,27 @@
 <script lang="ts">
-	import type { ISquare } from "../game/types";
+	import type { ITile } from "../game/types";
     import { dropzone } from "../../utils/dnd";
+	import { getPlayerTilesState } from "$lib/state/player.svelte";
+	import { updateBoardSquare } from "$lib/state/state.svelte";
 
-    // make runey
-    export let square: ISquare;
-    export let onDropzone
+    const { square, x, y } = $props();
+
+    const playerTileState = getPlayerTilesState();
+    const tiles = playerTileState.tiles;
+
+    const onDropzone = (tileId: number): void => {
+        const foundTile: ITile | undefined = tiles.find(tile => tile.id == tileId);
+        if (foundTile) updateBoardSquare(x, y, foundTile);
+        const newTiles = tiles.filter(tile => {
+            return tile.id != tileId
+        });
+        playerTileState.remove(tileId);
+    }
+                
 </script>
 
 
 {#if square?.tile}
-<!-- is div the right type for this? -->
     <div 
         class="board__square" 
         id={String(square.id)} 
