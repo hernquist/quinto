@@ -1,24 +1,23 @@
 <script lang="ts">
-    import { getGameState, updateActivePlayer } from "../../state/state.svelte";
+    import { getGameState } from "../../state/state.svelte";
 	import { Players } from "../../state/types";
     
-    // this is repeated in PlayerTiles 
     const { isActive } = $props();
     const { Top, Bottom } = Players;
-    const { activePlayer } = getGameState()
+    const gameState = getGameState();
 
-    const handleClick = () => {
+    const handleClick = (activePlayer: Players) => {
         if (activePlayer === Top) {
-            updateActivePlayer(Bottom);
+            gameState.updateActivePlayer(Bottom);
         } 
         if (activePlayer === Bottom) {
-            updateActivePlayer(Top);
+            gameState.updateActivePlayer(Top);
         }
     }
 </script>
 
 
-<button disabled={!isActive} onclick={handleClick}>
+<button disabled={!isActive} onclick={() => handleClick(gameState.game.activePlayer)}>
     Finish Turn
 </button>
 

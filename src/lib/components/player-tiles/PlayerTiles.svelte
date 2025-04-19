@@ -2,7 +2,7 @@
     import Tile from "../tile/Tile.svelte";
 
     // or just spread props into Tile
-    const { isActive, tiles } = $props();
+    let { isActive, tiles } = $props();
 
 </script>
 

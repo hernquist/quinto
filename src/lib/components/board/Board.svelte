@@ -3,8 +3,8 @@
 	import Square from "../square/Square.svelte";
     
     const gameState = getGameState();
-    const { board, activePlayer } = gameState;
-
+    const { board } = gameState.game;
+    const { activePlayer } = $props();
 </script>
 
 <div class="board__container">
