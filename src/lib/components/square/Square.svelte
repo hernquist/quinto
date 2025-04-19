@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { ISquare, ITile, ITiles } from "../game/types";
     import { dropzone } from "../../utils/dnd";
-	import { getPlayerTilesState } from "$lib/state/player.svelte";
+	import { getPlayerState } from "$lib/state/player.svelte";
 	import { getGameState } from "$lib/state/state.svelte";
 	import type { Players } from "$lib/state/types";
 
@@ -15,13 +15,13 @@
     const gameState = getGameState();
 
     const { square, x, y, activePlayer }: ISquareProps = $props();
-    const playerTileState = getPlayerTilesState();
+    const playerTileState = getPlayerState();
     let tiles: ITiles = $derived(playerTileState.tiles[activePlayer]);
 
     const onDropzone = (tileId: number): void => {
         const foundTile: ITile | undefined = tiles.find(tile => tile.id == tileId);
         if (foundTile) gameState.updateBoardSquare(x, y, foundTile);
-        playerTileState.remove(activePlayer, tileId);
+        playerTileState.removeTile(activePlayer, tileId);
     }
 </script>
 
@@ -42,7 +42,6 @@
         }}
     ></div>
 {/if}
-
 
 <style>
     .board__square {

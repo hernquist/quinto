@@ -2,12 +2,10 @@ import type { ITiles, ITile, IBoard } from "$lib/components/game/types";
 import { GameStatus, Players, type IGameState, type IPlayer } from "./types";
 import { setContext, getContext } from 'svelte';
 
-const { Top, Bottom } = Players; 
-
 const initState: IGameState = {
 	round: 0,
 	status: GameStatus.Before,
-	activePlayer: Top,
+	activePlayer: Players.Top,
 	tiles: [],
 	rows: 0,
 	columns: 0,
@@ -29,7 +27,6 @@ export class GameState {
 	}
 
 	updateActivePlayer (playerPosition: Players) {
-		console.log("playerPosition", playerPosition);
 		this.game.activePlayer = playerPosition;
 	}
 
@@ -58,23 +55,3 @@ export function getGameState() {
 	return getContext<ReturnType<typeof setGameState>>(KEY);
 }
  
-// player -- needs to be updated to context and state
-let topPlayer: IPlayer = $state({
-	score: 0,
-	goesFirst: false,
-});
-
-let bottomPlayer: IPlayer = $state({
-	score: 0,
-	goesFirst: false,
-})
-
-export function getPlayer(playerPosition: Players): IPlayer {
-	if (playerPosition === Top) return topPlayer;
-	return bottomPlayer;
-}
-
-export function updatePlayer(playerPosition: Players, player: IPlayer): void {
-	if (playerPosition === Top) topPlayer = player
-	if (playerPosition === Bottom) bottomPlayer = player;
-}
