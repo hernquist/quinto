@@ -2,7 +2,7 @@
     import { draggable } from "../../utils/dnd";
 	import type { ITile } from "../game/types";
 
-    const { tile, isActive } = $props();
+    const { tile, isActive }: {tile: ITile, isActive: boolean } = $props();
 </script>
 
 {#if isActive}

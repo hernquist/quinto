@@ -2,8 +2,9 @@
 	import type { ISquare, ITile, ITiles } from "../game/types";
     import { dropzone } from "../../utils/dnd";
 	import { getPlayerState } from "$lib/state/player.svelte";
-	import { getGameState } from "$lib/state/state.svelte";
+	import { getGameState } from "$lib/state/game.svelte";
 	import type { Players } from "$lib/state/types";
+	import Tile from "../tile/Tile.svelte";
 
     interface ISquareProps {
         square: ISquare, 
@@ -31,7 +32,7 @@
         class="board__square" 
         id={String(square.id)} 
     >
-        {square.tile?.text}
+        <Tile tile={square.tile} isActive />
     </div>
 {:else}
     <div 
@@ -51,5 +52,8 @@
         border: 2px solid gray;
         border-radius: 1px;
         margin: 6px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 </style>
