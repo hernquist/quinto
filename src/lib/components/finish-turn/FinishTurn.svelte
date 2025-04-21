@@ -23,7 +23,20 @@
 
 <style>
     button {
-        color: green;
-        background-color: aquamarine;
+        color: rgb(239, 244, 239);
+        background-color: cornflowerblue;
+        padding: 2px;
+        border: 2px solid gray;
+        border-radius: 20px;
+        height: 40px;
+        margin: 2px;
+
+        &:disabled {
+            background-color: lightslategray;
+        }
+
+        &:hover {
+            opacity: 0.5;
+        }
     }
 </style>

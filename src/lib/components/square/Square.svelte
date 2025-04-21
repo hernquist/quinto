@@ -50,5 +50,6 @@
         background-color: lightsalmon;
         border: 2px solid gray;
         border-radius: 1px;
+        margin: 6px;
     }
 </style>

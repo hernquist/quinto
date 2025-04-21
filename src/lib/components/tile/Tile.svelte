@@ -32,6 +32,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        margin: 2px;
     }
 
     .tile.disabled {

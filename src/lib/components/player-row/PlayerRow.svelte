@@ -6,8 +6,16 @@
     const isActive = $derived(activePlayer === playerPosition);
 </script>
 
-<div>
+<div class="playerRow__container">
     <PlayerTiles {tiles} {isActive}/>
     <FinishTurn {isActive} />
 </div>
+
+<style>
+    .playerRow__container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+</style>
 
