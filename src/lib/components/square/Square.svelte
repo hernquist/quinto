@@ -21,8 +21,12 @@
 
     const onDropzone = (tileId: number): void => {
         const foundTile: ITile | undefined = tiles.find(tile => tile.id == tileId);
-        if (foundTile) gameState.updateBoardSquare(x, y, foundTile);
-        playerTileState.removeTile(activePlayer, tileId);
+        // put in logic to allow only legal moves
+        if (foundTile) {
+            gameState.updateBoardSquare(x, y, foundTile);
+            gameState.updateTurn(x, y, foundTile)
+            playerTileState.removeTile(activePlayer, tileId);   
+        }
     }
 </script>
 

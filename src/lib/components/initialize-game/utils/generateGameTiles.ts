@@ -2,8 +2,8 @@ import { getGameState  } from "$lib/state/game.svelte";
 
 function generateGameTiles(){
     const gameState = getGameState();
-    const totalSquares = gameState.game.totalSquares;
-    const numberOfTiles = Math.round(totalSquares * 0.75);
+    const startingNumberOfSquares = gameState.game.startingNumberOfSquares;
+    const numberOfTiles = Math.round(startingNumberOfSquares * 0.75);
 
     let gameTiles = []
 
