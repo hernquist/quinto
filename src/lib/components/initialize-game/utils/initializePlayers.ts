@@ -1,4 +1,4 @@
-import { getGameState } from "$lib/state/state.svelte";
+import { getGameState } from "$lib/state/game.svelte";
 import { getPlayerState } from "$lib/state/player.svelte";
 import { Players, type IPlayer } from "$lib/state/types";
 

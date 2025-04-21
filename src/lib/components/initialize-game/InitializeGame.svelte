@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getGameState } from "../../state/state.svelte";
+    import { getGameState } from "../../state/game.svelte";
 	import generateGameTiles from "./utils/generateGameTiles";
 	import initializePlayers from "./utils/initializePlayers";
 	import initializeBoard from "./utils/initializeBoard";

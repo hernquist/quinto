@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getGameState } from "../../state/state.svelte";
+    import { getGameState } from "../../state/game.svelte";
 	import { Players } from "../../state/types";
     
     const { isActive } = $props();

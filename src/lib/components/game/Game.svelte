@@ -5,7 +5,7 @@
 	import PlayerRow from "../player-row/PlayerRow.svelte";
     import { Players } from "$lib/state/types";
 	import { getPlayerState } from "$lib/state/player.svelte";
-	import { getGameState } from "$lib/state/state.svelte";
+	import { getGameState } from "$lib/state/game.svelte";
     
     const { Top, Bottom } = Players;
     const playerTileState = getPlayerState();
