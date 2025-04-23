@@ -16,7 +16,7 @@
     const gameState = getGameState();
 
     let { square, x, y, activePlayer, dropzoneAllowlist }: ISquareProps = $props();
-    const { tile, startingSquare, id } = $derived(square);
+    const { tile, startingSquare, id, hasDropzoneeeee } = $derived(square);
 
     const playerTileState = getPlayerState();
     let tiles: ITiles = $derived(playerTileState.tiles[activePlayer]);
@@ -33,7 +33,7 @@
                 acc = true;
             }
             return acc;
-        }, false));
+        }, false);
         return isAllowed ? dropzone : () => {};
     }
 
@@ -45,7 +45,7 @@
         const foundTile: ITile | undefined = tiles.find(tile => tile.id == tileId);
         // put in logic to allow only legal moves
         if (foundTile) {
-            gameState.updateBoardSquare(x, y, foundTile);
+            gameState.updateBoardSquareWithTile(x, y, foundTile);
             gameState.updateTurn(x, y, foundTile)
             playerTileState.removeTile(activePlayer, tileId);   
         }
@@ -59,14 +59,20 @@
     >
         <Tile tile={tile} isActive />
     </div>
+{:else if hasDropzoneeeee}
+    <div 
+        class="board__square"
+        class:startingSquare
+        id={String(id)} 
+        use:dropzone={{
+            on_dropzone: onDropzone, 
+        }}
+    ></div>
 {:else}
     <div 
         class="board__square"
         class:startingSquare
         id={String(id)} 
-        use:hasDropzone()={{
-            on_dropzone: onDropzone, 
-        }}
     ></div>
 {/if}
 

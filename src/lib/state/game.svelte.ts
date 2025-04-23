@@ -39,7 +39,7 @@ export class GameState {
 		this.game.activePlayer = playerPosition;
 	}
 
-	updateBoardSquare(x: number, y: number, tile: ITile): void {
+	updateBoardSquareWithTile(x: number, y: number, tile: ITile): void {
 		this.game.board[x][y] = { ...this.game.board[x][y], tile };
 	} 
 	
@@ -58,13 +58,38 @@ export class GameState {
 		}
 	}
 
+	updateBoardAfterTileDrop() {
+		const allowList = this.getDropzoneAllowlist();
+		const xDim = this.game.columns - 1;
+		const yDim = this.game.rows - 1;
+
+		for (let x = 0; x < xDim; x++) {
+			for (let y = 0; y < yDim; y++) {
+				if (allowList === DropzoneStatus.Complete) {
+					this.game.board[x][y] = { ...this.game.board[x][y], hasDropzoneeeee: true}
+				} else {
+					const isAllowed = allowList.reduce((acc: any, curr: any) => {
+						const [xAllowed, yAllowed] = curr;
+						if (xAllowed === x && yAllowed === y) {
+							acc = true;
+						}
+						return acc;
+					}, false);
+					if (isAllowed) {
+						this.game.board[x][y] = { ...this.game.board[x][y], hasDropzoneeeee: true}
+					}
+				}	
+			}
+		}
+	}
+
 	updateTurn(x: number, y: number, tile: ITile): void {
 		const droppedTile: IDroppedTile = { x, y, tile };
 		this.game.turn.droppedTiles.push(droppedTile);
 		
-		console.log("-----------", this.game.turn.turnStatus);
 		this.updateTurnStatus();
-		console.log("^^^^^^^^^^^", this.game.turn.turnStatus);
+
+		this.updateBoardAfterTileDrop();
 	}
 
 	getDropzoneAllowlist() {
