@@ -23,9 +23,23 @@ interface IDroppedTile {
     y: number;
 }
 
+enum TurnStatus {
+    ZeroPlaced = "zeroPlaced",
+    OnePlaced = "onePlaced",
+    MultiPlaced = "multipPlaced",
+    Disconnected = "disconnected",
+    DisconnectedInvalid = "disconnectedInvalid",
+    Invalid = "inValid"
+}
+
+enum DropzoneStatus {
+    Complete = 'complete'
+}
+
 interface ITurn {
     firstTurnOfRound: boolean; // is there a better way of doing this?
     droppedTiles: IDroppedTile[];
+    turnStatus: TurnStatus;
 }
 
 interface IGameState {
@@ -53,4 +67,4 @@ interface IPlayers {
 }
 
 export type { IPlayer, IGameState, IPlayerTiles, IPlayers, ITurn, IDroppedTile };
-export { Players, GameStatus }
+export { Players, GameStatus, TurnStatus, DropzoneStatus }

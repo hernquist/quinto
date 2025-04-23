@@ -6,8 +6,8 @@
     import { getPlayerState } from "$lib/state/player.svelte";
 	import { Players } from "$lib/state/types";
 
-    const ROWS = 6;
-    const COLUMNS = 7;
+    const ROWS = 3;
+    const COLUMNS = 8;
 
     const  { children } = $props();
     const { Top, Bottom } = Players;
@@ -26,6 +26,7 @@
     playerTileState.updateTiles(Bottom, bottomPlayerTiles)
     // finish initializing board
     initializeBoard();
+    gameState.setStartingSquare();
 </script>
 
 {@render children()}

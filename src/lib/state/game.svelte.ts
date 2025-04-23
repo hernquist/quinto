@@ -1,6 +1,6 @@
 import { setContext, getContext } from 'svelte';
-import { GameStatus, Players, type IDroppedTile, type IGameState } from "./types";
-import type { ITiles, ITile, IBoard } from "$lib/components/game/types";
+import { DropzoneStatus, GameStatus, Players, TurnStatus, type IDroppedTile, type IGameState } from "./types";
+import type { ITiles, ITile, IBoard, ICoordTuple } from "$lib/components/game/types";
 import type { IPlayerState } from "./player.svelte";
 
 const { Top, Bottom} = Players;
@@ -19,6 +19,7 @@ const initState: IGameState = {
 	turn: {
 		firstTurnOfRound: true,
 		droppedTiles: [],
+		turnStatus: TurnStatus.ZeroPlaced
 	}
 }
 
@@ -45,10 +46,41 @@ export class GameState {
 	updateBoard(board: IBoard): void {
 		this.game.board = board;
 	}
+	
+	updateTurnStatus() {
+		if (this.game.turn.turnStatus === TurnStatus.ZeroPlaced) {
+			this.game.turn.turnStatus = TurnStatus.OnePlaced;
+			return;
+		}
+		if (this.game.turn.turnStatus === TurnStatus.OnePlaced) {
+			this.game.turn.turnStatus = TurnStatus.MultiPlaced;
+			return;
+		}
+	}
 
 	updateTurn(x: number, y: number, tile: ITile): void {
 		const droppedTile: IDroppedTile = { x, y, tile };
 		this.game.turn.droppedTiles.push(droppedTile);
+		
+		console.log("-----------", this.game.turn.turnStatus);
+		this.updateTurnStatus();
+		console.log("^^^^^^^^^^^", this.game.turn.turnStatus);
+	}
+
+	getDropzoneAllowlist() {
+		const constraints = {
+			[TurnStatus.ZeroPlaced]: this.hasStartingSquare() ? [this.getStartingSquareCoordinates()] : DropzoneStatus.Complete,
+			[TurnStatus.OnePlaced]: DropzoneStatus.Complete,
+			[TurnStatus.MultiPlaced]: [],
+			[TurnStatus.Disconnected]: [],
+			[TurnStatus.DisconnectedInvalid]: [],
+			[TurnStatus.Invalid]: []
+		}
+		return constraints[this.game.turn.turnStatus] || []
+	} 
+
+	hasStartingSquare() {
+		return this.game.round === 0 && this.game.turn.firstTurnOfRound;
 	}
 
 	private getInactivePlayer(): Players {
@@ -65,7 +97,6 @@ export class GameState {
 	private updateScore(playerState: IPlayerState): void {
 		const score = this.calculateScore();
 		playerState.player[this.game.activePlayer].score += score; 
-		console.log("updating player ", this.game.activePlayer, score, "points")
 	}
 
 	private resetTurn(): void {
@@ -114,6 +145,17 @@ export class GameState {
 		this.game.rows = rows;
 		this.game.columns = columns;
 		this.game.startingNumberOfSquares = rows * columns;
+	}
+
+	getStartingSquareCoordinates(): ICoordTuple {
+		const x = Math.trunc((this.game.columns - 1) /2);
+		const y = Math.trunc((this.game.rows -1) /2);
+		return [x, y];
+	}
+
+	setStartingSquare(): void {
+		const [x, y] = this.getStartingSquareCoordinates();
+		this.game.board[x][y] = { ...this.game.board[x][y], startingSquare: true}
 	}
 }
 

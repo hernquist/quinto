@@ -3,7 +3,11 @@
 	import Square from "../square/Square.svelte";
     
     const gameState = getGameState();
-    const { board } = gameState.game;
+    let { board } = $derived(gameState.game);
+
+    const dropzoneAllowlist = $derived(gameState.getDropzoneAllowlist());
+   
+    // TODO: why are pasing this in props AND grabbing game info from context
     const { activePlayer } = $props();
 </script>
 
@@ -11,7 +15,7 @@
     {#each board as column, x}
         <div class="board_row">
             {#each column as square, y}
-                <Square {square} {x} {y} {activePlayer}/>
+                <Square {square} {x} {y} {activePlayer} {dropzoneAllowlist}/>
             {/each}
         </div>
     {/each}
