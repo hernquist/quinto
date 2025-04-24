@@ -26,7 +26,7 @@ interface IDroppedTile {
 enum TurnStatus {
     ZeroPlaced = "zeroPlaced",
     OnePlaced = "onePlaced",
-    MultiPlaced = "multipPlaced",
+    MultiPlaced = "multiPlaced",
     Disconnected = "disconnected",
     DisconnectedInvalid = "disconnectedInvalid",
     Invalid = "inValid"
@@ -66,5 +66,11 @@ interface IPlayers {
     [Players.Bottom]: IPlayer;
 }
 
+enum Direction {
+    Horizontal = 'horizontal',
+    Vertical = 'vertical',
+    Undecided = 'undecided'
+}
+
 export type { IPlayer, IGameState, IPlayerTiles, IPlayers, ITurn, IDroppedTile };
-export { Players, GameStatus, TurnStatus, DropzoneStatus }
+export { Players, GameStatus, TurnStatus, DropzoneStatus, Direction }
