@@ -17,6 +17,7 @@
     const { tile, startingSquare, id, hasDropzone } = $derived(square);
     const playerTileState = getPlayerState();
     let tiles: ITiles = $derived(playerTileState.tiles[activePlayer]);
+    let hovering = $state(false);
 
     const onDropzone = (tileId: number): void => {
         const foundTile: ITile | undefined = tiles.find(tile => tile.id == tileId);
@@ -26,20 +27,26 @@
             gameState.updateTurn(x, y, foundTile)
             playerTileState.removeTile(activePlayer, tileId);   
         }
-}
+    }
 </script>
 
 {#if tile}
     <div 
         class="board__square" 
         id={String(id)} 
+        
     >
         <Tile tile={tile} isActive />
     </div>
 {:else if hasDropzone}
     <div 
+        role="cell"
+        tabindex={x*y}
         class="board__square"
         class:startingSquare
+        class:hovering
+		ondragenter={() => hovering = true}
+     	ondragleave={() => hovering = false}
         id={String(id)} 
         use:dropzone={{
             on_dropzone: onDropzone, 
@@ -64,6 +71,19 @@
         display: flex;
         justify-content: center;
         align-items: center;
+
+        &:hover {
+            border: 2px solid #040404;
+        }
+    }
+
+    .board__square.hovering {
+        border: 3px solid darkslategrey;
+        background-color: burlywood;
+        background-image: radial-gradient(black 0.5px, transparent 0.5px),
+                        radial-gradient(black 0.5px, transparent 0.5px);
+      background-size: 5px 5px;
+      background-position: 0 0, 2.5px 2.5px;
     }
 
     .startingSquare {
