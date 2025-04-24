@@ -1,27 +1,11 @@
 import { setContext, getContext } from 'svelte';
-import { DropzoneStatus, GameStatus, Players, TurnStatus, type IDroppedTile, type IGameState } from "./types";
+import { Players, Direction, TurnStatus, type IDroppedTile, type IGameState } from "./types";
 import type { ITiles, ITile, IBoard, ICoordTuple } from "$lib/components/game/types";
 import type { IPlayerState } from "./player.svelte";
+import { addDropzoneOptions, checkSurroundSquaresForASingleTile } from './gameUtils';
+import initState from './gameInitialState';
 
 const { Top, Bottom} = Players;
-
-const initState: IGameState = {
-	round: 0,
-	status: GameStatus.Before,
-	activePlayer: Players.Top,
-	tiles: [],
-	rows: 0,
-	columns: 0,
-	startingNumberOfSquares: 0,
-	tilesPerPlayer: 5,
-	gameMultiple: 5,
-	board: [],
-	turn: {
-		firstTurnOfRound: true,
-		droppedTiles: [],
-		turnStatus: TurnStatus.ZeroPlaced
-	}
-}
 
 export class GameState {
 	game = $state<IGameState>(initState);
@@ -31,54 +15,46 @@ export class GameState {
 		this.game = initState;
 	}
 
-	updateTiles (tiles: ITiles) {
+	public updateTiles (tiles: ITiles) {
 		this.game.tiles = tiles;
 	}
 
-	updateActivePlayer (playerPosition: Players) {
+	public updateActivePlayer (playerPosition: Players) {
 		this.game.activePlayer = playerPosition;
 	}
 
-	updateBoardSquareWithTile(x: number, y: number, tile: ITile): void {
+	public updateBoardSquareWithTile(x: number, y: number, tile: ITile): void {
 		this.game.board[x][y] = { ...this.game.board[x][y], tile };
 	} 
 	
-	updateBoard(board: IBoard): void {
+	public updateBoard(board: IBoard): void {
 		this.game.board = board;
 	}
 	
-	updateTurnStatus() {
-		if (this.game.turn.turnStatus === TurnStatus.ZeroPlaced) {
-			this.game.turn.turnStatus = TurnStatus.OnePlaced;
-			return;
-		}
+	private updateTurnStatus() {
 		if (this.game.turn.turnStatus === TurnStatus.OnePlaced) {
 			this.game.turn.turnStatus = TurnStatus.MultiPlaced;
 			return;
 		}
+		if (this.game.turn.turnStatus === TurnStatus.ZeroPlaced) {
+			this.game.turn.turnStatus = TurnStatus.OnePlaced;
+			return;
+		}
 	}
 
-	updateBoardAfterTileDrop() {
-		const allowList = this.getDropzoneAllowlist();
-		const xDim = this.game.columns - 1;
-		const yDim = this.game.rows - 1;
+	public updateBoardAfterTileDrop() {
+		const allowList = this.getDropzoneAllowlist() || [];
 
-		for (let x = 0; x < xDim; x++) {
-			for (let y = 0; y < yDim; y++) {
-				if (allowList === DropzoneStatus.Complete) {
-					this.game.board[x][y] = { ...this.game.board[x][y], hasDropzoneeeee: true}
-				} else {
-					const isAllowed = allowList.reduce((acc: any, curr: any) => {
-						const [xAllowed, yAllowed] = curr;
-						if (xAllowed === x && yAllowed === y) {
-							acc = true;
-						}
-						return acc;
-					}, false);
-					if (isAllowed) {
-						this.game.board[x][y] = { ...this.game.board[x][y], hasDropzoneeeee: true}
+		for (let x = 0; x < this.game.columns; x++) {
+			for (let y = 0; y < this.game.rows; y++) {
+				const isAllowed = allowList.reduce((acc: any, curr: any) => {
+					const [xAllowed, yAllowed] = curr;
+					if (xAllowed === x && yAllowed === y) {
+						acc = true;
 					}
-				}	
+					return acc;
+				}, false);
+				this.game.board[x][y] = { ...this.game.board[x][y], hasDropzone: isAllowed}
 			}
 		}
 	}
@@ -86,25 +62,83 @@ export class GameState {
 	updateTurn(x: number, y: number, tile: ITile): void {
 		const droppedTile: IDroppedTile = { x, y, tile };
 		this.game.turn.droppedTiles.push(droppedTile);
-		
 		this.updateTurnStatus();
-
 		this.updateBoardAfterTileDrop();
 	}
 
-	getDropzoneAllowlist() {
-		const constraints = {
-			[TurnStatus.ZeroPlaced]: this.hasStartingSquare() ? [this.getStartingSquareCoordinates()] : DropzoneStatus.Complete,
-			[TurnStatus.OnePlaced]: DropzoneStatus.Complete,
-			[TurnStatus.MultiPlaced]: [],
-			[TurnStatus.Disconnected]: [],
-			[TurnStatus.DisconnectedInvalid]: [],
-			[TurnStatus.Invalid]: []
+	private getSinglePlacedDropzoneOptions() {
+		const singleTilePlaced = this.game?.turn?.droppedTiles || [];
+		if (singleTilePlaced.length !== 1) {
+			console.error("getSinglePlacedDropzoneOptions error: internal game state borken -- number of tiles", singleTilePlaced.length);
+			return;
 		}
-		return constraints[this.game.turn.turnStatus] || []
+		const [tile] = singleTilePlaced;
+		let dropzoneOptions: IDroppedTile[] = [];
+		dropzoneOptions = addDropzoneOptions(this.game.rows, tile, Direction.Vertical, dropzoneOptions);
+		dropzoneOptions = addDropzoneOptions(this.game.columns, tile, Direction.Horizontal, dropzoneOptions);
+		return dropzoneOptions;
+	}
+
+	private getMultiPlacedDropzoneOptions() {
+		const multiTilesPlaced = this.game.turn.droppedTiles;
+		if (multiTilesPlaced.length < 2) {
+			console.error("{getMultiPlacedDropzoneOptions} error: internal game state borken -- number of tiles", multiTilesPlaced.length);
+			return;
+		}
+		const [firstTile, secondTile] = multiTilesPlaced;
+		let direction = Direction.Undecided;
+
+		if (firstTile.x === secondTile.x) direction = Direction.Vertical;
+		if (firstTile.y === secondTile.y) direction = Direction.Horizontal;
+		
+		let dropzoneOptions: IDroppedTile[] = [];
+		if (direction === Direction.Vertical) {
+			dropzoneOptions = addDropzoneOptions(this.game.rows, firstTile, direction, dropzoneOptions) 
+		} 
+		if (direction === Direction.Horizontal) {
+			dropzoneOptions = addDropzoneOptions(this.game.columns, firstTile, direction, dropzoneOptions) 
+		}
+		return dropzoneOptions;
+	}
+
+	private hasTile(x:number, y: number): boolean {
+		return Boolean(this.game.board[x][y].tile);
+	}
+
+	private getAvailableDropzoneSquares() {
+		const dropzoneOptions = [];
+		for (let y = 0; y < this.game.rows; y++) {
+			for (let x = 0; x < this.game.columns; x++) {
+				if (!this.hasTile(x, y) && checkSurroundSquaresForASingleTile(this.game.board, x, y)) {
+					dropzoneOptions.push([x, y])
+				}
+			}
+		}
+		return dropzoneOptions;
+	}
+
+	private getDropzoneAllowlist() {
+		const { ZeroPlaced, OnePlaced, MultiPlaced, Disconnected, DisconnectedInvalid, Invalid } = TurnStatus;
+		const turnStatus = this.game.turn.turnStatus;
+
+		// beginning of turn
+		if (turnStatus === ZeroPlaced) {
+			if (this.hasStartingSquare()) {
+				// special case of first move -- 1st tile must be placed on starting square
+				return [this.getStartingSquareCoordinates()];
+			}
+			return this.getAvailableDropzoneSquares();
+		} 
+		// one tile placed 
+		if (turnStatus === OnePlaced) return this.getSinglePlacedDropzoneOptions();
+		// more than one tile paced
+		if (turnStatus === MultiPlaced) return this.getMultiPlacedDropzoneOptions();
+		// other cases
+		if ([Disconnected, DisconnectedInvalid, Invalid].includes(turnStatus)) return [];
+		return [];
 	} 
 
-	hasStartingSquare() {
+	private hasStartingSquare() {
 		return this.game.round === 0 && this.game.turn.firstTurnOfRound;
 	}
 
@@ -127,15 +161,13 @@ export class GameState {
 	private resetTurn(): void {
 		this.game.turn.firstTurnOfRound = !this.game.turn.firstTurnOfRound;
 		this.game.turn.droppedTiles = [];
+		this.game.turn.turnStatus = TurnStatus.ZeroPlaced;
 	}
 
 	// can I use in the initialize game function (make not private)
 	private replenishTiles (playerState: IPlayerState): void {
 		// no tiles
-		if (this.game.tiles.length === 0) {
-			console.log("no tiles left");
-			return;
-		}
+		if (this.game.tiles.length === 0) return;
 
 		// get number of tiles needed
 		const tilesPerPlayer = this.game.tilesPerPlayer;
@@ -144,14 +176,12 @@ export class GameState {
 		
 		// partial replenish
 		if (this.game.tiles.length < numberOfTilesNeeded) {
-			console.log("Partial replenish: ", this.game.tiles.length, "tiles");
 			playerState.tiles[this.game.activePlayer] = [...playerState.tiles[this.game.activePlayer], ...this.game.tiles];
 			return;
 		}
 
 		// complete replish
 		const neededTiles = this.game.tiles.splice(0, numberOfTilesNeeded);
-		console.log("Partial replenish: ", numberOfTilesNeeded, "tiles");
 		playerState.tiles[this.game.activePlayer] = [...playerState.tiles[this.game.activePlayer], ...neededTiles];
 	}
 
@@ -164,6 +194,7 @@ export class GameState {
 			this.game.round++;
 		}
 		this.resetTurn();
+		this.updateBoardAfterTileDrop();
 	}
 	
 	updateBoardDimensions(rows: number, columns: number): void {
