@@ -2,7 +2,7 @@
     import { draggable } from "../../utils/dnd";
 	import type { ITile } from "../game/types";
 
-    const { tile, isActive } = $props();
+    const { tile, isActive }: {tile: ITile, isActive: boolean } = $props();
 </script>
 
 {#if isActive}
@@ -32,13 +32,16 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        margin: 2px;
+        margin: 2px; 
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        font-size: 42px;
     }
 
     .tile.disabled {
         background-color: dimgrey;
         color: linen;
         opacity: 1;
+        font-size: 40px;
     }
 </style>
 

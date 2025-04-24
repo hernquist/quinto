@@ -1,4 +1,4 @@
-import type { IBoard, ITiles } from "$lib/components/game/types";
+import type { IBoard, ITile, ITiles } from "$lib/components/game/types";
 
 enum Players {
     Top = 'TOP',
@@ -17,6 +17,31 @@ interface IPlayer {
     goesFirst: boolean,
 }
 
+interface IDroppedTile {
+    tile: ITile,
+    x: number;
+    y: number;
+}
+
+enum TurnStatus {
+    ZeroPlaced = "zeroPlaced",
+    OnePlaced = "onePlaced",
+    MultiPlaced = "multiPlaced",
+    Disconnected = "disconnected",
+    DisconnectedInvalid = "disconnectedInvalid",
+    Invalid = "inValid"
+}
+
+enum DropzoneStatus {
+    Complete = 'complete'
+}
+
+interface ITurn {
+    firstTurnOfRound: boolean; // is there a better way of doing this?
+    droppedTiles: IDroppedTile[];
+    turnStatus: TurnStatus;
+}
+
 interface IGameState {
 	round: number;
 	status: GameStatus;
@@ -24,9 +49,11 @@ interface IGameState {
 	tiles: ITiles;
 	rows: number;
 	columns: number;
-	totalSquares: number;
+	startingNumberOfSquares: number;
+    tilesPerPlayer: number;
 	gameMultiple: number;
     board: IBoard;
+    turn: ITurn;
 }
 
 interface IPlayerTiles {
@@ -39,5 +66,11 @@ interface IPlayers {
     [Players.Bottom]: IPlayer;
 }
 
-export type { IPlayer, IGameState, IPlayerTiles, IPlayers };
-export { Players, GameStatus }
+enum Direction {
+    Horizontal = 'horizontal',
+    Vertical = 'vertical',
+    Undecided = 'undecided'
+}
+
+export type { IPlayer, IGameState, IPlayerTiles, IPlayers, ITurn, IDroppedTile };
+export { Players, GameStatus, TurnStatus, DropzoneStatus, Direction }

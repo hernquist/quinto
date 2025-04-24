@@ -4,11 +4,15 @@ interface ITile {
     value: number;
 }
 
+type ICoordTuple = [number, number]
+
 interface ISquare {
     id: number;
     x: number;
     y: number;
     tile: ITile | null;
+    hasDropzone: boolean;
+    startingSquare?: boolean;
 }
 
 type ITiles = ITile[];
@@ -17,4 +21,4 @@ type IRow = ISquare[];
 type IColumn = ISquare[];
 type IBoard = ISquare[][];
 
-export type { ITile, ISquare, ITiles, IRow, IColumn, IBoard };
+export type { ITile, ISquare, ITiles, IRow, IColumn, IBoard, ICoordTuple };

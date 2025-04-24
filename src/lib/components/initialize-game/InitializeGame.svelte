@@ -1,13 +1,13 @@
 <script lang="ts">
-    import { getGameState } from "../../state/state.svelte";
+    import { getGameState } from "../../state/game.svelte";
 	import generateGameTiles from "./utils/generateGameTiles";
 	import initializePlayers from "./utils/initializePlayers";
 	import initializeBoard from "./utils/initializeBoard";
     import { getPlayerState } from "$lib/state/player.svelte";
 	import { Players } from "$lib/state/types";
 
-    const ROWS = 6;
-    const COLUMNS = 7;
+    const ROWS = 3;
+    const COLUMNS = 8;
 
     const  { children } = $props();
     const { Top, Bottom } = Players;
@@ -26,6 +26,9 @@
     playerTileState.updateTiles(Bottom, bottomPlayerTiles)
     // finish initializing board
     initializeBoard();
+    gameState.setStartingSquare();
+    // update board after setStartingSquare since it affects 
+    gameState.updateBoardAfterTileDrop();
 </script>
 
 {@render children()}

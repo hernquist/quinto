@@ -9,6 +9,11 @@ const initPlayer: IPlayer = {
 	goesFirst: false,
 }
 
+export interface IPlayerState {
+    tiles: IPlayerTiles;
+    player: IPlayers
+} 
+
 export class PlayerState {
     tiles = $state<IPlayerTiles>({
         [Top]: [],

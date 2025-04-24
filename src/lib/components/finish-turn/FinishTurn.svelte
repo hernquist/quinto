@@ -1,23 +1,18 @@
 <script lang="ts">
-    import { getGameState } from "../../state/state.svelte";
-	import { Players } from "../../state/types";
+    import { getGameState } from "../../state/game.svelte";
+    import { getPlayerState } from "$lib/state/player.svelte";
     
     const { isActive } = $props();
-    const { Top, Bottom } = Players;
     const gameState = getGameState();
+    const playerState = getPlayerState();
 
-    const handleClick = (activePlayer: Players) => {
-        if (activePlayer === Top) {
-            gameState.updateActivePlayer(Bottom);
-        } 
-        if (activePlayer === Bottom) {
-            gameState.updateActivePlayer(Top);
-        }
+    const handleClick = () => {
+        gameState.finishTurn(playerState)
     }
 </script>
 
 
-<button disabled={!isActive} onclick={() => handleClick(gameState.game.activePlayer)}>
+<button disabled={!isActive} onclick={handleClick}>
     Finish Turn
 </button>
 
@@ -29,7 +24,7 @@
         border: 2px solid gray;
         border-radius: 20px;
         height: 40px;
-        margin: 2px;
+        margin: 2px 2px 2px 8px;
 
         &:disabled {
             background-color: lightslategray;

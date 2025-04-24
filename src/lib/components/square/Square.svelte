@@ -2,8 +2,9 @@
 	import type { ISquare, ITile, ITiles } from "../game/types";
     import { dropzone } from "../../utils/dnd";
 	import { getPlayerState } from "$lib/state/player.svelte";
-	import { getGameState } from "$lib/state/state.svelte";
-	import type { Players } from "$lib/state/types";
+	import { getGameState } from "$lib/state/game.svelte";
+	import { type Players } from "$lib/state/types";
+	import Tile from "../tile/Tile.svelte";
 
     interface ISquareProps {
         square: ISquare, 
@@ -11,35 +12,44 @@
         y: number, 
         activePlayer: Players
     }
-
     const gameState = getGameState();
-
-    const { square, x, y, activePlayer }: ISquareProps = $props();
+    let { square, x, y, activePlayer }: ISquareProps = $props();
+    const { tile, startingSquare, id, hasDropzone } = $derived(square);
     const playerTileState = getPlayerState();
     let tiles: ITiles = $derived(playerTileState.tiles[activePlayer]);
 
     const onDropzone = (tileId: number): void => {
         const foundTile: ITile | undefined = tiles.find(tile => tile.id == tileId);
-        if (foundTile) gameState.updateBoardSquare(x, y, foundTile);
-        playerTileState.removeTile(activePlayer, tileId);
-    }
+
+        if (foundTile) {
+            gameState.updateBoardSquareWithTile(x, y, foundTile);
+            gameState.updateTurn(x, y, foundTile)
+            playerTileState.removeTile(activePlayer, tileId);   
+        }
+}
 </script>
 
-
-{#if square?.tile}
+{#if tile}
     <div 
         class="board__square" 
-        id={String(square.id)} 
+        id={String(id)} 
     >
-        {square.tile?.text}
+        <Tile tile={tile} isActive />
     </div>
+{:else if hasDropzone}
+    <div 
+        class="board__square"
+        class:startingSquare
+        id={String(id)} 
+        use:dropzone={{
+            on_dropzone: onDropzone, 
+        }}
+    ></div>
 {:else}
     <div 
-        class="board__square" 
-        id={String(square.id)} 
-        use:dropzone={{
-            on_dropzone: onDropzone
-        }}
+        class="board__square"
+        class:startingSquare
+        id={String(id)} 
     ></div>
 {/if}
 
@@ -51,5 +61,13 @@
         border: 2px solid gray;
         border-radius: 1px;
         margin: 6px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .startingSquare {
+        border: 6px dashed lightgrey;
+        background-color: salmon;
     }
 </style>
