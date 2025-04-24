@@ -27,7 +27,6 @@
     // finish initializing board
     initializeBoard();
     gameState.setStartingSquare();
-    console.log("gameState", JSON.parse(JSON.stringify(gameState.game)))
     // update board after setStartingSquare since it affects 
     gameState.updateBoardAfterTileDrop();
 </script>
