@@ -12,6 +12,7 @@ interface ISquare {
     y: number;
     tile: ITile | null;
     hasDropzone: boolean;
+    hasDroppedTile: boolean;
     startingSquare?: boolean;
 }
 
