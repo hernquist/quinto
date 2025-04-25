@@ -9,10 +9,12 @@
     const handleClick = () => {
         gameState.finishTurn(playerState)
     }
+    
+    const disabled = $derived(gameState.game.turn.droppedTiles.length === 0);
 </script>
 
 
-<button disabled={!isActive} onclick={handleClick}>
+<button disabled={!isActive || disabled} onclick={handleClick}>
     Finish Turn
 </button>
 
@@ -31,7 +33,7 @@
         }
 
         &:hover {
-            opacity: 0.5;
+            opacity: 0.8;
         }
     }
 </style>

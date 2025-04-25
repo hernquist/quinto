@@ -14,7 +14,7 @@
     }
     const gameState = getGameState();
     let { square, x, y, activePlayer }: ISquareProps = $props();
-    const { tile, startingSquare, id, hasDropzone } = $derived(square);
+    const { tile, startingSquare, id, hasDropzone, hasDroppedTile } = $derived(square);
     const playerTileState = getPlayerState();
     let tiles: ITiles = $derived(playerTileState.tiles[activePlayer]);
     let hovering = $state(false);
@@ -34,9 +34,9 @@
     <div 
         class="board__square" 
         id={String(id)} 
-        
+        class:hasDroppedTile
     >
-        <Tile tile={tile} isActive />
+        <Tile tile={tile} isActive {hasDroppedTile} />
     </div>
 {:else if hasDropzone}
     <div 
@@ -82,8 +82,17 @@
         background-color: burlywood;
         background-image: radial-gradient(black 0.5px, transparent 0.5px),
                         radial-gradient(black 0.5px, transparent 0.5px);
-      background-size: 5px 5px;
-      background-position: 0 0, 2.5px 2.5px;
+        background-size: 5px 5px;
+        background-position: 0 0, 2.5px 2.5px;
+    }
+
+    .board__square.hasDroppedTile {
+        border: 3px solid peachpuff;
+        background-color: limegreen;
+        background-image: radial-gradient(whitesmoke 0.5px, transparent 0.5px),
+                        radial-gradient(whitesmoke 0.5px, transparent 0.5px);
+        background-size: 5px 5px;
+        background-position: 0 0, 2.5px 2.5px;
     }
 
     .startingSquare {
