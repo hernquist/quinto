@@ -251,33 +251,32 @@ export class GameState {
 		}
 
 		// ------------------------------------
-
 		if (direction === Direction.Horizontal) {
-			function orderHorizontalTiles(tileA:IDroppedTile, tileB: IDroppedTile, key: "x" | "y"): number {
+			function orderTilesByDimension(tileA:IDroppedTile, tileB: IDroppedTile, key: "x" | "y"): number {
 				if (tileA[key] > tileB[key]) return 1;
 				if (tileA[key] < tileB[key]) return -1;
 				return 0;
 			}
 			// order dropped tiles from the left to right
-			let orderedDroppedTiles = droppedTiles.sort((a, b) => orderHorizontalTiles(a, b, "x"));
+			let orderedDroppedTiles = droppedTiles.sort((a, b) => orderTilesByDimension(a, b, "x"));
 			console.log("[game].calculateScore.orderedDroppedTiles:", orderedDroppedTiles);
 
-			const lastSquare = orderedDroppedTiles.pop();
-			const [firstSquare, ...middleSquares] = orderedDroppedTiles;
+			// TODO: fix type error
+			const lastSquare: IDroppedTile = orderedDroppedTiles.pop() ;
+			const [firstSquare, ...middleSquares]: IDroppedTile[] = orderedDroppedTiles;
 			
-			let { x, y, tile: { value }} = firstSquare; 
 			
 			// determine "line" for horizontal placement
-
 			// some init
 			let hasAdjacentTile = true;
 			let line: ILineItem[] = []
 			let shiftLeft = 1;
-
+			
 			// add first square to line
+			let { x, y, tile: { value }} = firstSquare; 
 			line.push({x, y, value});
 			do {
-				if (this.game.board?.[x -shiftLeft]?.[y]?.tile) {
+				if (this.game.board?.[x - shiftLeft]?.[y]?.tile) {
 					// not needed
 					// if (line.length === 0) { 
 					// 	line.push({x, y, value})
@@ -300,8 +299,10 @@ export class GameState {
 			hasAdjacentTile = true;
 
 			// add last square to line
+			x = lastSquare?.x;
+			y = lastSquare?.y;
+			value = lastSquare?.tile?.value;
 			line.push({ x, y, value });
-
 			do {
 				if (this.game.board?.[x + shiftRight]?.[y]?.tile) {
 					// if (line.length === 0) {
@@ -318,7 +319,7 @@ export class GameState {
 				}
 			} while (hasAdjacentTile)
 
-				
+			// TODO this is probably where the logic is broken
 			let currentSquare: IDroppedTile = firstSquare;
 			// check to see if there are previously dropped tiles on the board via gaps in the droppedTiles  
 			middleSquares.forEach((square: IDroppedTile) => {
@@ -334,17 +335,18 @@ export class GameState {
 				}
 				
 			})
-
 			lines.push(line);
 
 			// check each droppedTiles vertical "line" possibility
-
 			// orginal droppedTiles 
-			for (let i = 0; i < droppedTiles.length; i++) {
+			// TODO: this is a little suspect and somewhat typed to the type error above
+			const newConstitutedDroppedTiles = [firstSquare, ...middleSquares, lastSquare];
+			for (let i = 0; i < newConstitutedDroppedTiles.length; i++) {
+				console.log("i and newConstitutedDroppedTiles.length:", i, newConstitutedDroppedTiles.length, newConstitutedDroppedTiles);
 				hasAdjacentTile = true;
 				line = [];
 
-				const { x , y, tile: { value }} = droppedTiles[i];
+				const { x, y, tile: { value }} = newConstitutedDroppedTiles[i];
 				// checking above
 				let shiftUp = 1;
 				do {
@@ -380,9 +382,13 @@ export class GameState {
 						hasAdjacentTile = false;
 					}
 				} while (hasAdjacentTile);
-
-				lines.push(line)
+				if (line.length !== 0) {
+					lines.push(line)
+				}
 			}
+
+			console.log("[game].calculateScore.lines:", lines);
+			// -------------------------------------------
 
 			// calculate "lines" score
 			return readLinesForScore(lines, gameMultiple);
@@ -399,6 +405,7 @@ export class GameState {
 
 		}
 
+		console.error("Error: calculation not working...")
 		return 0;
 	}
 
