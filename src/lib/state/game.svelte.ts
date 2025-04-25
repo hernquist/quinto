@@ -49,9 +49,7 @@ export class GameState {
 			for (let y = 0; y < this.game.rows; y++) {
 				const isAllowed = allowList.reduce((acc: any, curr: any) => {
 					const [xAllowed, yAllowed] = curr;
-					if (xAllowed === x && yAllowed === y) {
-						acc = true;
-					}
+					if (xAllowed === x && yAllowed === y) acc = true;
 					return acc;
 				}, false);
 				this.game.board[x][y] = { ...this.game.board[x][y], hasDropzone: isAllowed}
