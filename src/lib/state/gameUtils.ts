@@ -1,5 +1,5 @@
 import type { IBoard } from "$lib/components/game/types";
-import { Direction, type IDroppedTile } from "./types";
+import { Direction, type IDroppedTile, type ILineItem } from "./types";
 
 export function checkSurroundSquaresForASingleTile (board: IBoard, x: number, y: number): boolean {
     if (
@@ -28,4 +28,14 @@ export function addDropzoneOptions(length: number, firstTile: IDroppedTile, dire
         }
     }	
     return dropzoneOptions;
+}
+
+export function readLinesForScore(lines: ILineItem[][], gameMultiple: number): number {
+    return lines.reduce((acc: number, line: ILineItem[]) => {
+        const lineValue = line.reduce((acc: number, { value }: { value: number}) => acc + value, 0);
+        if (lineValue % gameMultiple === 0) {
+            return acc + lineValue;
+        };
+        return acc - lineValue;
+    }, 0);
 }

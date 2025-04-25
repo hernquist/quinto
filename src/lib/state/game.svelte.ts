@@ -1,8 +1,8 @@
 import { setContext, getContext } from 'svelte';
-import { Players, Direction, TurnStatus, type IDroppedTile, type IGameState } from "./types";
+import { Players, Direction, TurnStatus, type IDroppedTile, type IGameState, type ILineItem } from "./types";
 import type { ITiles, ITile, IBoard, ICoordTuple } from "$lib/components/game/types";
 import type { IPlayerState } from "./player.svelte";
-import { addDropzoneOptions, checkSurroundSquaresForASingleTile } from './gameUtils';
+import { addDropzoneOptions, checkSurroundSquaresForASingleTile, readLinesForScore } from './gameUtils';
 import initState from './gameInitialState';
 
 const { Top, Bottom} = Players;
@@ -49,9 +49,7 @@ export class GameState {
 			for (let y = 0; y < this.game.rows; y++) {
 				const isAllowed = allowList.reduce((acc: any, curr: any) => {
 					const [xAllowed, yAllowed] = curr;
-					if (xAllowed === x && yAllowed === y) {
-						acc = true;
-					}
+					if (xAllowed === x && yAllowed === y) acc = true;
 					return acc;
 				}, false);
 				this.game.board[x][y] = { ...this.game.board[x][y], hasDropzone: isAllowed}
@@ -94,12 +92,12 @@ export class GameState {
 			return;
 		}
 		const [firstTile, secondTile] = multiTilesPlaced;
-		let direction = Direction.Undecided;
 
-		if (firstTile.x === secondTile.x) direction = Direction.Vertical;
-		if (firstTile.y === secondTile.y) direction = Direction.Horizontal;
+		if (firstTile.x === secondTile.x) this.game.turn.direction = Direction.Vertical;
+		if (firstTile.y === secondTile.y) this.game.turn.direction = Direction.Horizontal;
 		
 		let dropzoneOptions: IDroppedTile[] = [];
+		const direction = this.game.turn.direction;
 		if (direction === Direction.Vertical) {
 			dropzoneOptions = addDropzoneOptions(this.game.rows, firstTile, direction, dropzoneOptions) 
 		} 
@@ -157,8 +155,336 @@ export class GameState {
 	}
 
 	private calculateScore(): number {
-		const droppedTiles = this.game.turn.droppedTiles;
-		return droppedTiles.reduce((acc, curr) => acc + curr.tile.value, 0)
+		const { turn: { direction, droppedTiles}, gameMultiple } = this.game;
+		console.log("[game].calculateScore.droppedTiles:", droppedTiles);
+		let lines: ILineItem[][] = [];
+
+		if (direction === Direction.Undecided) {
+			// search left
+			const [square] = droppedTiles;
+			const { x, y, tile: { value }} = square;
+
+			// set up -- shift left
+			let hasAdjacentTile = true
+			
+			let line: ILineItem[] = [];
+			let shiftLeft = 1;
+			do {
+				if (this.game.board?.[x - shiftLeft]?.[y]?.tile) {
+					if (line.length === 0) { 
+							line.push({ x, y, value })
+					};
+					line.push({ 
+						x: x - shiftLeft, 
+						y, 
+						value: this.game.board[x - shiftLeft][y].tile?.value || 0 
+					});
+					shiftLeft += 1;
+				} else {
+					hasAdjacentTile = false;
+				}
+			} while (hasAdjacentTile);
+
+			let shiftRight = 1;
+			hasAdjacentTile = true;
+			do {
+				if (this.game.board?.[x + shiftRight]?.[y]?.tile) {
+					if (line.length === 0) {
+						line.push({ x, y, value });
+					}
+					line.push({ 
+						x: x + shiftRight, 
+						y, 
+						value: this.game.board[x + shiftRight][y].tile?.value || 0 
+					});
+					shiftRight += 1;
+				} else {
+					hasAdjacentTile = false;
+				}
+			} while (hasAdjacentTile)
+			
+			if (line.length !== 0) {
+				lines.push(line);
+			}
+
+			// up and and down
+			hasAdjacentTile = true;
+			// shift "up"
+			line = [];
+			let shiftUp = 1
+			do {
+				if (this.game.board?.[x]?.[y - shiftUp]?.tile) {
+					if (line.length === 0) { 
+						line.push({x, y, value})
+					};
+					line.push({ 
+						x: x, 
+						y: y - shiftUp, 
+						value: this.game.board[x][y - shiftUp]?.tile?.value || 0 
+					});
+					shiftUp += 1;
+				} else {
+					hasAdjacentTile = false;
+				}
+			} while (hasAdjacentTile);
+
+			let shiftDown = 1;
+			hasAdjacentTile = true;
+			do {
+				if (this.game.board?.[x]?.[y + shiftDown]?.tile) {
+					if (line.length === 0) {
+						line.push({x, y, value});
+					}
+					line.push({ 
+						x, 
+						y: y + shiftDown, 
+						value: this.game.board[x][y + shiftDown].tile?.value || 0 
+					});
+					shiftDown += 1;
+				} else {
+					hasAdjacentTile = false;
+				}
+			} while (hasAdjacentTile)
+			
+			if (line.length !== 0) {
+				lines.push(line);
+			}
+
+			// handle empty line -- single, untouched tile
+			if (lines.length === 0) {
+				lines.push([{ x, y, value } ])
+			}
+			console.log("[game].calculateScore.lines:", lines);
+			return readLinesForScore(lines, gameMultiple);
+		}
+
+		// TODO: move
+		function orderTilesByDimension(tileA:IDroppedTile, tileB: IDroppedTile, key: "x" | "y"): number {
+			if (tileA[key] > tileB[key]) return 1;
+			if (tileA[key] < tileB[key]) return -1;
+			return 0;
+		}
+
+		// ------------------------------------
+		if (direction === Direction.Horizontal) {
+			
+			// order dropped tiles from the left to right
+			let orderedDroppedTiles = droppedTiles.sort((a, b) => orderTilesByDimension(a, b, "x"));
+
+			// TODO: fix type error
+			const lastSquare: IDroppedTile = orderedDroppedTiles.pop() ;
+			const [firstSquare, ...middleSquares]: IDroppedTile[] = orderedDroppedTiles;
+			
+			
+			// determine "line" for horizontal placement
+			// some init
+			let hasAdjacentTile = true;
+			let line: ILineItem[] = []
+			let shiftLeft = 1;
+			
+			// add first square to line
+			let { x, y, tile: { value }} = firstSquare; 
+			line.push({x, y, value});
+			
+			do {
+				if (this.game.board?.[x - shiftLeft]?.[y]?.tile) {
+					line.push({
+						x: x - shiftLeft,
+						y,
+						value: this.game.board[x - shiftLeft][y].tile?.value || 0
+					});
+					shiftLeft += 1;
+				} else {
+					hasAdjacentTile = false
+				}
+			} while (hasAdjacentTile)
+
+			let shiftRight = 1;
+			hasAdjacentTile = true;
+
+			do {
+				if (this.game.board?.[x + shiftRight]?.[y]?.tile) {
+					line.push({ 
+						x: x + shiftRight, 
+						y, 
+						value: this.game.board[x + shiftRight][y].tile?.value || 0 
+					});
+					shiftRight += 1;
+				} else {
+					hasAdjacentTile = false;
+				}
+			} while (hasAdjacentTile)
+
+			lines.push(line);
+
+			// check each droppedTiles vertical "line" possibility
+			// orginal droppedTiles 
+			// TODO: this is a little suspect and somewhat typed to the type error above
+			const newConstitutedDroppedTiles = [firstSquare, ...middleSquares, lastSquare];
+			for (let i = 0; i < newConstitutedDroppedTiles.length; i++) {
+				console.log("i and newConstitutedDroppedTiles.length:", i, newConstitutedDroppedTiles.length, newConstitutedDroppedTiles);
+				hasAdjacentTile = true;
+				line = [];
+
+				const { x, y, tile: { value }} = newConstitutedDroppedTiles[i];
+				// checking above
+				let shiftUp = 1;
+				do {
+					if (this.game.board?.[x]?.[y - shiftUp]?.tile) {
+						if (line.length === 0) { 
+							line.push({x, y, value})
+						};
+						line.push({ 
+							x: x, 
+							y: y - shiftUp, 
+							value: this.game.board[x][y - shiftUp]?.tile?.value || 0 
+						});
+						shiftUp += 1;
+					} else {
+						hasAdjacentTile = false;
+					}
+				} while (hasAdjacentTile);
+
+				let shiftDown = 1
+				hasAdjacentTile = true 
+				do {
+					if (this.game.board?.[x]?.[y + shiftDown]?.tile) {
+						if (line.length === 0) {
+							line.push({x, y, value});
+						}
+						line.push({ 
+							x, 
+							y: y + shiftDown, 
+							value: this.game.board[x][y + shiftDown].tile?.value || 0 
+						});
+						shiftDown += 1;
+					} else {
+						hasAdjacentTile = false;
+					}
+				} while (hasAdjacentTile);
+				if (line.length !== 0) {
+					lines.push(line)
+				}
+			}
+
+			console.log("[game].calculateScore.lines:", lines);
+			// -------------------------------------------
+
+			// calculate "lines" score
+			return readLinesForScore(lines, gameMultiple);
+		}
+
+		// ------------------------------------------------------------------
+		if (direction === Direction.Vertical) {
+			// order dropped tiles from top to bottom
+			let orderedDroppedTiles = droppedTiles.sort((a, b) => orderTilesByDimension(a, b, "y"));
+			console.log("[game].calculateScore.orderedDroppedTiles.VERTICAL:", orderedDroppedTiles);
+
+			// TODO: fix type error
+			const lastSquare: IDroppedTile = orderedDroppedTiles.pop() ;
+			const [firstSquare, ...middleSquares]: IDroppedTile[] = orderedDroppedTiles;
+	
+			// determine "line" for verticl placement
+			// some init
+			let hasAdjacentTile = true;
+			let line: ILineItem[] = []
+			let shiftUp = 1;
+	
+			// add first square to line
+			let { x, y, tile: { value }} = firstSquare; 
+			line.push({x, y, value});
+			do {
+				if (this.game.board?.[x]?.[y - shiftUp]?.tile) {
+					line.push({
+						x,
+						y: y - shiftUp,
+						value: this.game.board[x][y - shiftUp].tile?.value || 0
+					});
+					shiftUp += 1;
+				} else {
+					hasAdjacentTile = false
+				}
+			} while (hasAdjacentTile)
+
+			let shiftDown = 1;
+			hasAdjacentTile = true;
+
+			do {
+				if (this.game.board?.[x]?.[y + shiftDown]?.tile) {
+					line.push({ 
+						x, 
+						y: y + shiftDown, 
+						value: this.game.board[x][y + shiftDown].tile?.value || 0 
+					});
+					shiftDown += 1;
+				} else {
+					hasAdjacentTile = false;
+				}
+			} while (hasAdjacentTile)
+
+			lines.push(line);
+
+			// check each droppedTiles horizontal "line" possibility
+			// orginal droppedTiles 
+			// TODO: this is a little suspect and somewhat typed to the type error above
+			const newConstitutedDroppedTiles = [firstSquare, ...middleSquares, lastSquare];
+			for (let i = 0; i < newConstitutedDroppedTiles.length; i++) {
+				console.log("i and newConstitutedDroppedTiles.length:", i, newConstitutedDroppedTiles.length, newConstitutedDroppedTiles);
+				hasAdjacentTile = true;
+				line = [];
+
+				const { x, y, tile: { value }} = newConstitutedDroppedTiles[i];
+				// checking left
+				let shiftLeft = 1;
+				do {
+					if (this.game.board?.[x - shiftLeft]?.[y]?.tile) {
+						if (line.length === 0) { 
+							line.push({x, y, value})
+						};
+						line.push({ 
+							x: x - shiftLeft, 
+							y: y, 
+							value: this.game.board[x - shiftLeft][y]?.tile?.value || 0 
+						});
+						shiftLeft += 1;
+					} else {
+						hasAdjacentTile = false;
+					}
+				} while (hasAdjacentTile);
+
+				let shiftRight = 1;
+				hasAdjacentTile = true; 
+				do {
+					if (this.game.board?.[x + shiftRight]?.[y]?.tile) {
+						if (line.length === 0) {
+							line.push({x, y, value});
+						}
+						line.push({ 
+							x: x + shiftRight, 
+							y, 
+							value: this.game.board[x + shiftRight][y].tile?.value || 0 
+						});
+						shiftRight += 1;
+					} else {
+						hasAdjacentTile = false;
+					}
+				} while (hasAdjacentTile);
+
+				if (line.length !== 0) {
+					lines.push(line)
+				}
+			}
+
+			console.log("[game].calculateScore.lines:", lines);
+			// -------------------------------------------
+
+			// calculate "lines" score
+			return readLinesForScore(lines, gameMultiple);
+		}
+		// ------------------------------------------------------------------
+
+		console.error("Error: calculation not working...")
+		return 0;
 	}
 
 	private updateScore(playerState: IPlayerState): void {
@@ -171,6 +497,7 @@ export class GameState {
 		this.game.turn.droppedTiles = [];
 		this.removeDroppedTileImprintFromBoard();
 		this.game.turn.turnStatus = TurnStatus.ZeroPlaced;
+		this.game.turn.direction = Direction.Undecided;
 	}
 
 	// can I use in the initialize game function (make not private)
@@ -186,6 +513,8 @@ export class GameState {
 		// partial replenish
 		if (this.game.tiles.length < numberOfTilesNeeded) {
 			playerState.tiles[this.game.activePlayer] = [...playerState.tiles[this.game.activePlayer], ...this.game.tiles];
+			// tiles complete
+			this.game.tiles = [];
 			return;
 		}
 
