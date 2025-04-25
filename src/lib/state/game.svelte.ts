@@ -277,12 +277,9 @@ export class GameState {
 			// add first square to line
 			let { x, y, tile: { value }} = firstSquare; 
 			line.push({x, y, value});
+			
 			do {
 				if (this.game.board?.[x - shiftLeft]?.[y]?.tile) {
-					// not needed
-					// if (line.length === 0) { 
-					// 	line.push({x, y, value})
-					// };
 					line.push({
 						x: x - shiftLeft,
 						y,
@@ -294,22 +291,11 @@ export class GameState {
 				}
 			} while (hasAdjacentTile)
 
-			x = lastSquare?.x;
-			y = lastSquare?.y;
-			value = lastSquare?.tile?.value;
 			let shiftRight = 1;
 			hasAdjacentTile = true;
 
-			// add last square to line
-			x = lastSquare?.x;
-			y = lastSquare?.y;
-			value = lastSquare?.tile?.value;
-			line.push({ x, y, value });
 			do {
 				if (this.game.board?.[x + shiftRight]?.[y]?.tile) {
-					// if (line.length === 0) {
-					// 	line.push({ x, y, value });
-					// }
 					line.push({ 
 						x: x + shiftRight, 
 						y, 
@@ -321,22 +307,6 @@ export class GameState {
 				}
 			} while (hasAdjacentTile)
 
-			// TODO this is probably where the logic is broken
-			let currentSquare: IDroppedTile = firstSquare;
-			// check to see if there are previously dropped tiles on the board via gaps in the droppedTiles  
-			middleSquares.forEach((square: IDroppedTile) => {
-				// is consquective square
-				if (currentSquare.x - 1 === square.x) {
-					console.log("pushing consequecutive dropped tile: ", { x: square.x, y:square.y, value: square.tile.value })
-					line.push({ x: square.x, y:square.y, value: square.tile.value })
-				} else {
-					const tempSquare = this.game.board?.[currentSquare.x + 1]?.[currentSquare.y];
-					currentSquare = { x: tempSquare.x, y: tempSquare.y, tile: tempSquare.tile || { id: -1, text: -1, value: -1 } };
-					console.log("pushing gapped dropped tile: ",  { x: tempSquare.x, y: tempSquare.y, tile: tempSquare.tile || { id: -1, text: -1, value: -1 } });
-					line.push( { x: currentSquare.x, y: currentSquare.y, value: currentSquare.tile.value})
-				}
-				
-			})
 			lines.push(line);
 
 			// check each droppedTiles vertical "line" possibility
@@ -428,17 +398,8 @@ export class GameState {
 				}
 			} while (hasAdjacentTile)
 
-			x = lastSquare?.x;
-			y = lastSquare?.y;
-			value = lastSquare?.tile?.value;
 			let shiftDown = 1;
 			hasAdjacentTile = true;
-
-			// add last square to line
-			x = lastSquare?.x;
-			y = lastSquare?.y;
-			value = lastSquare?.tile?.value;
-			line.push({ x, y, value });
 
 			do {
 				if (this.game.board?.[x]?.[y + shiftDown]?.tile) {
@@ -453,22 +414,6 @@ export class GameState {
 				}
 			} while (hasAdjacentTile)
 
-			// TODO this is probably where the logic is broken
-			let currentSquare: IDroppedTile = firstSquare;
-			// check to see if there are previously dropped tiles on the board via gaps in the droppedTiles  
-			middleSquares.forEach((square: IDroppedTile) => {
-				// is consquective square
-				if (currentSquare.y - 1 === square.y) {
-					console.log("pushing consequecutive dropped tile: ", { x: square.x, y:square.y, value: square.tile.value })
-					line.push({ x: square.x, y:square.y, value: square.tile.value })
-				} else {
-					const tempSquare = this.game.board?.[currentSquare.x]?.[currentSquare.y + 1];
-					currentSquare = { x: tempSquare.x, y: tempSquare.y, tile: tempSquare.tile || { id: -1, text: -1, value: -1 } };
-					console.log("pushing gapped dropped tile: ",  { x: tempSquare.x, y: tempSquare.y, tile: tempSquare.tile || { id: -1, text: -1, value: -1 } });
-					line.push( { x: currentSquare.x, y: currentSquare.y, value: currentSquare.tile.value})
-				}
-				
-			})
 			lines.push(line);
 
 			// check each droppedTiles horizontal "line" possibility

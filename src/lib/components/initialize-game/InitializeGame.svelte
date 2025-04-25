@@ -6,8 +6,8 @@
     import { getPlayerState } from "$lib/state/player.svelte";
 	import { Players } from "$lib/state/types";
 
-    const ROWS = 3;
-    const COLUMNS = 8;
+    const ROWS = 7;
+    const COLUMNS = 7;
 
     const  { children } = $props();
     const { Top, Bottom } = Players;
