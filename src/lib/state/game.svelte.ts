@@ -24,7 +24,7 @@ export class GameState {
 	}
 
 	public updateBoardSquareWithTile(x: number, y: number, tile: ITile): void {
-		this.game.board[x][y] = { ...this.game.board[x][y], tile };
+		this.game.board[x][y] = { ...this.game.board[x][y], tile, hasDroppedTile: true };
 	} 
 	
 	public updateBoard(board: IBoard): void {
@@ -55,6 +55,14 @@ export class GameState {
 					return acc;
 				}, false);
 				this.game.board[x][y] = { ...this.game.board[x][y], hasDropzone: isAllowed}
+			}
+		}
+	}
+
+	private removeDroppedTileImprintFromBoard() {
+		for (let x = 0; x < this.game.columns; x++) {
+			for (let y = 0; y < this.game.rows; y++) {
+					this.game.board[x][y] = { ...this.game.board[x][y], hasDroppedTile: false}
 			}
 		}
 	}
@@ -161,6 +169,7 @@ export class GameState {
 	private resetTurn(): void {
 		this.game.turn.firstTurnOfRound = !this.game.turn.firstTurnOfRound;
 		this.game.turn.droppedTiles = [];
+		this.removeDroppedTileImprintFromBoard();
 		this.game.turn.turnStatus = TurnStatus.ZeroPlaced;
 	}
 
