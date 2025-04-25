@@ -148,7 +148,6 @@ export class GameState {
 
 	private calculateScore(): number {
 		const { turn: { direction, droppedTiles}, gameMultiple } = this.game;
-		console.log("[game].calculateScore.droppedTiles:", droppedTiles);
 		let lines: ILineItem[][] = [];
 
 		if (direction === Direction.Undecided) {
@@ -246,7 +245,6 @@ export class GameState {
 			if (lines.length === 0) {
 				lines.push([{ x, y, value } ])
 			}
-			console.log("[game].calculateScore.lines:", lines);
 			return readLinesForScore(lines, gameMultiple);
 		}
 
@@ -314,7 +312,6 @@ export class GameState {
 			// TODO: this is a little suspect and somewhat typed to the type error above
 			const newConstitutedDroppedTiles = [firstSquare, ...middleSquares, lastSquare];
 			for (let i = 0; i < newConstitutedDroppedTiles.length; i++) {
-				console.log("i and newConstitutedDroppedTiles.length:", i, newConstitutedDroppedTiles.length, newConstitutedDroppedTiles);
 				hasAdjacentTile = true;
 				line = [];
 
@@ -359,7 +356,6 @@ export class GameState {
 				}
 			}
 
-			console.log("[game].calculateScore.lines:", lines);
 			// -------------------------------------------
 
 			// calculate "lines" score
@@ -369,14 +365,14 @@ export class GameState {
 		// ------------------------------------------------------------------
 		if (direction === Direction.Vertical) {
 			// order dropped tiles from top to bottom
-			let orderedDroppedTiles = droppedTiles.sort((a, b) => orderTilesByDimension(a, b, "y"));
-			console.log("[game].calculateScore.orderedDroppedTiles.VERTICAL:", orderedDroppedTiles);
+			let orderedDroppedTiles: IDroppedTile[] = droppedTiles.sort((a, b) => orderTilesByDimension(a, b, "y"));
 
 			// TODO: fix type error
-			const lastSquare: IDroppedTile = orderedDroppedTiles.pop() ;
+			// const lastSquare: IDroppedTile = orderedDroppedTiles.pop() || { x: -1, y: 1, tile: { id: -1, text: -1, value: -1 }};
+			const lastSquare: IDroppedTile | undefined = orderedDroppedTiles.pop();
 			const [firstSquare, ...middleSquares]: IDroppedTile[] = orderedDroppedTiles;
 	
-			// determine "line" for verticl placement
+			// determine "line" for vertical placement
 			// some init
 			let hasAdjacentTile = true;
 			let line: ILineItem[] = []
@@ -421,7 +417,6 @@ export class GameState {
 			// TODO: this is a little suspect and somewhat typed to the type error above
 			const newConstitutedDroppedTiles = [firstSquare, ...middleSquares, lastSquare];
 			for (let i = 0; i < newConstitutedDroppedTiles.length; i++) {
-				console.log("i and newConstitutedDroppedTiles.length:", i, newConstitutedDroppedTiles.length, newConstitutedDroppedTiles);
 				hasAdjacentTile = true;
 				line = [];
 
@@ -466,14 +461,9 @@ export class GameState {
 					lines.push(line)
 				}
 			}
-
-			console.log("[game].calculateScore.lines:", lines);
-			// -------------------------------------------
-
 			// calculate "lines" score
 			return readLinesForScore(lines, gameMultiple);
 		}
-		// ------------------------------------------------------------------
 
 		console.error("Error: calculation not working...")
 		return 0;
