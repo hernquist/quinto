@@ -6,11 +6,16 @@
     import { Players } from "$lib/state/types";
 	import { getPlayerState } from "$lib/state/player.svelte";
 	import { getGameState } from "$lib/state/game.svelte";
+	import Modal from "../modal/modal.svelte";
     
     const { Top, Bottom } = Players;
     const playerTileState = getPlayerState();
     const gameState = getGameState();
+	let showModal = $state(false);
+
 </script>
+
+<button onclick={() => (showModal = true)}> show modal </button>
 
 <InitializeGame>
     <pre>Player: {gameState.game.activePlayer}  # tiles: {gameState.game.tiles.length} Round: {gameState.game.round} Turn: {gameState.game.turn.turnStatus} Direction: {gameState.game.turn.direction} </pre>
@@ -18,4 +23,12 @@
     <PlayerRow playerPosition={Top} activePlayer={gameState.game.activePlayer} tiles={playerTileState.tiles[Top]}/>
     <Board activePlayer={gameState.game.activePlayer}/>
     <PlayerRow playerPosition={Bottom} activePlayer={gameState.game.activePlayer} tiles={playerTileState.tiles[Bottom]}/>
+    <Modal bind:showModal>
+        {#snippet header()}
+            <h2>
+                Modal
+            </h2>
+        {/snippet}
+        MODAL
+    </Modal>
 </InitializeGame>
