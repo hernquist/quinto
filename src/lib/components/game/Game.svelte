@@ -13,7 +13,7 @@
 </script>
 
 <InitializeGame>
-    <pre>Player: {gameState.game.activePlayer}  # tiles: {gameState.game.tiles.length} Round: {gameState.game.round} Turn status: {gameState.game.turn.turnStatus}</pre>
+    <pre>Player: {gameState.game.activePlayer}  # tiles: {gameState.game.tiles.length} Round: {gameState.game.round} Turn: {gameState.game.turn.turnStatus} Direction: {gameState.game.turn.direction} </pre>
     <Score />
     <PlayerRow playerPosition={Top} activePlayer={gameState.game.activePlayer} tiles={playerTileState.tiles[Top]}/>
     <Board activePlayer={gameState.game.activePlayer}/>

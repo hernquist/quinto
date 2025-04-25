@@ -86,12 +86,12 @@ export class GameState {
 			return;
 		}
 		const [firstTile, secondTile] = multiTilesPlaced;
-		let direction = Direction.Undecided;
 
-		if (firstTile.x === secondTile.x) direction = Direction.Vertical;
-		if (firstTile.y === secondTile.y) direction = Direction.Horizontal;
+		if (firstTile.x === secondTile.x) this.game.turn.direction = Direction.Vertical;
+		if (firstTile.y === secondTile.y) this.game.turn.direction = Direction.Horizontal;
 		
 		let dropzoneOptions: IDroppedTile[] = [];
+		const direction = this.game.turn.direction;
 		if (direction === Direction.Vertical) {
 			dropzoneOptions = addDropzoneOptions(this.game.rows, firstTile, direction, dropzoneOptions) 
 		} 
@@ -149,6 +149,7 @@ export class GameState {
 	}
 
 	private calculateScore(): number {
+
 		const droppedTiles = this.game.turn.droppedTiles;
 		return droppedTiles.reduce((acc, curr) => acc + curr.tile.value, 0)
 	}
@@ -162,6 +163,7 @@ export class GameState {
 		this.game.turn.firstTurnOfRound = !this.game.turn.firstTurnOfRound;
 		this.game.turn.droppedTiles = [];
 		this.game.turn.turnStatus = TurnStatus.ZeroPlaced;
+		this.game.turn.direction = Direction.Undecided;
 	}
 
 	// can I use in the initialize game function (make not private)

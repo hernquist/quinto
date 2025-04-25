@@ -40,6 +40,7 @@ interface ITurn {
     firstTurnOfRound: boolean; // is there a better way of doing this?
     droppedTiles: IDroppedTile[];
     turnStatus: TurnStatus;
+    direction: Direction;
 }
 
 interface IGameState {
