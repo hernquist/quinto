@@ -73,5 +73,11 @@ enum Direction {
     Undecided = 'undecided'
 }
 
-export type { IPlayer, IGameState, IPlayerTiles, IPlayers, ITurn, IDroppedTile };
+interface ILineItem {
+    x: number;
+    y: number;
+    value: number;
+}
+
+export type { IPlayer, IGameState, IPlayerTiles, IPlayers, ITurn, IDroppedTile, ILineItem };
 export { Players, GameStatus, TurnStatus, DropzoneStatus, Direction }
