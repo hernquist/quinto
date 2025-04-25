@@ -427,6 +427,8 @@ export class GameState {
 		// partial replenish
 		if (this.game.tiles.length < numberOfTilesNeeded) {
 			playerState.tiles[this.game.activePlayer] = [...playerState.tiles[this.game.activePlayer], ...this.game.tiles];
+			// tiles complete
+			this.game.tiles = [];
 			return;
 		}
 
