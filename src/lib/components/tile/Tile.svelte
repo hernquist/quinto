@@ -2,12 +2,19 @@
     import { draggable } from "../../utils/dnd";
 	import type { ITile } from "../game/types";
 
-    const { tile, isActive }: {tile: ITile, isActive: boolean } = $props();
+    interface TileComponentProps {
+        tile: ITile, 
+        isActive: boolean, 
+        hasDroppedTile: boolean 
+    }
+
+    const { tile, isActive, hasDroppedTile }: TileComponentProps= $props();
 </script>
 
 {#if isActive}
     <div 
-        class="tile" 
+        class="tile"
+        class:hasDroppedTile
         id={String(tile.id)} 
         use:draggable={tile.id}
     >
@@ -42,6 +49,10 @@
         color: linen;
         opacity: 1;
         font-size: 40px;
+    }
+
+    .tile.hasDroppedTile {
+        background-color: orange;
     }
 </style>
 
