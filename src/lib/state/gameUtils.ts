@@ -1,4 +1,5 @@
 import type { IBoard } from "$lib/components/game/types";
+import type { IToastState } from "./toast/types";
 import { Direction, type IDroppedTile, type ILineItem } from "./types";
 
 export function checkSurroundSquaresForASingleTile (board: IBoard, x: number, y: number): boolean {
@@ -30,12 +31,12 @@ export function addDropzoneOptions(length: number, firstTile: IDroppedTile, dire
     return dropzoneOptions;
 }
 
-export function readLinesForScore(lines: ILineItem[][], gameMultiple: number): number {
+export function readLinesForScore(lines: ILineItem[][], gameMultiple: number, toastState: IToastState): number {
     return lines.reduce((acc: number, line: ILineItem[]) => {
         const lineValue = line.reduce((acc: number, { value }: { value: number}) => acc + value, 0);
-        if (lineValue % gameMultiple === 0) {
-            return acc + lineValue;
-        };
-        return acc - lineValue;
+        const lineValueString = line.reduce((acc: string, { value }: { value: number}) => acc + `${value} `, "");
+        const scoredValue = lineValue % gameMultiple === 0 ? lineValue : 0 - lineValue;
+        toastState.add("", `${lineValueString} => ${String(scoredValue)}`);
+        return acc + scoredValue;
     }, 0);
 }
