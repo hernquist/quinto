@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { getToastState } from '$lib/state/toast/toast.svelte';
+	import type { IToastState } from '$lib/state/toast/types';
   import Toast from "./Toast.svelte";
 
-	const toastState = getToastState();
+	const toastState: IToastState = getToastState();
 </script>
 
 <div class="absolute right-2 top-2 flex flex-col gap-2">

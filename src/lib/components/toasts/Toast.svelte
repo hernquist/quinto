@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { IToast } from '$lib/state/toast/types';
+	import type { IToast, IToastState } from '$lib/state/toast/types';
 	import X from 'phosphor-svelte/lib/X';
 	import { getToastState } from '$lib/state/toast/toast.svelte';
 
@@ -8,7 +8,7 @@
 	};
 
 	let { toast }: Props = $props();
-	const toastState = getToastState();
+	const toastState: IToastState = getToastState();
 </script>
 
 <div

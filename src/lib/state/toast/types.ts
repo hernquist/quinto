@@ -6,7 +6,7 @@ export type IToast = {
 
 export interface IToastState {
 	toasts: IToast[],
-	toastToTimeMap: Record<string, number>,
-	add: (title: string, message: string, durationMs?: number) => {},
-	remove: (id: string) => {},
+	toastToTimeMap?: Record<string, number>,
+	add: (title: string, message: string, durationMs?: number) => void,
+	remove: (id: string) => void,
 }
