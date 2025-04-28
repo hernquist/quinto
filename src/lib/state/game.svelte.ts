@@ -560,7 +560,7 @@ export class GameState {
 	}
 
 	public captureBoard() {
-c		this.capturedBoard = JSON.parse(JSON.stringify(this.game.board));
+		this.capturedBoard = JSON.parse(JSON.stringify(this.game.board));
 	}
 	
 	public updateBoardDimensions(rows: number, columns: number): void {
