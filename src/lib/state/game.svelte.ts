@@ -10,6 +10,7 @@ const { Top, Bottom} = Players;
 
 export class GameState {
 	game = $state<IGameState>(initState);
+	capturedBoard = $state<IBoard>([]);
 
 	// I don't think we need the initialState here
 	constructor (initState: IGameState) {
@@ -18,6 +19,14 @@ export class GameState {
 
 	public updateTiles (tiles: ITiles) {
 		this.game.tiles = tiles;
+	}
+
+	public setHoveringTrue (x: number, y: number): void {
+		this.game.board[x][y].hovering = true;
+	}
+
+	public setHoveringFalse (x: number, y: number): void {
+		this.game.board[x][y].hovering = false;
 	}
 
 	public updateActivePlayer (playerPosition: Players) {
@@ -493,10 +502,23 @@ export class GameState {
 		playerState.player[this.game.activePlayer].score += score; 
 	}
 
-	private resetTurn(): void {
+	// reset for next player
+	private resetForNextTurn(): void {
 		this.game.turn.firstTurnOfRound = !this.game.turn.firstTurnOfRound;
 		this.game.turn.droppedTiles = [];
 		this.removeDroppedTileImprintFromBoard();
+		this.game.turn.turnStatus = TurnStatus.ZeroPlaced;
+		this.game.turn.direction = Direction.Undecided;
+	}
+
+	// reset reset turn for the same player via a button click
+	public resetTurn(playerState: IPlayerState): void {
+		this.game.turn.droppedTiles.forEach((droppedTile) => {
+			const { x, y, tile } = droppedTile;
+			playerState.tiles[this.game.activePlayer].push(tile) 
+		})
+		this.game.board = JSON.parse(JSON.stringify(this.capturedBoard));
+		this.game.turn.droppedTiles = [];
 		this.game.turn.turnStatus = TurnStatus.ZeroPlaced;
 		this.game.turn.direction = Direction.Undecided;
 	}
@@ -532,8 +554,13 @@ export class GameState {
 		if (!this.game.turn.firstTurnOfRound) {
 			this.game.round++;
 		}
-		this.resetTurn();
+		this.resetForNextTurn();
 		this.updateBoardAfterTileDrop();
+		this.captureBoard();
+	}
+
+	public captureBoard() {
+c		this.capturedBoard = JSON.parse(JSON.stringify(this.game.board));
 	}
 	
 	public updateBoardDimensions(rows: number, columns: number): void {
