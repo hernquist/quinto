@@ -4,6 +4,7 @@ import type { ITiles, ITile, IBoard, ICoordTuple } from "$lib/components/game/ty
 import type { IPlayerState } from "./player.svelte";
 import { addDropzoneOptions, checkSurroundSquaresForASingleTile, readLinesForScore } from './gameUtils';
 import initState from './gameInitialState';
+import type { IToastState } from './toast/types';
 
 const { Top, Bottom} = Players;
 
@@ -65,7 +66,7 @@ export class GameState {
 		}
 	}
 
-	updateTurn(x: number, y: number, tile: ITile): void {
+	public updateTurn(x: number, y: number, tile: ITile): void {
 		const droppedTile: IDroppedTile = { x, y, tile };
 		this.game.turn.droppedTiles.push(droppedTile);
 		this.updateTurnStatus();
@@ -154,7 +155,7 @@ export class GameState {
 		return Top;
 	}
 
-	private calculateScore(): number {
+	private calculateScore(toastState: IToastState): number {
 		const { turn: { direction, droppedTiles}, gameMultiple } = this.game;
 		console.log("[game].calculateScore.droppedTiles:", droppedTiles);
 		let lines: ILineItem[][] = [];
@@ -255,7 +256,7 @@ export class GameState {
 				lines.push([{ x, y, value } ])
 			}
 			console.log("[game].calculateScore.lines:", lines);
-			return readLinesForScore(lines, gameMultiple);
+			return readLinesForScore(lines, gameMultiple, toastState);
 		}
 
 		// TODO: move
@@ -371,7 +372,7 @@ export class GameState {
 			// -------------------------------------------
 
 			// calculate "lines" score
-			return readLinesForScore(lines, gameMultiple);
+			return readLinesForScore(lines, gameMultiple, toastState);
 		}
 
 		// ------------------------------------------------------------------
@@ -479,7 +480,7 @@ export class GameState {
 			// -------------------------------------------
 
 			// calculate "lines" score
-			return readLinesForScore(lines, gameMultiple);
+			return readLinesForScore(lines, gameMultiple, toastState);
 		}
 		// ------------------------------------------------------------------
 
@@ -487,8 +488,8 @@ export class GameState {
 		return 0;
 	}
 
-	private updateScore(playerState: IPlayerState): void {
-		const score = this.calculateScore();
+	private updateScore(playerState: IPlayerState, toastState: IToastState): void {
+		const score = this.calculateScore(toastState);
 		playerState.player[this.game.activePlayer].score += score; 
 	}
 
@@ -523,8 +524,8 @@ export class GameState {
 		playerState.tiles[this.game.activePlayer] = [...playerState.tiles[this.game.activePlayer], ...neededTiles];
 	}
 
-	finishTurn(playerState: IPlayerState): void {
-		this.updateScore(playerState);
+	public finishTurn(playerState: IPlayerState, toastState: IToastState): void {
+		this.updateScore(playerState, toastState);
 		this.replenishTiles(playerState);
 		this.updateActivePlayer(this.getInactivePlayer());
 		// if second turn of round increment to next round
@@ -535,19 +536,19 @@ export class GameState {
 		this.updateBoardAfterTileDrop();
 	}
 	
-	updateBoardDimensions(rows: number, columns: number): void {
+	public updateBoardDimensions(rows: number, columns: number): void {
 		this.game.rows = rows;
 		this.game.columns = columns;
 		this.game.startingNumberOfSquares = rows * columns;
 	}
 
-	getStartingSquareCoordinates(): ICoordTuple {
+	public getStartingSquareCoordinates(): ICoordTuple {
 		const x = Math.trunc((this.game.columns - 1) /2);
 		const y = Math.trunc((this.game.rows -1) /2);
 		return [x, y];
 	}
 
-	setStartingSquare(): void {
+	public setStartingSquare(): void {
 		const [x, y] = this.getStartingSquareCoordinates();
 		this.game.board[x][y] = { ...this.game.board[x][y], startingSquare: true}
 	}
