@@ -20,6 +20,7 @@ function initializeBoard() {
         }
         board[x] = column;
     }
+    gameState.setDuringGameStatus()
     gameState.updateBoard(board);
 }
 
