@@ -29,6 +29,8 @@
     gameState.setStartingSquare();
     // update board after setStartingSquare since it affects 
     gameState.updateBoardAfterTileDrop();
+    // make a copy of the board before game play starts
+    gameState.captureBoard();
 </script>
 
 {@render children()}

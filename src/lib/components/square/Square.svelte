@@ -14,10 +14,10 @@
     }
     const gameState = getGameState();
     let { square, x, y, activePlayer }: ISquareProps = $props();
-    const { tile, startingSquare, id, hasDropzone, hasDroppedTile } = $derived(square);
+    const { tile, startingSquare, id, hasDropzone, hasDroppedTile, hovering } = $derived(square);
     const playerTileState = getPlayerState();
     let tiles: ITiles = $derived(playerTileState.tiles[activePlayer]);
-    let hovering = $state(false);
+   
 
     const onDropzone = (tileId: number): void => {
         const foundTile: ITile | undefined = tiles.find(tile => tile.id == tileId);
@@ -45,8 +45,8 @@
         class="board__square"
         class:startingSquare
         class:hovering
-		ondragenter={() => hovering = true}
-     	ondragleave={() => hovering = false}
+		ondragenter={() => gameState.setHoveringTrue(x, y)}
+     	ondragleave={() => gameState.setHoveringFalse(x, y)}
         id={String(id)} 
         use:dropzone={{
             on_dropzone: onDropzone, 
