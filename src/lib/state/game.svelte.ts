@@ -1,5 +1,5 @@
 import { setContext, getContext } from 'svelte';
-import { Players, Direction, TurnStatus, type IDroppedTile, type IGameState, type ILineItem } from "./types";
+import { Players, Direction, TurnStatus, type IDroppedTile, type IGameState, type ILineItem, GameStatus } from "./types";
 import type { ITiles, ITile, IBoard, ICoordTuple } from "$lib/components/game/types";
 import type { IPlayerState } from "./player.svelte";
 import { addDropzoneOptions, checkSurroundSquaresForASingleTile, readLinesForScore } from './gameUtils';
@@ -27,6 +27,10 @@ export class GameState {
 
 	public setHoveringFalse (x: number, y: number): void {
 		this.game.board[x][y].hovering = false;
+	}
+
+	public setDuringGameStatus(): void {
+		this.game.status = GameStatus.During;
 	}
 
 	public updateActivePlayer (playerPosition: Players) {
@@ -546,7 +550,26 @@ export class GameState {
 		playerState.tiles[this.game.activePlayer] = [...playerState.tiles[this.game.activePlayer], ...neededTiles];
 	}
 
+	private checkForEndOfGameStatus(playerState: IPlayerState) {
+		// check if game over
+		if (playerState.tiles[Top].length === 0 && playerState.tiles[Bottom].length === 0) {
+			this.game.status = GameStatus.Complete;
+			// show modal
+		} else {
+			// check for one player down
+			const activePlayer = this.game.activePlayer
+			if (playerState.tiles[activePlayer].length === 0) {
+				this.game.status = GameStatus.OnePlayerDone
+				// we need to handle this
+				// show a modal?
+				// skip turn? Or just penalize the player with tiles left?
+			} 
+		}
+		
+	}
+
 	public finishTurn(playerState: IPlayerState, toastState: IToastState): void {
+
 		this.updateScore(playerState, toastState);
 		this.replenishTiles(playerState);
 		this.updateActivePlayer(this.getInactivePlayer());
@@ -554,6 +577,11 @@ export class GameState {
 		if (!this.game.turn.firstTurnOfRound) {
 			this.game.round++;
 		}
+		this.checkForEndOfGameStatus(playerState);
+
+		if (this.game.status === GameStatus.Complete) {
+			// handle game over
+		} 
 		this.resetForNextTurn();
 		this.updateBoardAfterTileDrop();
 		this.captureBoard();
