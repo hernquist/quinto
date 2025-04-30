@@ -9,14 +9,18 @@
 	import MainModalWrapper from "../main-modal-wrapper/MainModalWrapper.svelte";
 	import ModalHeader from "../modal-header/ModalHeader.svelte";
     import Modal from "../modal/Modal.svelte";
+	import { getModalState } from "$lib/state/modal/modal.svelte";
+	import { ModalScreen } from "$lib/state/modal/types";
     
     const { Top, Bottom } = Players;
     const playerTileState = getPlayerState();
     const gameState = getGameState();
+    const modalState = getModalState();
 	let showModal = $state(false);
 
     $effect(() => {
         if (gameState.game.status === GameStatus.Complete) {
+            modalState.changeScreen(ModalScreen.GameOver);
             showModal = true;
         }
 	});
