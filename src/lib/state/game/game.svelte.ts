@@ -1,10 +1,10 @@
 import { setContext, getContext } from 'svelte';
-import { Players, Direction, TurnStatus, type IDroppedTile, type IGameState, type ILineItem, GameStatus } from "./types";
+import { Players, Direction, TurnStatus, type IDroppedTile, type IGameState, type ILineItem, GameStatus } from "../types";
 import type { ITiles, ITile, IBoard, ICoordTuple } from "$lib/components/game/types";
-import type { IPlayerState } from "./player.svelte";
+import type { IPlayerState } from "../player/player.svelte";
 import { addDropzoneOptions, checkSurroundSquaresForASingleTile, readLinesForScore } from './gameUtils';
 import initState from './gameInitialState';
-import type { IToastState } from './toast/types';
+import type { IToastState } from '../toast/types';
 
 const { Top, Bottom} = Players;
 

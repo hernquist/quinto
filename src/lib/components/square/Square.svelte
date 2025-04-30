@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { ISquare, ITile, ITiles } from "../game/types";
     import { dropzone } from "../../utils/dnd";
-	import { getPlayerState } from "$lib/state/player.svelte";
-	import { getGameState } from "$lib/state/game.svelte";
+	import { getPlayerState } from "$lib/state/player/player.svelte";
+	import { getGameState } from "$lib/state/game/game.svelte";
 	import { type Players } from "$lib/state/types";
 	import Tile from "../tile/Tile.svelte";
 

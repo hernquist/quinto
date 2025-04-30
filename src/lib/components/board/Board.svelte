@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getGameState } from "../../state/game.svelte";
+	import { getGameState } from "../../state/game/game.svelte";
 	import Square from "../square/Square.svelte";
     
     const gameState = getGameState();

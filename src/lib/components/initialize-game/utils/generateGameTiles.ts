@@ -1,4 +1,4 @@
-import { getGameState  } from "$lib/state/game.svelte";
+import { getGameState  } from "$lib/state/game/game.svelte";
 
 function generateGameTiles(){
     const gameState = getGameState();

@@ -1,5 +1,5 @@
 import type { IBoard, IColumn } from "$lib/components/game/types";
-import { getGameState  } from "../../../state/game.svelte";
+import { getGameState  } from "../../../state/game/game.svelte";
 
 
 function makeSquareId (x: number, y: number, columns: number): number {

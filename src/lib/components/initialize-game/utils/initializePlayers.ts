@@ -1,5 +1,5 @@
-import { getGameState } from "$lib/state/game.svelte";
-import { getPlayerState } from "$lib/state/player.svelte";
+import { getGameState } from "$lib/state/game/game.svelte";
+import { getPlayerState } from "$lib/state/player/player.svelte";
 import { Players, type IPlayer } from "$lib/state/types";
 
 const { Top, Bottom } = Players;

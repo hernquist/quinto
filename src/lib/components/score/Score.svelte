@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getPlayerState } from "$lib/state/player.svelte";
+    import { getPlayerState } from "$lib/state/player/player.svelte";
 	import { Players } from "$lib/state/types";
 
     const { Top, Bottom } = Players;

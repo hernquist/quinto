@@ -1,6 +1,6 @@
-import type { ITile } from '$lib/components/game/types';
 import { setContext, getContext } from 'svelte';
-import { Players, type IPlayer, type IPlayerTiles, type IPlayers } from './types';
+import type { ITile } from '$lib/components/game/types';
+import { Players, type IPlayer, type IPlayerTiles, type IPlayers } from '../types';
 
 const { Top, Bottom } = Players; 
 

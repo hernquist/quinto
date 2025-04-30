@@ -4,17 +4,22 @@
 	import InitializeGame from "../initialize-game/InitializeGame.svelte";
 	import PlayerRow from "../player-row/PlayerRow.svelte";
     import { GameStatus, Players } from "$lib/state/types";
-	import { getPlayerState } from "$lib/state/player.svelte";
-	import { getGameState } from "$lib/state/game.svelte";
-	import Modal from "../modal/modal.svelte";
+	import { getPlayerState } from "$lib/state/player/player.svelte";
+	import { getGameState } from "$lib/state/game/game.svelte";
+	import MainModalWrapper from "../main-modal-wrapper/MainModalWrapper.svelte";
+	import ModalHeader from "../modal-header/ModalHeader.svelte";
+    import Modal from "../modal/Modal.svelte";
     
     const { Top, Bottom } = Players;
     const playerTileState = getPlayerState();
     const gameState = getGameState();
 	let showModal = $state(false);
-    if (gameState.game.status === GameStatus.Complete) {
-        // make modal pop up
-    }
+
+    $effect(() => {
+        if (gameState.game.status === GameStatus.Complete) {
+            showModal = true;
+        }
+	});
 
 </script>
 
@@ -31,10 +36,8 @@
     <PlayerRow playerPosition={Bottom} activePlayer={gameState.game.activePlayer} tiles={playerTileState.tiles[Bottom]}/>
     <Modal bind:showModal>
         {#snippet header()}
-            <h2>
-                Modal
-            </h2>
+            <ModalHeader />
         {/snippet}
-        MODAL
+        <MainModalWrapper />
     </Modal>
 </InitializeGame>
