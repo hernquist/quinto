@@ -1,14 +1,16 @@
 import { setContext, getContext } from 'svelte';
-import { Players, Direction, TurnStatus, type IDroppedTile, type IGameState, type ILineItem } from "./types";
+import { Players, Direction, TurnStatus, type IDroppedTile, type IGameState, type ILineItem, GameStatus } from "./types";
 import type { ITiles, ITile, IBoard, ICoordTuple } from "$lib/components/game/types";
 import type { IPlayerState } from "./player.svelte";
 import { addDropzoneOptions, checkSurroundSquaresForASingleTile, readLinesForScore } from './gameUtils';
 import initState from './gameInitialState';
+import type { IToastState } from './toast/types';
 
 const { Top, Bottom} = Players;
 
 export class GameState {
 	game = $state<IGameState>(initState);
+	capturedBoard = $state<IBoard>([]);
 
 	// I don't think we need the initialState here
 	constructor (initState: IGameState) {
@@ -19,12 +21,24 @@ export class GameState {
 		this.game.tiles = tiles;
 	}
 
+	public setHoveringTrue (x: number, y: number): void {
+		this.game.board[x][y].hovering = true;
+	}
+
+	public setHoveringFalse (x: number, y: number): void {
+		this.game.board[x][y].hovering = false;
+	}
+
+	public setDuringGameStatus(): void {
+		this.game.status = GameStatus.During;
+	}
+
 	public updateActivePlayer (playerPosition: Players) {
 		this.game.activePlayer = playerPosition;
 	}
 
 	public updateBoardSquareWithTile(x: number, y: number, tile: ITile): void {
-		this.game.board[x][y] = { ...this.game.board[x][y], tile };
+		this.game.board[x][y] = { ...this.game.board[x][y], tile, hasDroppedTile: true };
 	} 
 	
 	public updateBoard(board: IBoard): void {
@@ -57,7 +71,15 @@ export class GameState {
 		}
 	}
 
-	updateTurn(x: number, y: number, tile: ITile): void {
+	private removeDroppedTileImprintFromBoard() {
+		for (let x = 0; x < this.game.columns; x++) {
+			for (let y = 0; y < this.game.rows; y++) {
+					this.game.board[x][y] = { ...this.game.board[x][y], hasDroppedTile: false}
+			}
+		}
+	}
+
+	public updateTurn(x: number, y: number, tile: ITile): void {
 		const droppedTile: IDroppedTile = { x, y, tile };
 		this.game.turn.droppedTiles.push(droppedTile);
 		this.updateTurnStatus();
@@ -146,7 +168,7 @@ export class GameState {
 		return Top;
 	}
 
-	private calculateScore(): number {
+	private calculateScore(toastState: IToastState): number {
 		const { turn: { direction, droppedTiles}, gameMultiple } = this.game;
 		let lines: ILineItem[][] = [];
 
@@ -245,7 +267,7 @@ export class GameState {
 			if (lines.length === 0) {
 				lines.push([{ x, y, value } ])
 			}
-			return readLinesForScore(lines, gameMultiple);
+			return readLinesForScore(lines, gameMultiple, toastState);
 		}
 
 		// TODO: move
@@ -359,7 +381,7 @@ export class GameState {
 			// -------------------------------------------
 
 			// calculate "lines" score
-			return readLinesForScore(lines, gameMultiple);
+			return readLinesForScore(lines, gameMultiple, toastState);
 		}
 
 		// ------------------------------------------------------------------
@@ -462,20 +484,34 @@ export class GameState {
 				}
 			}
 			// calculate "lines" score
-			return readLinesForScore(lines, gameMultiple);
+			return readLinesForScore(lines, gameMultiple, toastState);
 		}
 
 		console.error("Error: calculation not working...")
 		return 0;
 	}
 
-	private updateScore(playerState: IPlayerState): void {
-		const score = this.calculateScore();
+	private updateScore(playerState: IPlayerState, toastState: IToastState): void {
+		const score = this.calculateScore(toastState);
 		playerState.player[this.game.activePlayer].score += score; 
 	}
 
-	private resetTurn(): void {
+	// reset for next player
+	private resetForNextTurn(): void {
 		this.game.turn.firstTurnOfRound = !this.game.turn.firstTurnOfRound;
+		this.game.turn.droppedTiles = [];
+		this.removeDroppedTileImprintFromBoard();
+		this.game.turn.turnStatus = TurnStatus.ZeroPlaced;
+		this.game.turn.direction = Direction.Undecided;
+	}
+
+	// reset reset turn for the same player via a button click
+	public resetTurn(playerState: IPlayerState): void {
+		this.game.turn.droppedTiles.forEach((droppedTile) => {
+			const { x, y, tile } = droppedTile;
+			playerState.tiles[this.game.activePlayer].push(tile) 
+		})
+		this.game.board = JSON.parse(JSON.stringify(this.capturedBoard));
 		this.game.turn.droppedTiles = [];
 		this.game.turn.turnStatus = TurnStatus.ZeroPlaced;
 		this.game.turn.direction = Direction.Undecided;
@@ -504,31 +540,60 @@ export class GameState {
 		playerState.tiles[this.game.activePlayer] = [...playerState.tiles[this.game.activePlayer], ...neededTiles];
 	}
 
-	finishTurn(playerState: IPlayerState): void {
-		this.updateScore(playerState);
+	private checkForEndOfGameStatus(playerState: IPlayerState) {
+		// check if game over
+		if (playerState.tiles[Top].length === 0 && playerState.tiles[Bottom].length === 0) {
+			this.game.status = GameStatus.Complete;
+			// show modal
+		} else {
+			// check for one player down
+			const activePlayer = this.game.activePlayer
+			if (playerState.tiles[activePlayer].length === 0) {
+				this.game.status = GameStatus.OnePlayerDone
+				// we need to handle this
+				// show a modal?
+				// skip turn? Or just penalize the player with tiles left?
+			} 
+		}
+		
+	}
+
+	public finishTurn(playerState: IPlayerState, toastState: IToastState): void {
+
+		this.updateScore(playerState, toastState);
 		this.replenishTiles(playerState);
 		this.updateActivePlayer(this.getInactivePlayer());
 		// if second turn of round increment to next round
 		if (!this.game.turn.firstTurnOfRound) {
 			this.game.round++;
 		}
-		this.resetTurn();
+		this.checkForEndOfGameStatus(playerState);
+
+		if (this.game.status === GameStatus.Complete) {
+			// handle game over
+		} 
+		this.resetForNextTurn();
 		this.updateBoardAfterTileDrop();
+		this.captureBoard();
+	}
+
+	public captureBoard() {
+		this.capturedBoard = JSON.parse(JSON.stringify(this.game.board));
 	}
 	
-	updateBoardDimensions(rows: number, columns: number): void {
+	public updateBoardDimensions(rows: number, columns: number): void {
 		this.game.rows = rows;
 		this.game.columns = columns;
 		this.game.startingNumberOfSquares = rows * columns;
 	}
 
-	getStartingSquareCoordinates(): ICoordTuple {
+	public getStartingSquareCoordinates(): ICoordTuple {
 		const x = Math.trunc((this.game.columns - 1) /2);
 		const y = Math.trunc((this.game.rows -1) /2);
 		return [x, y];
 	}
 
-	setStartingSquare(): void {
+	public setStartingSquare(): void {
 		const [x, y] = this.getStartingSquareCoordinates();
 		this.game.board[x][y] = { ...this.game.board[x][y], startingSquare: true}
 	}

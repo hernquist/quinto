@@ -1,6 +1,7 @@
 <script lang="ts">
 	import FinishTurn from "../finish-turn/FinishTurn.svelte";
     import PlayerTiles from "../player-tiles/PlayerTiles.svelte";
+	import ResetTurn from "../reset-turn/ResetTurn.svelte";
 
     const { tiles, playerPosition, activePlayer } = $props();
     const isActive = $derived(activePlayer === playerPosition);
@@ -9,6 +10,7 @@
 <div class="playerRow__container">
     <PlayerTiles {tiles} {isActive}/>
     <FinishTurn {isActive} />
+    <ResetTurn {isActive} />
 </div>
 
 <style>

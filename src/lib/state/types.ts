@@ -8,7 +8,7 @@ enum Players {
 enum GameStatus {
     Before = "BEFORE",
     During = "DURING",
-    Finishing = "FINISHING",
+    OnePlayerDone = "ONE_PLAYER_DONE",
     Complete = "COMPLETE"
 }
 

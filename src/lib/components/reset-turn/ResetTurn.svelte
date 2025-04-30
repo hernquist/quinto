@@ -1,15 +1,13 @@
 <script lang="ts">
     import { getGameState } from "../../state/game.svelte";
     import { getPlayerState } from "$lib/state/player.svelte";
-	import { getToastState } from "$lib/state/toast/toast.svelte";
     
     const { isActive } = $props();
     const gameState = getGameState();
     const playerState = getPlayerState();
-    const toastState = getToastState();
-
+    
     const handleClick = () => {
-        gameState.finishTurn(playerState, toastState);
+        gameState.resetTurn(playerState);
     }
     
     const disabled = $derived(gameState.game.turn.droppedTiles.length === 0);
@@ -17,7 +15,7 @@
 
 
 <button disabled={!isActive || disabled} onclick={handleClick}>
-    Finish Turn
+    Reset
 </button>
 
 <style>

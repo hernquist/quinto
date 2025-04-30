@@ -11,7 +11,9 @@ interface ISquare {
     x: number;
     y: number;
     tile: ITile | null;
+    hovering: boolean;
     hasDropzone: boolean;
+    hasDroppedTile: boolean;
     startingSquare?: boolean;
 }
 

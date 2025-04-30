@@ -3,7 +3,7 @@
     import Score from "../score/Score.svelte";
 	import InitializeGame from "../initialize-game/InitializeGame.svelte";
 	import PlayerRow from "../player-row/PlayerRow.svelte";
-    import { Players } from "$lib/state/types";
+    import { GameStatus, Players } from "$lib/state/types";
 	import { getPlayerState } from "$lib/state/player.svelte";
 	import { getGameState } from "$lib/state/game.svelte";
 	import Modal from "../modal/modal.svelte";
@@ -12,12 +12,18 @@
     const playerTileState = getPlayerState();
     const gameState = getGameState();
 	let showModal = $state(false);
+    if (gameState.game.status === GameStatus.Complete) {
+        // make modal pop up
+    }
 
 </script>
 
 <button onclick={() => (showModal = true)}> show modal </button>
 
 <InitializeGame>
+    {#if gameState.game.status === GameStatus.Complete}
+        <pre>DONE</pre>
+    {/if}
     <pre>Player: {gameState.game.activePlayer}  # tiles: {gameState.game.tiles.length} Round: {gameState.game.round} Turn: {gameState.game.turn.turnStatus} Direction: {gameState.game.turn.direction} </pre>
     <Score />
     <PlayerRow playerPosition={Top} activePlayer={gameState.game.activePlayer} tiles={playerTileState.tiles[Top]}/>
