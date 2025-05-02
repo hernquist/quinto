@@ -6,16 +6,17 @@
     import { GameStatus, Players } from "$lib/state/types";
 	import { getPlayerState } from "$lib/state/player/player.svelte";
 	import { getGameState } from "$lib/state/game/game.svelte";
-	import MainModalWrapper from "../main-modal-wrapper/MainModalWrapper.svelte";
+	import MainModalWrapper from "$lib/components/main-modal-wrapper/MainModalWrapper.svelte";
 	import ModalHeader from "../modal-header/ModalHeader.svelte";
-    import Modal from "../modal/Modal.svelte";
 	import { getModalState } from "$lib/state/modal/modal.svelte";
 	import { ModalScreen } from "$lib/state/modal/types";
+	import Modal from "$lib/components/modal/Modal.svelte";
     
     const { Top, Bottom } = Players;
     const playerTileState = getPlayerState();
     const gameState = getGameState();
     const modalState = getModalState();
+    // this should probably be part of modalState
 	let showModal = $state(false);
 
     $effect(() => {
