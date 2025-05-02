@@ -3,32 +3,34 @@
     import Score from "../score/Score.svelte";
 	import InitializeGame from "../initialize-game/InitializeGame.svelte";
 	import PlayerRow from "../player-row/PlayerRow.svelte";
-    import { GameStatus, Players } from "$lib/state/types";
 	import { getPlayerState } from "$lib/state/player/player.svelte";
 	import { getGameState } from "$lib/state/game/game.svelte";
+	import Modal from "$lib/components/modal/modal.svelte";
 	import MainModalWrapper from "$lib/components/main-modal-wrapper/MainModalWrapper.svelte";
 	import ModalHeader from "$lib/components/modal-header/ModalHeader.svelte";
 	import { getModalState } from "$lib/state/modal-state/modal-state.svelte";
 	import { ModalScreen } from "$lib/state/modal-state/types";
-	import Modal from "$lib/components/modal/modal.svelte";
+    import { GameStatus, Players } from "$lib/state/types";
     
     const { Top, Bottom } = Players;
     const playerTileState = getPlayerState();
     const gameState = getGameState();
     const modalState = getModalState();
-    // this should probably be part of modalState
 	let showModal = $state(false);
+    const toggleModal = () => {
+        showModal = true
+    }
 
     $effect(() => {
         if (gameState.game.status === GameStatus.Complete) {
             modalState.changeScreen(ModalScreen.GameOver);
-            showModal = true;
+            toggleModal();
         }
 	});
 
 </script>
 
-<button onclick={() => (showModal = true)}> show modal </button>
+<button onclick={toggleModal}> show modal </button>
 
 <InitializeGame>
     {#if gameState.game.status === GameStatus.Complete}
