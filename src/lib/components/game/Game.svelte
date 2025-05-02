@@ -10,7 +10,7 @@
 	import ModalHeader from "$lib/components/modal-header/ModalHeader.svelte";
 	import { getModalState } from "$lib/state/modal-state/modal-state.svelte";
 	import { ModalScreen } from "$lib/state/modal-state/types";
-	import Modal from "$lib/components/modal/Modal.svelte";
+	import Modal from "$lib/components/modal/modal.svelte";
     
     const { Top, Bottom } = Players;
     const playerTileState = getPlayerState();
