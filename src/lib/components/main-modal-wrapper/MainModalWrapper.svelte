@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { getModalState } from "$lib/state/modal/modal.svelte";
-	import { ModalScreen } from "$lib/state/modal/types";
+	import { getModalState } from "$lib/state/modal-state/modal-state.svelte";
+	import { ModalScreen } from "$lib/state/modal-state/types";
     
     const modalState = getModalState();
     const { Settings, GameOver, HighScores, About} = ModalScreen

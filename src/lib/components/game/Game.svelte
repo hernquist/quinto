@@ -8,8 +8,8 @@
 	import { getGameState } from "$lib/state/game/game.svelte";
 	import MainModalWrapper from "$lib/components/main-modal-wrapper/MainModalWrapper.svelte";
 	import ModalHeader from "$lib/components/modal-header/ModalHeader.svelte";
-	import { getModalState } from "$lib/state/modal/modal.svelte";
-	import { ModalScreen } from "$lib/state/modal/types";
+	import { getModalState } from "$lib/state/modal-state/modal-state.svelte";
+	import { ModalScreen } from "$lib/state/modal-state/types";
 	import Modal from "$lib/components/modal/Modal.svelte";
     
     const { Top, Bottom } = Players;
