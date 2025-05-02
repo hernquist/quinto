@@ -7,7 +7,7 @@
 	import { getPlayerState } from "$lib/state/player/player.svelte";
 	import { getGameState } from "$lib/state/game/game.svelte";
 	import MainModalWrapper from "$lib/components/main-modal-wrapper/MainModalWrapper.svelte";
-	import ModalHeader from "../modal-header/ModalHeader.svelte";
+	import ModalHeader from "$lib/components/modal-header/ModalHeader.svelte";
 	import { getModalState } from "$lib/state/modal/modal.svelte";
 	import { ModalScreen } from "$lib/state/modal/types";
 	import Modal from "$lib/components/modal/Modal.svelte";
