@@ -11,7 +11,7 @@
 	setGameState();
 	setToastState();
 	setModalState();
-;</script>
+</script>
 
 <Toaster />
 
