@@ -3,9 +3,8 @@
     import { getPlayerState } from "$lib/state/player/player.svelte";
 	import { initializeGame } from "./utils/initializeGame";
 
-    const  { children } = $props();
+    const { children } = $props();
     const gameState = getGameState();
-    // update player tiles
     const playerTileState = getPlayerState();
 
     initializeGame(gameState, playerTileState);

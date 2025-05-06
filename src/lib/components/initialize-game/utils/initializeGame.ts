@@ -12,6 +12,7 @@ const { Top, Bottom } = Players;
 
 export function initializeGame(gameState: GameState, playerTileState: PlayerState) {
     // initialize board
+    gameState.reInitializeGame();
     gameState.updateBoardDimensions(ROWS, COLUMNS);
     // initialize game tiles
     generateGameTiles(gameState);

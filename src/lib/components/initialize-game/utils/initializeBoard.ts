@@ -19,7 +19,7 @@ function initializeBoard(gameState: GameState) {
         let column: IColumn = [];
 
         for (let y = 0; y < rows; y++) {
-            column[y] = { id: makeSquareId(x, y, columns), x, y, tile: null, ...initialSquare}
+            column[y] = { id: makeSquareId(x, y, columns), x, y, tile: null, ...initialSquare }
         }
         board[x] = column;
     }
