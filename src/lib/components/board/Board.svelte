@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { getGameState } from "../../state/game.svelte";
+	import { getGameState } from "../../state/game/game.svelte";
 	import Square from "../square/Square.svelte";
     
     const gameState = getGameState();
     let { board } = $derived(gameState.game);
 
-    // TODO: why are pasing this in props AND grabbing game info from context
+    // TODO: why are puttiing this in props AND grabbing game info from context
     const { activePlayer } = $props();
+    $inspect(board, "board");
 </script>
 
 <div class="board__container">

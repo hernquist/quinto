@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { getGameState } from "../../state/game.svelte";
-    import { getPlayerState } from "$lib/state/player.svelte";
+    import { getGameState } from "../../state/game/game.svelte";
+    import { getPlayerState } from "$lib/state/player/player.svelte";
 	import { getToastState } from "$lib/state/toast/toast.svelte";
     
     const { isActive } = $props();

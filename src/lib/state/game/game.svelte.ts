@@ -1,10 +1,12 @@
 import { setContext, getContext } from 'svelte';
-import { Players, Direction, TurnStatus, type IDroppedTile, type IGameState, type ILineItem, GameStatus } from "./types";
-import type { ITiles, ITile, IBoard, ICoordTuple } from "$lib/components/game/types";
-import type { IPlayerState } from "./player.svelte";
 import { addDropzoneOptions, checkSurroundSquaresForASingleTile, readLinesForScore } from './gameUtils';
 import initState from './gameInitialState';
-import type { IToastState } from './toast/types';
+import { Direction, TurnStatus, type IDroppedTile, type IGameState, type ILineItem, GameStatus } from "$lib/state/game/types";
+import { Players } from '$lib/state/player/types';
+import type { IPlayerState, PlayerState } from "../player/player.svelte";
+import type { ITiles, ITile, IBoard, ICoordTuple } from "$lib/components/game/types";
+import type { IToastState } from '$lib/state/toast/types';
+import type { ToastState } from '../toast/toast.svelte';
 
 const { Top, Bottom} = Players;
 
@@ -43,6 +45,10 @@ export class GameState {
 	
 	public updateBoard(board: IBoard): void {
 		this.game.board = board;
+	}
+
+	public reInitializeGame() {
+		this.game = initState
 	}
 	
 	private updateTurnStatus() {
@@ -170,7 +176,6 @@ export class GameState {
 
 	private calculateScore(toastState: IToastState): number {
 		const { turn: { direction, droppedTiles}, gameMultiple } = this.game;
-		console.log("[game].calculateScore.droppedTiles:", droppedTiles);
 		let lines: ILineItem[][] = [];
 
 		if (direction === Direction.Undecided) {
@@ -268,7 +273,6 @@ export class GameState {
 			if (lines.length === 0) {
 				lines.push([{ x, y, value } ])
 			}
-			console.log("[game].calculateScore.lines:", lines);
 			return readLinesForScore(lines, gameMultiple, toastState);
 		}
 
@@ -336,7 +340,6 @@ export class GameState {
 			// TODO: this is a little suspect and somewhat typed to the type error above
 			const newConstitutedDroppedTiles = [firstSquare, ...middleSquares, lastSquare];
 			for (let i = 0; i < newConstitutedDroppedTiles.length; i++) {
-				console.log("i and newConstitutedDroppedTiles.length:", i, newConstitutedDroppedTiles.length, newConstitutedDroppedTiles);
 				hasAdjacentTile = true;
 				line = [];
 
@@ -381,7 +384,6 @@ export class GameState {
 				}
 			}
 
-			console.log("[game].calculateScore.lines:", lines);
 			// -------------------------------------------
 
 			// calculate "lines" score
@@ -391,14 +393,14 @@ export class GameState {
 		// ------------------------------------------------------------------
 		if (direction === Direction.Vertical) {
 			// order dropped tiles from top to bottom
-			let orderedDroppedTiles = droppedTiles.sort((a, b) => orderTilesByDimension(a, b, "y"));
-			console.log("[game].calculateScore.orderedDroppedTiles.VERTICAL:", orderedDroppedTiles);
+			let orderedDroppedTiles: IDroppedTile[] = droppedTiles.sort((a, b) => orderTilesByDimension(a, b, "y"));
 
 			// TODO: fix type error
-			const lastSquare: IDroppedTile = orderedDroppedTiles.pop() ;
+			// const lastSquare: IDroppedTile = orderedDroppedTiles.pop() || { x: -1, y: 1, tile: { id: -1, text: -1, value: -1 }};
+			const lastSquare: IDroppedTile | undefined = orderedDroppedTiles.pop();
 			const [firstSquare, ...middleSquares]: IDroppedTile[] = orderedDroppedTiles;
 	
-			// determine "line" for verticl placement
+			// determine "line" for vertical placement
 			// some init
 			let hasAdjacentTile = true;
 			let line: ILineItem[] = []
@@ -443,10 +445,10 @@ export class GameState {
 			// TODO: this is a little suspect and somewhat typed to the type error above
 			const newConstitutedDroppedTiles = [firstSquare, ...middleSquares, lastSquare];
 			for (let i = 0; i < newConstitutedDroppedTiles.length; i++) {
-				console.log("i and newConstitutedDroppedTiles.length:", i, newConstitutedDroppedTiles.length, newConstitutedDroppedTiles);
 				hasAdjacentTile = true;
 				line = [];
 
+				// TODO: fix tile error -- see above
 				const { x, y, tile: { value }} = newConstitutedDroppedTiles[i];
 				// checking left
 				let shiftLeft = 1;
@@ -488,14 +490,9 @@ export class GameState {
 					lines.push(line)
 				}
 			}
-
-			console.log("[game].calculateScore.lines:", lines);
-			// -------------------------------------------
-
 			// calculate "lines" score
 			return readLinesForScore(lines, gameMultiple, toastState);
 		}
-		// ------------------------------------------------------------------
 
 		console.error("Error: calculation not working...")
 		return 0;
@@ -568,7 +565,7 @@ export class GameState {
 		
 	}
 
-	public finishTurn(playerState: IPlayerState, toastState: IToastState): void {
+	public finishTurn(playerState: PlayerState, toastState: ToastState): void {
 
 		this.updateScore(playerState, toastState);
 		this.replenishTiles(playerState);
@@ -581,6 +578,10 @@ export class GameState {
 
 		if (this.game.status === GameStatus.Complete) {
 			// handle game over
+			const { isTieGame } = playerState.setWinner(this.game);
+			if (isTieGame) {
+				this.game.status = GameStatus.Tie;
+			}
 		} 
 		this.resetForNextTurn();
 		this.updateBoardAfterTileDrop();

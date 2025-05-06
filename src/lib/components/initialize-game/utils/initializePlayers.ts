@@ -1,12 +1,10 @@
-import { getGameState } from "$lib/state/game.svelte";
-import { getPlayerState } from "$lib/state/player.svelte";
-import { Players, type IPlayer } from "$lib/state/types";
+import { GameState } from "$lib/state/game/game.svelte";
+import { PlayerState } from "$lib/state/player/player.svelte";
+import { Players, type IPlayer } from "$lib/state/player/types";
 
 const { Top, Bottom } = Players;
 
-function initializePlayers() {
-    const playerState = getPlayerState();
-    const gameState = getGameState();
+function initializePlayers(playerState: PlayerState, gameState: GameState) {
     // determine first player
     const topPlayerFirst = Math.random() >= 0.5;
     const bottomPlayerFirst = !topPlayerFirst;
@@ -22,6 +20,7 @@ function initializePlayers() {
     const top: IPlayer = {
         goesFirst: topPlayerFirst,
         score: 0,
+        winner: false
     };
 
     // update top player
@@ -36,6 +35,7 @@ function initializePlayers() {
     const bottom: IPlayer = {
         goesFirst: bottomPlayerFirst,
         score: 0,
+        winner: false
     };
 
     // update bottom player

@@ -1,5 +1,5 @@
 import type { IBoard } from "$lib/components/game/types";
-import type { IToastState } from "./toast/types";
+import type { IToastState } from "$lib/state/toast/types";
 import { Direction, type IDroppedTile, type ILineItem } from "./types";
 
 export function checkSurroundSquaresForASingleTile (board: IBoard, x: number, y: number): boolean {
