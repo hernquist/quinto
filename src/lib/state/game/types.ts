@@ -1,20 +1,12 @@
 import type { IBoard, ITile, ITiles } from "$lib/components/game/types";
-
-enum Players {
-    Top = 'TOP',
-    Bottom = 'BOTTOM',
-}
+import type { Players } from "../player/types";
 
 enum GameStatus {
     Before = "BEFORE",
     During = "DURING",
     OnePlayerDone = "ONE_PLAYER_DONE",
-    Complete = "COMPLETE"
-}
-
-interface IPlayer {
-    score: number;
-    goesFirst: boolean,
+    Complete = "COMPLETE",
+    Tie = "TIE"
 }
 
 interface IDroppedTile {
@@ -57,16 +49,6 @@ interface IGameState {
     turn: ITurn;
 }
 
-interface IPlayerTiles {
-    [Players.Top]: ITiles;
-    [Players.Bottom]: ITiles;
-};
-
-interface IPlayers {
-    [Players.Top]: IPlayer;
-    [Players.Bottom]: IPlayer;
-}
-
 enum Direction {
     Horizontal = 'horizontal',
     Vertical = 'vertical',
@@ -79,5 +61,5 @@ interface ILineItem {
     value: number;
 }
 
-export type { IPlayer, IGameState, IPlayerTiles, IPlayers, ITurn, IDroppedTile, ILineItem };
-export { Players, GameStatus, TurnStatus, DropzoneStatus, Direction }
+export type { IGameState, ITurn, IDroppedTile, ILineItem };
+export { GameStatus, TurnStatus, DropzoneStatus, Direction }
