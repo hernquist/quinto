@@ -1,36 +1,14 @@
 <script lang="ts">
     import { getGameState } from "../../state/game/game.svelte";
-	import generateGameTiles from "./utils/generateGameTiles";
-	import initializePlayers from "./utils/initializePlayers";
-	import initializeBoard from "./utils/initializeBoard";
     import { getPlayerState } from "$lib/state/player/player.svelte";
-	import { Players } from "$lib/state/types";
-
-    const ROWS = 4;
-    const COLUMNS = 4;
+	import { initializeGame } from "./utils/initializeGame";
 
     const  { children } = $props();
-    const { Top, Bottom } = Players;
-
     const gameState = getGameState();
-    
-    // initialize board
-    gameState.updateBoardDimensions(ROWS, COLUMNS);
-    // initialize game tiles
-    generateGameTiles();
-    // initialize player and produce initialze player tiles
-    const { topPlayerTiles, bottomPlayerTiles } = initializePlayers();
     // update player tiles
     const playerTileState = getPlayerState();
-    playerTileState.updateTiles(Top, topPlayerTiles);
-    playerTileState.updateTiles(Bottom, bottomPlayerTiles)
-    // finish initializing board
-    initializeBoard();
-    gameState.setStartingSquare();
-    // update board after setStartingSquare since it affects 
-    gameState.updateBoardAfterTileDrop();
-    // make a copy of the board before game play starts
-    gameState.captureBoard();
+
+    initializeGame(gameState, playerTileState);
 </script>
 
 {@render children()}
