@@ -14,7 +14,7 @@ export class ToastState {
 		});
 	}
 
-	add(title: string, message: string, durationMs = 50000000) {
+	public add(title: string, message: string, durationMs = 2000) {
 		const id = crypto.randomUUID();
 		this.toasts.push({
 			id,
@@ -30,13 +30,25 @@ export class ToastState {
 		);
 	}
 
-	remove(id: string) {
+	public remove(id: string) {
 		const timeout = this.toastToTimeoutMap.get(id);
 		if (timeout) {
 			clearTimeout(timeout);
 			this.toastToTimeoutMap.delete(id);
 		}
 		this.toasts = this.toasts.filter((toast) => toast.id !== id);
+	}
+
+	public removeAllToasts() {
+		this.toasts.forEach(({ id }) => {
+			const timeout = this.toastToTimeoutMap.get(id);
+			if (timeout) {
+				clearTimeout(timeout);
+				this.toastToTimeoutMap.delete(id);
+			}
+		});
+
+		this.toasts = [];
 	}
 }
 
