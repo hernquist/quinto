@@ -1,7 +1,6 @@
-import { getGameState  } from "$lib/state/game/game.svelte";
+import { GameState  } from "$lib/state/game/game.svelte";
 
-function generateGameTiles(){
-    const gameState = getGameState();
+function generateGameTiles(gameState: GameState) {
     const startingNumberOfSquares = gameState.game.startingNumberOfSquares;
     const numberOfTiles = Math.round(startingNumberOfSquares * 0.75);
 
