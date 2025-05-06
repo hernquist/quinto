@@ -1,15 +1,31 @@
 import { getContext, setContext } from 'svelte';
-import { ModalScreen } from './types';
+import { ModalScreen, type IModalState } from './types';
+
+let initState: IModalState = {
+	name : ModalScreen.Settings, 
+}
 
 export class ModalState {
-	screen = $state({ name : ModalScreen.Settings});
+	screen = $state<IModalState>(initState); 
+	showModal = $state(false);
 
 	constructor() {
-        this.screen.name = ModalScreen.Settings;
+	}
+	
+	public changeScreen(ms: ModalScreen): void {
+		this.screen.name = ms;
 	}
 
-	changeScreen(ms: ModalScreen): void {
-		this.screen.name = ms;
+	public toggleModalOn() {
+		this.showModal = true;
+	}
+
+	toggleModalOff() {
+		this.showModal = false;
+	}
+
+	public getShowModal(): boolean {
+		return this.showModal;
 	}
 }
 

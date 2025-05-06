@@ -5,4 +5,9 @@ enum ModalScreen {
     HighScores = "highScores"
 }
 
+interface IModalState {
+	name: ModalScreen, 
+}
+
 export { ModalScreen };
+export type { IModalState };
