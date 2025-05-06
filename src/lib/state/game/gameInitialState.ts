@@ -1,4 +1,5 @@
-import { Direction, GameStatus, Players, TurnStatus, type IGameState } from "../types";
+import { Players } from "../player/types";
+import { Direction, GameStatus, TurnStatus, type IGameState } from "./types";
 
 const initState: IGameState = {
 	round: 0,
