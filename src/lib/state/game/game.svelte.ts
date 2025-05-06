@@ -64,7 +64,6 @@ export class GameState {
 
 	public updateBoardAfterTileDrop() {
 		const allowList = this.getDropzoneAllowlist() || [];
-		console.log("this.getDropzoneAllowlist()", this.getDropzoneAllowlist())
 
 		for (let x = 0; x < this.game.columns; x++) {
 			for (let y = 0; y < this.game.rows; y++) {
