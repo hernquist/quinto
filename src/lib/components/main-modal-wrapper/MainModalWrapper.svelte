@@ -4,8 +4,7 @@
 	import { ModalScreen } from "$lib/state/modal-state/types";
     
     const modalState = getModalState();
-    const { Settings, GameOver, HighScores, About} = ModalScreen
-    
+    const { Settings, GameOver, HighScores, About} = ModalScreen;
 </script>
 
 <div>
