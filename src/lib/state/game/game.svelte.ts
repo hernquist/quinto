@@ -1,10 +1,12 @@
 import { setContext, getContext } from 'svelte';
-import { Players, Direction, TurnStatus, type IDroppedTile, type IGameState, type ILineItem, GameStatus } from "../types";
 import type { ITiles, ITile, IBoard, ICoordTuple } from "$lib/components/game/types";
-import type { IPlayerState } from "../player/player.svelte";
+import type { IPlayerState, PlayerState } from "../player/player.svelte";
 import { addDropzoneOptions, checkSurroundSquaresForASingleTile, readLinesForScore } from './gameUtils';
 import initState from './gameInitialState';
-import type { IToastState } from '../toast/types';
+import type { IToastState } from '$lib/state/toast/types';
+import { Direction, TurnStatus, type IDroppedTile, type IGameState, type ILineItem, GameStatus } from "$lib/state/game/types";
+import { Players } from '$lib/state/player/types';
+import type { ToastState } from '../toast/toast.svelte';
 
 const { Top, Bottom} = Players;
 
@@ -442,6 +444,7 @@ export class GameState {
 				hasAdjacentTile = true;
 				line = [];
 
+				// TODO: fix tile error -- see above
 				const { x, y, tile: { value }} = newConstitutedDroppedTiles[i];
 				// checking left
 				let shiftLeft = 1;
@@ -558,7 +561,7 @@ export class GameState {
 		
 	}
 
-	public finishTurn(playerState: IPlayerState, toastState: IToastState): void {
+	public finishTurn(playerState: PlayerState, toastState: ToastState): void {
 
 		this.updateScore(playerState, toastState);
 		this.replenishTiles(playerState);
@@ -571,6 +574,10 @@ export class GameState {
 
 		if (this.game.status === GameStatus.Complete) {
 			// handle game over
+			const { isTieGame } = playerState.setWinner(this.game);
+			if (isTieGame) {
+				this.game.status = GameStatus.Tie;
+			}
 		} 
 		this.resetForNextTurn();
 		this.updateBoardAfterTileDrop();
