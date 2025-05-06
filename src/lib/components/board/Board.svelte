@@ -5,8 +5,9 @@
     const gameState = getGameState();
     let { board } = $derived(gameState.game);
 
-    // TODO: why are pasing this in props AND grabbing game info from context
+    // TODO: why are puttiing this in props AND grabbing game info from context
     const { activePlayer } = $props();
+    $inspect(board, "board");
 </script>
 
 <div class="board__container">
