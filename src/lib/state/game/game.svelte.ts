@@ -46,6 +46,10 @@ export class GameState {
 	public updateBoard(board: IBoard): void {
 		this.game.board = board;
 	}
+
+	public reInitializeGame() {
+		this.game = initState
+	}
 	
 	private updateTurnStatus() {
 		if (this.game.turn.turnStatus === TurnStatus.OnePlaced) {
@@ -60,6 +64,7 @@ export class GameState {
 
 	public updateBoardAfterTileDrop() {
 		const allowList = this.getDropzoneAllowlist() || [];
+		console.log("this.getDropzoneAllowlist()", this.getDropzoneAllowlist())
 
 		for (let x = 0; x < this.game.columns; x++) {
 			for (let y = 0; y < this.game.rows; y++) {
