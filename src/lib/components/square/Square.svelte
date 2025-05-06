@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { ISquare, ITile, ITiles } from "../game/types";
     import { dropzone } from "../../utils/dnd";
 	import { getPlayerState } from "$lib/state/player/player.svelte";
 	import { getGameState } from "$lib/state/game/game.svelte";
-	import { type Players } from "$lib/state/types";
+	import { type Players } from "$lib/state/player/types";
+	import type { ISquare, ITile, ITiles } from "../game/types";
 	import Tile from "../tile/Tile.svelte";
 
     interface ISquareProps {
@@ -11,7 +11,8 @@
         x: number, 
         y: number, 
         activePlayer: Players
-    }
+    };
+    
     const gameState = getGameState();
     let { square, x, y, activePlayer }: ISquareProps = $props();
     const { tile, startingSquare, id, hasDropzone, hasDroppedTile, hovering } = $derived(square);
