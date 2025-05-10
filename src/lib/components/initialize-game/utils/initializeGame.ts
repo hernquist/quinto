@@ -10,10 +10,16 @@ const COLUMNS = 4;
 
 const { Top, Bottom } = Players;
 
-export function initializeGame(gameState: GameState, playerTileState: PlayerState) {
+export function initializeGame(gameState: GameState, playerTileState: PlayerState, options = {}) {
+    let defaults = {
+        rows: ROWS,
+        columns: COLUMNS
+    };
+    const args = Object.assign({}, defaults, options);
+
     // initialize board
     gameState.reInitializeGame();
-    gameState.updateBoardDimensions(ROWS, COLUMNS);
+    gameState.updateBoardDimensions(args);
     // initialize game tiles
     generateGameTiles(gameState);
     // initialize player and produce initialze player tiles
