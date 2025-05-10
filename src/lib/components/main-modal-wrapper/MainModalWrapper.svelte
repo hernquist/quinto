@@ -1,4 +1,5 @@
 <script lang="ts">
+    import SettingsModal from "$lib/components/settings-modal/index.svelte";
     import GameOverModal from "$lib/components/game-over-modal/index.svelte";
 	import { getModalState } from "$lib/state/modal-state/modal-state.svelte";
 	import { ModalScreen } from "$lib/state/modal-state/types";
@@ -9,7 +10,7 @@
 
 <div>
     {#if modalState.screen.name === Settings} 
-        <div>settings</div>
+        <SettingsModal />
         
     {:else if modalState.screen.name === GameOver}
         <GameOverModal />
