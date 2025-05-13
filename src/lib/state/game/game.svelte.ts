@@ -500,9 +500,7 @@ export class GameState {
 
 	private updateScore(playerState: IPlayerState, toastState: IToastState): void {
 		const score = this.calculateScore(toastState);
-		console.log("playerState.player[this.game.activePlayer].score: (before)", playerState.player[this.game.activePlayer].score)
 		playerState.player[this.game.activePlayer].score += score; 
-		console.log("playerState.player[this.game.activePlayer].score: (after)", playerState.player[this.game.activePlayer].score)
 	}
 
 	// reset for next player

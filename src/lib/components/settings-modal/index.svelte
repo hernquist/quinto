@@ -3,16 +3,11 @@
 	import { getModalState } from "$lib/state/modal-state/modal-state.svelte";
 	import { getPlayerState } from "$lib/state/player/player.svelte";
 	import { getToastState } from "$lib/state/toast/toast.svelte";
-	import Page from "../../../routes/+page.svelte";
 	import { initializeGame } from "../initialize-game/utils/initializeGame";
 	import { UpdateText } from "./types";
 
     let gameState = getGameState();
     let playerState = getPlayerState();
-    let modalState = getModalState();
-    let toastState = getToastState();
-
-    let rowsAndColumnsUpdateText = $state<UpdateText>(UpdateText.Update);
 
     // not needed
     // function handleClick(e: Event) {
@@ -32,7 +27,8 @@
     let rows = $state(gameState.game.rows);
 	let columns = $state(gameState.game.columns);
 
-    function onSave() {
+    function onSave(e) {
+        e.preventDefault();
         initializeGame(gameState, playerState, { rows, columns });
     }
 </script>

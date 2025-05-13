@@ -1,13 +1,12 @@
 <script lang="ts">
     import { getPlayerState } from "$lib/state/player/player.svelte";
 	import { Players } from "$lib/state/player/types";
-    import { getModalState } from "$lib/state/modal-state/modal-state.svelte";
 
     const { Top, Bottom } = Players;
-    const playerState = getPlayerState()
-    const topPlayer = playerState.player[Top];
-    const bottomPlayer = playerState.player[Bottom];
-    let modalState = getModalState();
+    const playerState = getPlayerState();
+    const topPlayerScore = $derived(playerState.player[Top].score);
+    const bottomPlayerScore = $derived(playerState.player[Bottom].score);
 </script>
 
-<div>{topPlayer.score} scoreboard {bottomPlayer.score} --- {modalState.showModal}</div>
+<div>{playerState.player[Top].score} scoreboard {playerState.player[Bottom].score}</div>
+<div>{topPlayerScore} scoreboard {bottomPlayerScore}</div>

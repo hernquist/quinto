@@ -19,6 +19,6 @@
         e.preventDefault();
         modalState.toggleModalOn();
         initializeGame(gameState, playerState);
-        toastState.removeAllToasts;
+        toastState.removeAllToasts();
     }}>NEW GAME</button>
 </div>

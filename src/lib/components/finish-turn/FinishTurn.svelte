@@ -8,7 +8,8 @@
     const playerState = getPlayerState();
     const toastState = getToastState();
 
-    const handleClick = () => {
+    const handleClick = (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
         gameState.finishTurn(playerState, toastState);
     }
     

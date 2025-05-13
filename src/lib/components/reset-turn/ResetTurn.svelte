@@ -6,7 +6,8 @@
     const gameState = getGameState();
     const playerState = getPlayerState();
     
-    const handleClick = () => {
+    const handleClick = (e) => {
+        e.preventDefault()
         gameState.resetTurn(playerState);
     }
     
