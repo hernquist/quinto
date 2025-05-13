@@ -1,28 +1,10 @@
 <script lang="ts">
     import { getGameState } from "$lib/state/game/game.svelte";
-	import { getModalState } from "$lib/state/modal-state/modal-state.svelte";
 	import { getPlayerState } from "$lib/state/player/player.svelte";
-	import { getToastState } from "$lib/state/toast/toast.svelte";
 	import { initializeGame } from "../initialize-game/utils/initializeGame";
-	import { UpdateText } from "./types";
 
     let gameState = getGameState();
     let playerState = getPlayerState();
-
-    // not needed
-    // function handleClick(e: Event) {
-    //     e.preventDefault();
-    //     console.log("click", rowsAndColumnsUpdateText)
-    //     switch(rowsAndColumnsUpdateText) {
-    //         case UpdateText.Update: 
-    //             rowsAndColumnsUpdateText = UpdateText.Save;
-    //             break;
-    //         case UpdateText.Save:
-    //             rowsAndColumnsUpdateText = UpdateText.Update;
-    //             break;
-
-    //     }
-    // }
 
     let rows = $state(gameState.game.rows);
 	let columns = $state(gameState.game.columns);
