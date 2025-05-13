@@ -36,8 +36,6 @@
     {#if gameState.game.status === GameStatus.Complete}
         <pre>DONE</pre>
     {/if}
-    <pre>{modalState.showModal}</pre>
-    <pre>{modalState.getShowModal()}</pre>
     <pre>Player: {gameState.game.activePlayer}  # tiles: {gameState.game.tiles.length} Round: {gameState.game.round} Turn: {gameState.game.turn.turnStatus} Direction: {gameState.game.turn.direction} </pre>
     <Score />
     <PlayerRow playerPosition={Top} activePlayer={gameState.game.activePlayer} tiles={playerTileState.tiles[Top]}/>

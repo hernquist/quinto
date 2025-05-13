@@ -562,11 +562,9 @@ export class GameState {
 				// skip turn? Or just penalize the player with tiles left?
 			} 
 		}
-		
 	}
 
 	public finishTurn(playerState: PlayerState, toastState: ToastState): void {
-
 		this.updateScore(playerState, toastState);
 		this.replenishTiles(playerState);
 		this.updateActivePlayer(this.getInactivePlayer());
@@ -592,7 +590,8 @@ export class GameState {
 		this.capturedBoard = JSON.parse(JSON.stringify(this.game.board));
 	}
 	
-	public updateBoardDimensions(rows: number, columns: number): void {
+	// make part of a bigger options arg
+	public updateBoardDimensions({ rows, columns }: { rows: number, columns: number} ): void {
 		this.game.rows = rows;
 		this.game.columns = columns;
 		this.game.startingNumberOfSquares = rows * columns;
