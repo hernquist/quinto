@@ -46,6 +46,10 @@ export class PlayerState {
         this.player[playerPosition] = player;
     }
 
+    public hasNoTiles(playerPosition: Players): boolean {
+        return this.tiles[playerPosition].length === 0;
+    }
+
     public getWinner() {
         if (this.player[Top].winner) {
             return ({
