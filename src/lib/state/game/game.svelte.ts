@@ -19,7 +19,7 @@ export class GameState {
 		this.game = initState;
 	}
 
-	public updateTiles (tiles: ITiles) {
+	public updateGameTiles (tiles: ITiles) {
 		this.game.tiles = tiles;
 	}
 
@@ -178,7 +178,7 @@ export class GameState {
 		const { turn: { direction, droppedTiles}, gameMultiple } = this.game;
 		let lines: ILineItem[][] = [];
 
-		if (direction === Direction.Undecided) {
+		if (direction === Direction.Undecided && droppedTiles.length > 0) {
 			// search left
 			const [square] = droppedTiles;
 			const { x, y, tile: { value }} = square;
@@ -583,9 +583,16 @@ export class GameState {
 		} 
 		this.resetForNextTurn();
 		this.updateBoardAfterTileDrop();
-		this.captureBoard();
-	}
 
+		// if active player has no tiles but the other play does...
+		if (playerState.hasNoTiles(this.game.activePlayer) && !playerState.hasNoTiles(this.getInactivePlayer())) {
+			toastState.add("", `${this.game.activePlayer} has no tiles... ${this.getInactivePlayer()}'s turn`)
+			this.finishTurn(playerState, toastState);
+		} else {
+			this.captureBoard();
+		}
+	}
+	
 	public captureBoard() {
 		this.capturedBoard = JSON.parse(JSON.stringify(this.game.board));
 	}

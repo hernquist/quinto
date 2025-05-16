@@ -16,7 +16,7 @@ function generateGameTiles(gameState: GameState) {
         gameTiles.push(tile);
     }
 
-    gameState.updateTiles(gameTiles);
+    gameState.updateGameTiles(gameTiles);
 } 
 
 export default generateGameTiles;

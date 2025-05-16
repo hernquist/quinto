@@ -15,7 +15,7 @@ function initializePlayers(playerState: PlayerState, gameState: GameState) {
     const gameTiles = gameState.game.tiles;
     const topPlayerTiles = gameTiles.splice(0, 5);
     // update game tiles
-    gameState.updateTiles(gameTiles);
+    gameState.updateGameTiles(gameTiles);
     
     const top: IPlayer = {
         goesFirst: topPlayerFirst,
@@ -30,7 +30,7 @@ function initializePlayers(playerState: PlayerState, gameState: GameState) {
     const updatedGameTiles = gameState.game.tiles;
     const bottomPlayerTiles = updatedGameTiles.splice(0, 5);
     // update game tiles again
-    gameState.updateTiles(updatedGameTiles);
+    gameState.updateGameTiles(updatedGameTiles);
 
     const bottom: IPlayer = {
         goesFirst: bottomPlayerFirst,
