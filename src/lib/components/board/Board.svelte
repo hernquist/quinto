@@ -1,20 +1,25 @@
 <script lang="ts">
 	import { getGameState } from "../../state/game/game.svelte";
+    import { getToastState } from "../../state/toast/toast.svelte";
 	import Square from "../square/Square.svelte";
+    import type { IHighlightedSquare } from "$lib/state/toast/types.ts"
     
     const gameState = getGameState();
     let { board } = $derived(gameState.game);
 
+    const toastState = getToastState();
+    let { highlightedSquares }: { highlightedSquares: IHighlightedSquare[] } = $derived(toastState);
+
     // TODO: why are puttiing this in props AND grabbing game info from context
     const { activePlayer } = $props();
-    $inspect("[Board] board:", board);
 </script>
 
+<!-- <pre>{JSON.stringify(highlightedSquares)}</pre> -->
 <div class="board__container">
     {#each board as column, x}
         <div class="board_row">
             {#each column as square, y}
-                <Square {square} {x} {y} {activePlayer} />
+                <Square {square} {x} {y} {activePlayer} {highlightedSquares} />
             {/each}
         </div>
     {/each}
