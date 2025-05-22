@@ -1,4 +1,4 @@
-import type { IBoard } from "$lib/components/game/types";
+import type { IBoard, ICoordTuple } from "$lib/components/game/types";
 import type { IToastState } from "$lib/state/toast/types";
 import { Direction, type IDroppedTile, type ILineItem } from "./types";
 
@@ -31,12 +31,14 @@ export function addDropzoneOptions(length: number, firstTile: IDroppedTile, dire
     return dropzoneOptions;
 }
 
+export function getScoredLineValue (line: ILineItem[], gameMultiple: number): number {
+    const lineValue = line.reduce((acc: number, { value }: { value: number}) => acc + value, 0);
+    const scoredValue = lineValue % gameMultiple === 0 ? lineValue : 0 - lineValue;
+    return scoredValue
+}
+
 export function readLinesForScore(lines: ILineItem[][], gameMultiple: number, toastState: IToastState): number {
-    return lines.reduce((acc: number, line: ILineItem[]) => {
-        const lineValue = line.reduce((acc: number, { value }: { value: number}) => acc + value, 0);
-        const lineValueString = line.reduce((acc: string, { value }: { value: number}) => acc + `${value} `, "");
-        const scoredValue = lineValue % gameMultiple === 0 ? lineValue : 0 - lineValue;
-        toastState.add("", `${lineValueString} => ${String(scoredValue)}`);
-        return acc + scoredValue;
-    }, 0);
+    // hmmm maybe I shouldn't separate this?, maybe I should
+    toastState.addHighlights(lines, gameMultiple);
+    return lines.reduce((acc: number, line: ILineItem[]) => acc + getScoredLineValue(line, gameMultiple), 0);
 }
