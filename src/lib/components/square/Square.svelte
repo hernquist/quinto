@@ -11,15 +11,15 @@
         x: number, 
         y: number, 
         activePlayer: Players
+        highlightedSquares?: IHighlightedSquare[]
     };
     
     const gameState = getGameState();
-    let { square, x, y, activePlayer }: ISquareProps = $props();
+    let { square, x, y, activePlayer, highlightedSquares }: ISquareProps = $props();
     const { tile, startingSquare, id, hasDropzone, hasDroppedTile, hovering } = $derived(square);
     const playerTileState = getPlayerState();
     let tiles: ITiles = $derived(playerTileState.tiles[activePlayer]);
    
-
     const onDropzone = (tileId: number): void => {
         const foundTile: ITile | undefined = tiles.find(tile => tile.id == tileId);
 
@@ -29,15 +29,28 @@
             playerTileState.removeTile(activePlayer, tileId);   
         }
     }
+
+    let isHighlighted = $derived.by(() => 
+        highlightedSquares?.reduce((isHighlighted, square) => 
+            square.x === x && square.y === y ? true : isHighlighted, false));
+
+    let scoredValue = $derived(highlightedSquares[0]?.scoredValue || 0)
 </script>
 
 {#if tile}
     <div 
-        class="board__square" 
+        class="board__square {scoredValue > 0 ? 'gain' : 'loss'}" 
         id={String(id)} 
         class:hasDroppedTile
+        class:isHighlighted 
     >
-        <Tile tile={tile} isActive {hasDroppedTile} />
+        <Tile 
+            tile={tile} 
+            isActive 
+            {hasDroppedTile} 
+            {isHighlighted} 
+            {scoredValue}
+        />
     </div>
 {:else if hasDropzone}
     <div 
@@ -94,6 +107,18 @@
                         radial-gradient(whitesmoke 0.5px, transparent 0.5px);
         background-size: 5px 5px;
         background-position: 0 0, 2.5px 2.5px;
+    }
+
+    .board__square.isHighlighted {
+        border: 2px dashed black;
+    }
+
+    .board__square.isHighlighted.gain {
+        background: green;
+    }
+    
+    .board__square.isHighlighted.loss {
+        background: red;
     }
 
     .startingSquare {
