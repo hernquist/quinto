@@ -38,7 +38,7 @@ export function getScoredLineValue (line: ILineItem[], gameMultiple: number): nu
 }
 
 export async function readLinesForScore(lines: ILineItem[][], gameMultiple: number, toastState: IToastState): number {
-    return new Promise ((resolve)=> {
+    return new Promise ((resolve) => {
         const totalLineScore = lines.reduce((acc: number, line: ILineItem[]) => acc + getScoredLineValue(line, gameMultiple), 0);
         toastState.addHighlights(lines, gameMultiple);
         setTimeout(() => { 
