@@ -20,7 +20,7 @@ export interface IToastState {
 	add: (title: string, message: string, durationMs?: number) => void,
 	remove: (id: string) => void,
 	
-	addHighlights: (sqaures: ILineItem[]) => void,
+	addHighlights: (sqaures: ILineItem[][], gameMultiple: number) => void,
 	addHighlight: (square: IHighlightedItem, durationMs?: number) => void,
 	removeHighlight: (id: string) => void,
 }
