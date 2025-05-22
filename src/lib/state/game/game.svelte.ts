@@ -174,7 +174,7 @@ export class GameState {
 		return Top;
 	}
 
-	private calculateScore(toastState: IToastState): number {
+	private async calculateScore(toastState: IToastState) {
 		const { turn: { direction, droppedTiles}, gameMultiple } = this.game;
 		let lines: ILineItem[][] = [];
 
@@ -498,8 +498,8 @@ export class GameState {
 		return 0;
 	}
 
-	private updateScore(playerState: IPlayerState, toastState: IToastState): void {
-		const score = this.calculateScore(toastState);
+	private async updateScore(playerState: IPlayerState, toastState: IToastState): void {
+		const score = await this.calculateScore(toastState);
 		playerState.player[this.game.activePlayer].score += score; 
 	}
 

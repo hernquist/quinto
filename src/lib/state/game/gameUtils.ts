@@ -37,9 +37,13 @@ export function getScoredLineValue (line: ILineItem[], gameMultiple: number): nu
     return scoredValue
 }
 
-export function readLinesForScore(lines: ILineItem[][], gameMultiple: number, toastState: IToastState): number {
-
-    const totalLineScore = lines.reduce((acc: number, line: ILineItem[]) => acc + getScoredLineValue(line, gameMultiple), 0);
-    toastState.addHighlights(lines, gameMultiple);
-    return totalLineScore;
+export async function readLinesForScore(lines: ILineItem[][], gameMultiple: number, toastState: IToastState): number {
+    return new Promise ((resolve)=> {
+        const totalLineScore = lines.reduce((acc: number, line: ILineItem[]) => acc + getScoredLineValue(line, gameMultiple), 0);
+        toastState.addHighlights(lines, gameMultiple);
+        setTimeout(() => { 
+            resolve(totalLineScore);
+            toastState.add("", `${totalLineScore}`); 
+        }, lines.length * 1200)
+    });
 }
