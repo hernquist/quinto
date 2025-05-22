@@ -38,7 +38,8 @@ export function getScoredLineValue (line: ILineItem[], gameMultiple: number): nu
 }
 
 export function readLinesForScore(lines: ILineItem[][], gameMultiple: number, toastState: IToastState): number {
-    // hmmm maybe I shouldn't separate this?, maybe I should
+
+    const totalLineScore = lines.reduce((acc: number, line: ILineItem[]) => acc + getScoredLineValue(line, gameMultiple), 0);
     toastState.addHighlights(lines, gameMultiple);
-    return lines.reduce((acc: number, line: ILineItem[]) => acc + getScoredLineValue(line, gameMultiple), 0);
+    return totalLineScore;
 }
