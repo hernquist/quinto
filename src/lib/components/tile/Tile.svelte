@@ -8,10 +8,23 @@
         hasDroppedTile: boolean 
     }
 
-    const { tile, isActive, hasDroppedTile }: TileComponentProps= $props();
+    const { 
+        tile, 
+        isActive, 
+        hasDroppedTile, 
+        isHighlighted, 
+        scoredValue 
+    }: TileComponentProps= $props();
+
+    let scoreText = $derived(scoredValue > 0 ? `+${scoredValue}` : scoredValue)
+
 </script>
 
-{#if isActive}
+{#if isHighlighted}
+    <div class="highlighted {scoredValue > 0 ? 'gain' : 'loss'}">
+        {scoreText}
+    </div>
+{:else if isActive}
     <div 
         class="tile"
         class:hasDroppedTile
@@ -53,6 +66,19 @@
 
     .tile.hasDroppedTile {
         background-color: orange;
+    }
+
+    .highlighted {
+        font-family: cursive;
+        font-size: 6vw;
+    }
+
+    .highlighted.gain {
+        background: green;
+    }
+
+    .highlighted.loss {
+        background: red;
     }
 </style>
 
