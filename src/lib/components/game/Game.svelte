@@ -5,6 +5,7 @@
 	import PlayerRow from "../player-row/PlayerRow.svelte";
 	import { getPlayerState } from "$lib/state/player/player.svelte";
 	import { getGameState } from "$lib/state/game/game.svelte";
+	import { getToastState } from "$lib/state/toast/toast.svelte";
 	import { getModalState } from "$lib/state/modal-state/modal-state.svelte";
 	import Modal from "$lib/components/modal/modal.svelte";
 	import MainModalWrapper from "$lib/components/main-modal-wrapper/MainModalWrapper.svelte";
@@ -18,19 +19,25 @@
     const playerTileState = getPlayerState();
     const gameState = getGameState();
     const modalState = getModalState();
+    const toastState = getToastState();
+    const { highlightedSquares, toasts } = $derived(toastState);
 
     $effect(() => {
-        if (gameState.game.status === GameStatus.Complete) {
+        if (gameState.game.status === GameStatus.Complete 
+            && highlightedSquares?.length === 0 
+            &&  toasts.length === 0
+        ) {
             modalState.changeScreen(ModalScreen.GameOver);
             modalState.toggleModalOn();
         }
 	});
 </script>
 
-<button onclick={(e) => {
-    e.preventDefault();
-    modalState.toggleModalOn()
-}}>show modal</button>
+<button onclick={
+    (e) => {
+        e.preventDefault();
+        modalState.toggleModalOn()
+    }}>show modal</button>
 
 <InitializeGame>
     {#if gameState.game.status === GameStatus.Complete}

@@ -2,7 +2,6 @@
 	import { type IToast, type IToastState, ToastType } from '$lib/state/toast/types';
 	import X from 'phosphor-svelte/lib/X';
 	import { getToastState } from '$lib/state/toast/toast.svelte';
-  import { send, receive } from "./transition.ts"
   import { fade } from 'svelte/transition';
   import { elasticOut } from 'svelte/easing';
 
