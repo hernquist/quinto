@@ -22,10 +22,12 @@
     const toastState = getToastState();
     const { highlightedSquares, toasts } = $derived(toastState);
 
+    // this is not working...
+    // we need a way to signify end of game with async highlights and toastsß
     $effect(() => {
         if (gameState.game.status === GameStatus.Complete 
             && highlightedSquares?.length === 0 
-            &&  toasts.length === 0
+            && toasts.length === 0
         ) {
             modalState.changeScreen(ModalScreen.GameOver);
             modalState.toggleModalOn();
