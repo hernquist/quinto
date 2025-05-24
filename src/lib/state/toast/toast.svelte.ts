@@ -1,5 +1,5 @@
 import { getContext, onDestroy, setContext } from 'svelte';
-import type { IHighlightedItem, IHighlightedSquare, IToast } from './types';
+import type { IHighlightedItem, IHighlightedSquare, IToast, ToastType } from './types';
 import type { ILineItem } from '../game/types';
 import { getScoredLineValue } from '../game/gameUtils';
 
@@ -25,19 +25,20 @@ export class ToastState {
 		});
 	}
 
-	public add(title: string, message: string, durationMs = 2000) {
+	public add(title: string, message: string, type: ToastType, durationMs = 2000) {
 		const id = crypto.randomUUID();
 		this.toasts.push({
 			id,
 			title,
-			message
+			message,
+			type
 		});
 
-		this.toastToTimeoutMap.set(
-			id,
-			setTimeout(() => {
-				this.remove(id);
-			}, durationMs)
+		this.toastToTimeoutMap.set(id, 
+			setTimeout(
+				() => { this.remove(id); }, 
+				durationMs
+			)
 		);
 	}
 

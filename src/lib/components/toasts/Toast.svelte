@@ -1,7 +1,10 @@
 <script lang="ts">
-	import type { IToast, IToastState } from '$lib/state/toast/types';
+	import { type IToast, type IToastState, ToastType } from '$lib/state/toast/types';
 	import X from 'phosphor-svelte/lib/X';
 	import { getToastState } from '$lib/state/toast/toast.svelte';
+  import { send, receive } from "./transition.ts"
+  import { fade } from 'svelte/transition';
+  import { elasticOut } from 'svelte/easing';
 
 	type Props = {
 		toast: IToast;
@@ -9,74 +12,44 @@
 
 	let { toast }: Props = $props();
 	const toastState: IToastState = getToastState();
+  let off = $state(false);
+
+  $effect(() => {
+    setTimeout(() => {
+      off = true
+    }, 100);
+  });
 </script>
 
-<div
-	class="relative flex h-16 w-60 flex-col justify-center rounded-md border border-gray-500 bg-gray-300 p-2 shadow-md"
->
-	<span class="text-sm font-medium">{toast.title}</span>
-	<span class="text-xs">{toast.message}</span>
-	<button class="absolute right-2 top-2 size-5" onclick={() => toastState.remove(toast.id)}>
-		<span class="sr-only">Close toast</span>
-		<X class="size-4" />
-	</button>
-</div>
-
-    <!-- import ErrorIcon from "../icons/ErrorIcon.svelte"; -->
-    <!-- import InfoIcon from "../icons/InfoIcon.svelte"; -->
-    <!-- import CloseIcon from "../icons/CloseIcon.svelte"; -->
-	<!-- import SuccessIcon from "../icons/SuccessIcon.svelte"; -->
-  
-  <!-- <article class={type} role="alert" transition:fade>
-    {#if type === "success"}
-      <SuccessIcon width="1.1em" />
-    {:else if type === "error"}
-      <ErrorIcon width="1.1em" />
-    {:else}
-      <InfoIcon width="1.1em" />
-    {/if}
-  
-    <div class="text">
-      <slot />
+{#if toast.type === ToastType.PLAYER_MESSGAGE}
+  <div >
+    {toast.message}
+  </div>
+{:else if toast.type === ToastType.TOTAL_LINE_SCORE}
+  {#if !off}
+    <div class="totalLine__score" transition:fade={{ duration: 1200 }}>
+      {toast.message}
     </div>
-  
-    {#if dismissible}
-      <button class="close" on:click={() => dispatch("dismiss")}>
-        <CloseIcon width="0.8em" />
-      </button>
-    {/if}
-  </article>
-  
-  <style lang="postcss">
-    article {
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.2rem;
-      display: flex;
-      align-items: center;
-      margin: 0 auto 0.5rem auto;
-      width: 20rem;
-    }
-    .error {
-      background: IndianRed;
-    }
-    .success {
-      background: MediumSeaGreen;
-    }
-    .info {
-      background: SkyBlue;
-    }
-    .text {
-      margin-left: 1rem;
-    }
-    button {
-      color: white;
-      background: transparent;
-      border: 0 none;
-      padding: 0;
-      margin: 0 0 0 auto;
-      line-height: 1;
-      font-size: 1rem;
-    }
-  </style> -->
-  
+  {/if}
+{:else}
+  <div
+    class="relative flex h-16 w-60 flex-col justify-center rounded-md border border-gray-500 bg-gray-300 p-2 shadow-md"
+  >
+    <span class="text-sm font-medium">{toast.title}</span>
+    <span class="text-xs">{toast.message}</span>
+    <button class="absolute right-2 top-2 size-5" onclick={() => toastState.remove(toast.id)}>
+      <span class="sr-only">Close toast</span>
+      <X class="size-4" />
+    </button>
+  </div>
+{/if}
+
+<style>
+  .totalLine__score {
+    font-family: cursive;
+    font-size: 96px
+  }
+
+</style>
+
+

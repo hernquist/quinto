@@ -5,7 +5,7 @@ import { Direction, TurnStatus, type IDroppedTile, type IGameState, type ILineIt
 import { Players } from '$lib/state/player/types';
 import type { IPlayerState, PlayerState } from "../player/player.svelte";
 import type { ITiles, ITile, IBoard, ICoordTuple } from "$lib/components/game/types";
-import type { IToastState } from '$lib/state/toast/types';
+import { ToastType, type IToastState } from '$lib/state/toast/types';
 import type { ToastState } from '../toast/toast.svelte';
 
 const { Top, Bottom} = Players;
@@ -586,7 +586,7 @@ export class GameState {
 
 		// if active player has no tiles but the other play does...
 		if (playerState.hasNoTiles(this.game.activePlayer) && !playerState.hasNoTiles(this.getInactivePlayer())) {
-			toastState.add("", `${this.game.activePlayer} has no tiles... ${this.getInactivePlayer()}'s turn`)
+			toastState.add("", `${this.game.activePlayer} has no tiles... ${this.getInactivePlayer()}'s turn`, ToastType.PLAYER_MESSGAGE)
 			this.finishTurn(playerState, toastState);
 		} else {
 			this.captureBoard();

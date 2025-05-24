@@ -1,5 +1,5 @@
 import type { IBoard, ICoordTuple } from "$lib/components/game/types";
-import type { IToastState } from "$lib/state/toast/types";
+import { ToastType, type IToastState } from "$lib/state/toast/types";
 import { Direction, type IDroppedTile, type ILineItem } from "./types";
 
 export function checkSurroundSquaresForASingleTile (board: IBoard, x: number, y: number): boolean {
@@ -43,7 +43,7 @@ export async function readLinesForScore(lines: ILineItem[][], gameMultiple: numb
         toastState.addHighlights(lines, gameMultiple);
         setTimeout(() => { 
             resolve(totalLineScore);
-            toastState.add("", `${totalLineScore}`); 
+            toastState.add("", `${totalLineScore}`, ToastType.TOTAL_LINE_SCORE); 
         }, lines.length * 1200)
     });
 }
