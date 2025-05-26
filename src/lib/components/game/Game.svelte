@@ -23,7 +23,8 @@
     const { highlightedSquares, toasts } = $derived(toastState);
 
     // this is not working...
-    // we need a way to signify end of game with async highlights and toastsß
+    // we need a way to signify end of game with async highlights and toasts
+    // if there is more than one row or column to score it doesn't work
     $effect(() => {
         if (gameState.game.status === GameStatus.Complete 
             && highlightedSquares?.length === 0 
