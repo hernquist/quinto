@@ -3,10 +3,10 @@
 	import { Players } from "$lib/state/player/types";
 
     const { Top, Bottom } = Players;
-    const playerState = getPlayerState();
-    const topPlayerScore = $derived(playerState.player[Top].score);
-    const bottomPlayerScore = $derived(playerState.player[Bottom].score);
+    let playerState = getPlayerState();
+
+    let topPlayerScore = $derived(playerState.player[Top].score);
+    let bottomPlayerScore = $derived(playerState.player[Bottom].score);
 </script>
 
-<div>{playerState.player[Top].score} scoreboard {playerState.player[Bottom].score}</div>
-<div>{topPlayerScore} scoreboard {bottomPlayerScore}</div>
+<div>{topPlayerScore} to {bottomPlayerScore}</div>
