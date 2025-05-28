@@ -14,6 +14,9 @@ export class GameState {
 	game = $state<IGameState>(initState);
 	capturedBoard = $state<IBoard>([]);
 
+	skippedTurn = false;
+	finishTurnActivePlayer: Players = Players.Top;
+
 	// I don't think we need the initialState here
 	constructor (initState: IGameState) {
 		this.game = initState;
@@ -500,7 +503,7 @@ export class GameState {
 
 	private async updateScore(playerState: IPlayerState, toastState: IToastState): void {
 		const score = await this.calculateScore(toastState);
-		playerState.player[this.game.activePlayer].score += score; 
+		playerState.player[this.finishTurnActivePlayer].score += score; 
 	}
 
 	// reset for next player
@@ -565,8 +568,15 @@ export class GameState {
 	}
 
 	public finishTurn(playerState: PlayerState, toastState: ToastState): void {
-		this.updateScore(playerState, toastState);
-		this.replenishTiles(playerState);
+		this.finishTurnActivePlayer = this.game.activePlayer;
+
+		if (!this.skippedTurn) {
+			this.updateScore(playerState, toastState);
+			this.replenishTiles(playerState);
+		} else {
+			this.skippedTurn = false;
+		}
+
 		this.updateActivePlayer(this.getInactivePlayer());
 		// if second turn of round increment to next round
 		if (!this.game.turn.firstTurnOfRound) {
@@ -586,11 +596,14 @@ export class GameState {
 
 		// if active player has no tiles but the other play does...
 		if (playerState.hasNoTiles(this.game.activePlayer) && !playerState.hasNoTiles(this.getInactivePlayer())) {
-			toastState.add("", `${this.game.activePlayer} has no tiles... ${this.getInactivePlayer()}'s turn`, ToastType.PLAYER_MESSGAGE)
+			toastState.addQueuedMessage("", `${this.game.activePlayer} has no tiles... ${this.getInactivePlayer()}'s turn`, this.game.activePlayer, ToastType.PLAYER_MESSGAGE);
+			this.skippedTurn = true;
 			this.finishTurn(playerState, toastState);
 		} else {
 			this.captureBoard();
 		}
+
+		toastState.fireMessages();
 	}
 	
 	public captureBoard() {
