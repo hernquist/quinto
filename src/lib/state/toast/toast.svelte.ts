@@ -1,18 +1,24 @@
 import { getContext, onDestroy, setContext } from 'svelte';
-import type { IHighlightedItem, IHighlightedSquare, IToast, ToastType } from './types';
+import type { IHighlightedItem, IHighlightedSquare, IQueuedMessgage, IToast, ToastType } from './types';
 import type { ILineItem } from '../game/types';
 import { getScoredLineValue } from '../game/gameUtils';
+import type { Players } from '../player/types';
 
-const HIGHLIGHT_DURATION = 1200;
+export const HIGHLIGHT_DURATION = 1200;
 
 export class ToastState {
 	toasts = $state<IToast[]>([]);
-	toastToTimeoutMap = new Map<string, number>();
+	toastToTimeoutMap = new Map<string, ReturnType<typeof setTimeout>>();
+
+	queuedMessages = $state<IQueuedMessgage[]>([]);
+	firedQueuedMessages = $state<IQueuedMessgage[]>([]);
+	firedQueuedMessagesToTimeoutMap = new Map<string, ReturnType<typeof setTimeout>>();
 
 	highlightedSquares = $state<IHighlightedSquare[]>([]);
 	highlightedSquaresToTimeoutMap = new Map();
 
 	linesIndex = 0;
+	numberOfLines = 0;
 
 	constructor() {
 		onDestroy(() => {
@@ -20,18 +26,18 @@ export class ToastState {
 				clearTimeout(timeout);
 			}
 			this.toastToTimeoutMap.clear();
-
 			this.highlightedSquaresToTimeoutMap.clear();
-		});
+			this.firedQueuedMessagesToTimeoutMap.clear();
+		});	
 	}
 
 	public add(title: string, message: string, type: ToastType, durationMs = 2000) {
 		const id = crypto.randomUUID();
-		this.toasts.push({
-			id,
-			title,
-			message,
-			type
+		this.toasts.push({ 
+			id, 
+			title, 
+			message, 
+			type 
 		});
 
 		this.toastToTimeoutMap.set(id, 
@@ -40,6 +46,27 @@ export class ToastState {
 				durationMs
 			)
 		);
+	}
+
+	public remove(id: string) {
+		const timeout = this.toastToTimeoutMap.get(id);
+		if (timeout) {
+			clearTimeout(timeout);
+			this.toastToTimeoutMap.delete(id);
+		}
+		this.toasts = this.toasts.filter((toast) => toast.id !== id);
+	}
+
+	public removeAllToasts() {
+		this.toasts.forEach(({ id }) => {
+			const timeout = this.toastToTimeoutMap.get(id);
+			if (timeout) {
+				clearTimeout(timeout);
+				this.toastToTimeoutMap.delete(id);
+			}
+		});
+
+		this.toasts = [];
 	}
 
 	private progressThroughLine(line: ILineItem[], gameMultiple: number) {
@@ -56,14 +83,14 @@ export class ToastState {
 
 	public addHighlights(lines: ILineItem[][], gameMultiple: number, highlightDuration = HIGHLIGHT_DURATION) {
 		this.resetLinesIndex()
-		const numberOfLines = lines.length;
+		this.numberOfLines = lines.length;
 
 		const line: ILineItem[] = lines[this.linesIndex];
 		this.progressThroughLine(line, gameMultiple);
 
-		if (this.linesIndex < numberOfLines) {
+		if (this.linesIndex < this.numberOfLines) {
 			const interval = setInterval(() => {
-				if (this.linesIndex === numberOfLines) {
+				if (this.linesIndex === this.numberOfLines) {
 					this.removeAllHighlights();
 					clearInterval(interval);
 				} else {
@@ -87,15 +114,6 @@ export class ToastState {
 		)
 	}
 
-	public remove(id: string) {
-		const timeout = this.toastToTimeoutMap.get(id);
-		if (timeout) {
-			clearTimeout(timeout);
-			this.toastToTimeoutMap.delete(id);
-		}
-		this.toasts = this.toasts.filter((toast) => toast.id !== id);
-	}
-
 	public removeHighlight(id: string) {
 		const timeout = this.highlightedSquaresToTimeoutMap.get(id);
 		if (timeout) {
@@ -103,18 +121,6 @@ export class ToastState {
 			this.highlightedSquaresToTimeoutMap.delete(id);
 		}
 		this.highlightedSquares = this.highlightedSquares.filter((square) => square.id !== id);
-	}
-
-	public removeAllToasts() {
-		this.toasts.forEach(({ id }) => {
-			const timeout = this.toastToTimeoutMap.get(id);
-			if (timeout) {
-				clearTimeout(timeout);
-				this.toastToTimeoutMap.delete(id);
-			}
-		});
-
-		this.toasts = [];
 	}
 
 	// not sure we need this
@@ -128,6 +134,41 @@ export class ToastState {
 		});
 
 		this.highlightedSquares = [];
+	}
+
+	public addQueuedMessage(title: string, message: string, activePlayer: Players, type: ToastType, durationMs = HIGHLIGHT_DURATION) {
+		const id = crypto.randomUUID();
+		this.queuedMessages.push({ id, title, message, activePlayer, type, durationMs});
+	}
+	
+	public fireMessages() {
+		this.firedQueuedMessages = this.queuedMessages;
+		this.firedQueuedMessages.forEach(( {id, durationMs} ) => 
+			this.firedQueuedMessagesToTimeoutMap.set(id, 
+				setTimeout(() => { this.removeFiredQueuedMessage(id); }, this.numberOfLines * durationMs)
+			)
+		)
+	}
+
+	public removeFiredQueuedMessage(id: string) {
+		const timeout = this.firedQueuedMessagesToTimeoutMap.get(id);
+		if (timeout) {
+			clearTimeout(timeout);
+			this.firedQueuedMessagesToTimeoutMap.delete(id);
+		}
+		this.firedQueuedMessages = this.firedQueuedMessages.filter((toast) => toast.id !== id);
+		this.queuedMessages = this.queuedMessages.filter((toast) => toast.id !== id);
+	}
+
+	public removeAllQueuedMessages() {
+		this.firedQueuedMessages.forEach(({ id }) => {
+			const timeout = this.firedQueuedMessagesToTimeoutMap.get(id);
+			if (timeout) {
+				clearTimeout(timeout);
+				this.firedQueuedMessagesToTimeoutMap.delete(id);
+			}
+		});
+		this.queuedMessages = [];
 	}
 }
 
