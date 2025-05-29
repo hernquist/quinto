@@ -114,13 +114,67 @@
     }
 
     .board__square.isHighlighted.gain {
-        background: green;
+        animation: rotate-bg-color-gain 1.4s infinite;
+    }
+
+    @keyframes rotate-bg-color-gain {
+        0% {
+            background-color: #9dffa8;
+        }
+        20% {
+            background-color: #89ff9b;
+        }
+        40% {
+            background-color: #6fff81;
+        }
+        60% {
+            background-color: #4fff67;
+        }
+        80% {
+            background-color: #34ff47;
+        }
+        100% {
+            background-color: #00ff00;
+        }
     }
     
     .board__square.isHighlighted.loss {
-        background: red;
+        animation: rotate-bg-color-loss 1.4s infinite;
     }
 
+    @keyframes rotate-bg-color-loss {
+        0% {
+            background-color: #ff0000;
+        }
+        11.1% {
+            background-color: #e60000;
+        }
+        22.2% {
+            background-color: #cc0000;
+        }
+        33.3% {
+            background-color: #b30000;
+        }
+        44.4% {
+            background-color: #990000;
+        }
+        55.6% {
+            background-color: #800000;
+        }
+        66.7% {
+            background-color: #660000;
+        }
+        77.8% {
+            background-color: #4d0000;
+        }
+        88.9% {
+            background-color: #330000;
+        }
+        100% {
+            background-color: #190000; /* dwarf-fortress */
+        }
+    }
+    
     .startingSquare {
         border: 6px dashed lightgrey;
         background-color: salmon;
