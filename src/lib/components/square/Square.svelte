@@ -146,32 +146,23 @@
         0% {
             background-color: #ff0000;
         }
-        11.1% {
+        16.7% {
             background-color: #e60000;
         }
-        22.2% {
+        33.3% {
             background-color: #cc0000;
         }
-        33.3% {
+        50% {
             background-color: #b30000;
         }
-        44.4% {
+        66.7% {
             background-color: #990000;
         }
-        55.6% {
+        83.3% {
             background-color: #800000;
         }
-        66.7% {
-            background-color: #660000;
-        }
-        77.8% {
-            background-color: #4d0000;
-        }
-        88.9% {
-            background-color: #330000;
-        }
         100% {
-            background-color: #190000; /* dwarf-fortress */
+            background-color: #660000;
         }
     }
     
