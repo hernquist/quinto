@@ -26,7 +26,7 @@
   </div>
 {:else if toast.type === ToastType.TOTAL_LINE_SCORE}
   {#if !off}
-    <div class="totalLine__score" transition:fade={{ duration: 1200 }}>
+    <div class="totalLine__score" out:fade={{ duration: 1000 }}>
       {toast.message}
     </div>
   {/if}
@@ -45,8 +45,11 @@
 
 <style>
   .totalLine__score {
-    font-family: cursive;
-    font-size: 96px
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    border: 12px double cornflowerblue;
+    font-size: 96px;
+    padding: 0 16px;
+    background-color: azure;
   }
 </style>
 
