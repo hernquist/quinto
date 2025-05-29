@@ -2,7 +2,7 @@ import { GameState  } from "$lib/state/game/game.svelte";
 
 function generateGameTiles(gameState: GameState) {
     const startingNumberOfSquares = gameState.game.startingNumberOfSquares;
-    const numberOfTiles = Math.round(startingNumberOfSquares * 0.75);
+    const numberOfTiles = Math.round(startingNumberOfSquares * 0.50);
 
     let gameTiles = []
 
@@ -12,7 +12,7 @@ function generateGameTiles(gameState: GameState) {
             id: index,
             text: value,
             value,
-        }
+        };
         gameTiles.push(tile);
     }
 
