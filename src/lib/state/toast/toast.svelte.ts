@@ -5,6 +5,7 @@ import { getScoredLineValue } from '../game/gameUtils';
 import type { Players } from '../player/types';
 
 export const HIGHLIGHT_DURATION = 1200;
+export const MAIN_TOAST_DURATION = 1200;
 
 export class ToastState {
 	toasts = $state<IToast[]>([]);
@@ -31,7 +32,7 @@ export class ToastState {
 		});	
 	}
 
-	public add(title: string, message: string, type: ToastType, durationMs = 2000) {
+	public add(title: string, message: string, type: ToastType, durationMs = MAIN_TOAST_DURATION) {
 		const id = crypto.randomUUID();
 		this.toasts.push({ 
 			id, 
