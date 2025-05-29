@@ -21,7 +21,7 @@
 </script>
 
 {#if isHighlighted}
-    <div class="highlighted {scoredValue > 0 ? 'gain' : 'loss'}">
+    <div class="tile highlighted {scoredValue > 0 ? 'gain' : 'loss'}">
         {scoreText}
     </div>
 {:else if isActive}
@@ -69,16 +69,20 @@
     }
 
     .highlighted {
-        font-family: cursive;
-        font-size: 6vw;
+        border: none;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    }
+
+    .tile.highlighted {
+        font-size: 5vw;
     }
 
     .highlighted.gain {
-        background: green;
+        background-color: transparent;
     }
 
     .highlighted.loss {
-        background: red;
+        background-color: transparent;
     }
 </style>
 
