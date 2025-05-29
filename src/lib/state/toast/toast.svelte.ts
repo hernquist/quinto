@@ -4,8 +4,8 @@ import type { ILineItem } from '../game/types';
 import { getScoredLineValue } from '../game/gameUtils';
 import type { Players } from '../player/types';
 
-export const HIGHLIGHT_DURATION = 1200;
-export const MAIN_TOAST_DURATION = 800;
+export const HIGHLIGHT_DURATION = 1400; // remember to tie to Square.svelte animations "1.4s"
+export const MAIN_TOAST_DURATION = 1000;
 
 export class ToastState {
 	toasts = $state<IToast[]>([]);
