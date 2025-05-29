@@ -5,7 +5,7 @@ import { getScoredLineValue } from '../game/gameUtils';
 import type { Players } from '../player/types';
 
 export const HIGHLIGHT_DURATION = 1200;
-export const MAIN_TOAST_DURATION = 1200;
+export const MAIN_TOAST_DURATION = 800;
 
 export class ToastState {
 	toasts = $state<IToast[]>([]);
@@ -115,7 +115,7 @@ export class ToastState {
 		)
 	}
 
-	public removeHighlight(id: string) {
+	private removeHighlight(id: string) {
 		const timeout = this.highlightedSquaresToTimeoutMap.get(id);
 		if (timeout) {
 			clearTimeout(timeout);
@@ -125,7 +125,7 @@ export class ToastState {
 	}
 
 	// not sure we need this
-	public removeAllHighlights() {
+	private removeAllHighlights() {
 		this.highlightedSquares.forEach(({ id }) => {
 			const timeout = this.highlightedSquaresToTimeoutMap.get(id);
 			if (timeout) {
@@ -151,7 +151,7 @@ export class ToastState {
 		)
 	}
 
-	public removeFiredQueuedMessage(id: string) {
+	private removeFiredQueuedMessage(id: string) {
 		const timeout = this.firedQueuedMessagesToTimeoutMap.get(id);
 		if (timeout) {
 			clearTimeout(timeout);
@@ -161,7 +161,7 @@ export class ToastState {
 		this.queuedMessages = this.queuedMessages.filter((toast) => toast.id !== id);
 	}
 
-	public removeAllQueuedMessages() {
+	private removeAllQueuedMessages() {
 		this.firedQueuedMessages.forEach(({ id }) => {
 			const timeout = this.firedQueuedMessagesToTimeoutMap.get(id);
 			if (timeout) {
