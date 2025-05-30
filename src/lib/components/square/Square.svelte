@@ -31,8 +31,10 @@
     }
 
     let isHighlighted = $derived.by(() => 
-        highlightedSquares?.reduce((isHighlighted, square) => 
-            square.x === x && square.y === y ? true : isHighlighted, false));
+        highlightedSquares?.reduce((isHighlighted, square) =>
+            square.x === x && square.y === y ? true : isHighlighted, false
+        )
+    );
 
     let scoredValue = $derived(highlightedSquares[0]?.scoredValue || 0)
 </script>
@@ -59,6 +61,7 @@
         class="board__square"
         class:startingSquare
         class:hovering
+        class:isGapSquare={isHighlighted}
 		ondragenter={() => gameState.setHoveringTrue(x, y)}
      	ondragleave={() => gameState.setHoveringFalse(x, y)}
         id={String(id)} 
@@ -105,6 +108,15 @@
         background-color: limegreen;
         background-image: radial-gradient(whitesmoke 0.5px, transparent 0.5px),
                         radial-gradient(whitesmoke 0.5px, transparent 0.5px);
+        background-size: 5px 5px;
+        background-position: 0 0, 2.5px 2.5px;
+    }
+
+    .board__square.isGapSquare {
+        border: 6px solid red;
+        background-color: lightcoral;
+        background-image: radial-gradient(antiquewhite 0.5px, transparent 0.5px),
+                        radial-gradient(antiquewhite 0.5px, transparent 0.5px);
         background-size: 5px 5px;
         background-position: 0 0, 2.5px 2.5px;
     }
