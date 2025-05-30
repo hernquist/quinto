@@ -69,13 +69,10 @@ export function checkForContinuousTiles(min: IDroppedTile, max: IDroppedTile, ga
     let emptySquares = [];
 
     while (getMaxToCheck - getMinToCheck >= 0) {
-        console.log("getMinToCheck, getMaxToCheck", getMinToCheck, getMaxToCheck);
-
         const droppedTileMatch = droppedTiles.find((tile) => 
             tile[key] === getMinToCheck && tile[dependentKey] === min[dependentKey]
         );
 
-        console.log("match", droppedTileMatch)
         if (!droppedTileMatch) {
             let boardMatch = false;
             board.forEach(column => {
