@@ -1,7 +1,7 @@
 import { setContext, getContext } from 'svelte';
-import { addDropzoneOptions, checkSurroundSquaresForASingleTile, readLinesForScore } from './gameUtils';
+import { addDropzoneOptions, checkForContinuousTiles, checkSurroundSquaresForASingleTile, getMinMaxTile, readLinesForScore } from './gameUtils';
 import initState from './gameInitialState';
-import { Direction, TurnStatus, type IDroppedTile, type IGameState, type ILineItem, GameStatus } from "$lib/state/game/types";
+import { Direction, TurnStatus, type IDroppedTile, type IGameState, type ILineItem, GameStatus, type ITurn, type IIsValidPlay } from "$lib/state/game/types";
 import { Players } from '$lib/state/player/types';
 import type { IPlayerState, PlayerState } from "../player/player.svelte";
 import type { ITiles, ITile, IBoard, ICoordTuple } from "$lib/components/game/types";
@@ -52,6 +52,15 @@ export class GameState {
 
 	public reInitializeGame() {
 		this.game = initState
+	}
+
+	public isValidPlay(): IIsValidPlay {
+		const { turn: { direction, droppedTiles }}: { turn: ITurn } = this.game;
+		if (direction === Direction.Undecided) return { isValid: true, emptySquares: [] };
+
+		const minTile = getMinMaxTile(droppedTiles, direction);
+		const maxTile = getMinMaxTile(droppedTiles, direction, false);
+		return checkForContinuousTiles(minTile, maxTile, this.game) 
 	}
 	
 	private updateTurnStatus() {
