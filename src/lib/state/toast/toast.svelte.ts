@@ -108,7 +108,7 @@ export class ToastState {
 
 		this.highlightedSquares.push({ ...lineItem, id })
 		this.highlightedSquaresToTimeoutMap.set(
-			id, 
+			id,
 			setTimeout(() => {
 				this.removeHighlight(id);
 			}, highlightDuration)
