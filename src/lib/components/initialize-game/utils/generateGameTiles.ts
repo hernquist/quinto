@@ -7,12 +7,12 @@ function generateGameTiles(gameState: GameState) {
     let gameTiles = []
 
     for (let index = 0; index < numberOfTiles; index ++) {
-        const value = Math.trunc(Math.random(1) * 9) + 1;
+        const value = Math.trunc(Math.random() * 9) + 1;
         const tile = {
             id: index,
             text: value,
             value,
-        }
+        };
         gameTiles.push(tile);
     }
 

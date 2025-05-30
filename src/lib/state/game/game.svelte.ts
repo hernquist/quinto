@@ -1,11 +1,11 @@
 import { setContext, getContext } from 'svelte';
-import { addDropzoneOptions, checkSurroundSquaresForASingleTile, readLinesForScore } from './gameUtils';
+import { addDropzoneOptions, checkForContinuousTiles, checkSurroundSquaresForASingleTile, getMinMaxTile, readLinesForScore } from './gameUtils';
 import initState from './gameInitialState';
-import { Direction, TurnStatus, type IDroppedTile, type IGameState, type ILineItem, GameStatus } from "$lib/state/game/types";
+import { Direction, TurnStatus, type IDroppedTile, type IGameState, type ILineItem, GameStatus, type ITurn, type IIsValidPlay } from "$lib/state/game/types";
 import { Players } from '$lib/state/player/types';
 import type { IPlayerState, PlayerState } from "../player/player.svelte";
 import type { ITiles, ITile, IBoard, ICoordTuple } from "$lib/components/game/types";
-import type { IToastState } from '$lib/state/toast/types';
+import { ToastType, type IToastState } from '$lib/state/toast/types';
 import type { ToastState } from '../toast/toast.svelte';
 
 const { Top, Bottom} = Players;
@@ -13,6 +13,9 @@ const { Top, Bottom} = Players;
 export class GameState {
 	game = $state<IGameState>(initState);
 	capturedBoard = $state<IBoard>([]);
+
+	skippedTurn = false;
+	finishTurnActivePlayer: Players = Players.Top;
 
 	// I don't think we need the initialState here
 	constructor (initState: IGameState) {
@@ -49,6 +52,15 @@ export class GameState {
 
 	public reInitializeGame() {
 		this.game = initState
+	}
+
+	public isValidPlay(): IIsValidPlay {
+		const { turn: { direction, droppedTiles }}: { turn: ITurn } = this.game;
+		if (direction === Direction.Undecided) return { isValid: true, emptySquares: [] };
+
+		const minTile = getMinMaxTile(droppedTiles, direction);
+		const maxTile = getMinMaxTile(droppedTiles, direction, false);
+		return checkForContinuousTiles(minTile, maxTile, this.game) 
 	}
 	
 	private updateTurnStatus() {
@@ -174,7 +186,7 @@ export class GameState {
 		return Top;
 	}
 
-	private calculateScore(toastState: IToastState): number {
+	private async calculateScore(toastState: IToastState) {
 		const { turn: { direction, droppedTiles}, gameMultiple } = this.game;
 		let lines: ILineItem[][] = [];
 
@@ -498,9 +510,9 @@ export class GameState {
 		return 0;
 	}
 
-	private updateScore(playerState: IPlayerState, toastState: IToastState): void {
-		const score = this.calculateScore(toastState);
-		playerState.player[this.game.activePlayer].score += score; 
+	private async updateScore(playerState: IPlayerState, toastState: IToastState): void {
+		const score = await this.calculateScore(toastState);
+		playerState.player[this.finishTurnActivePlayer].score += score; 
 	}
 
 	// reset for next player
@@ -565,8 +577,15 @@ export class GameState {
 	}
 
 	public finishTurn(playerState: PlayerState, toastState: ToastState): void {
-		this.updateScore(playerState, toastState);
-		this.replenishTiles(playerState);
+		this.finishTurnActivePlayer = this.game.activePlayer;
+
+		if (!this.skippedTurn) {
+			this.updateScore(playerState, toastState);
+			this.replenishTiles(playerState);
+		} else {
+			this.skippedTurn = false;
+		}
+
 		this.updateActivePlayer(this.getInactivePlayer());
 		// if second turn of round increment to next round
 		if (!this.game.turn.firstTurnOfRound) {
@@ -586,11 +605,14 @@ export class GameState {
 
 		// if active player has no tiles but the other play does...
 		if (playerState.hasNoTiles(this.game.activePlayer) && !playerState.hasNoTiles(this.getInactivePlayer())) {
-			toastState.add("", `${this.game.activePlayer} has no tiles... ${this.getInactivePlayer()}'s turn`)
+			toastState.addQueuedMessage("", `${this.game.activePlayer} has no tiles... ${this.getInactivePlayer()}'s turn`, this.game.activePlayer, ToastType.PLAYER_MESSGAGE);
+			this.skippedTurn = true;
 			this.finishTurn(playerState, toastState);
 		} else {
 			this.captureBoard();
 		}
+
+		toastState.fireMessages();
 	}
 	
 	public captureBoard() {

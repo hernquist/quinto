@@ -11,15 +11,15 @@
         x: number, 
         y: number, 
         activePlayer: Players
+        highlightedSquares?: IHighlightedSquare[]
     };
     
     const gameState = getGameState();
-    let { square, x, y, activePlayer }: ISquareProps = $props();
+    let { square, x, y, activePlayer, highlightedSquares }: ISquareProps = $props();
     const { tile, startingSquare, id, hasDropzone, hasDroppedTile, hovering } = $derived(square);
     const playerTileState = getPlayerState();
     let tiles: ITiles = $derived(playerTileState.tiles[activePlayer]);
    
-
     const onDropzone = (tileId: number): void => {
         const foundTile: ITile | undefined = tiles.find(tile => tile.id == tileId);
 
@@ -29,15 +29,30 @@
             playerTileState.removeTile(activePlayer, tileId);   
         }
     }
+
+    let isHighlighted = $derived.by(() => 
+        highlightedSquares?.reduce((isHighlighted, square) =>
+            square.x === x && square.y === y ? true : isHighlighted, false
+        )
+    );
+
+    let scoredValue = $derived(highlightedSquares[0]?.scoredValue || 0)
 </script>
 
 {#if tile}
     <div 
-        class="board__square" 
+        class="board__square {scoredValue > 0 ? 'gain' : 'loss'}" 
         id={String(id)} 
         class:hasDroppedTile
+        class:isHighlighted 
     >
-        <Tile tile={tile} isActive {hasDroppedTile} />
+        <Tile 
+            tile={tile} 
+            isActive 
+            {hasDroppedTile} 
+            {isHighlighted} 
+            {scoredValue}
+        />
     </div>
 {:else if hasDropzone}
     <div 
@@ -46,6 +61,7 @@
         class="board__square"
         class:startingSquare
         class:hovering
+        class:isGapSquare={isHighlighted}
 		ondragenter={() => gameState.setHoveringTrue(x, y)}
      	ondragleave={() => gameState.setHoveringFalse(x, y)}
         id={String(id)} 
@@ -96,6 +112,72 @@
         background-position: 0 0, 2.5px 2.5px;
     }
 
+    .board__square.isGapSquare {
+        border: 6px solid red;
+        background-color: lightcoral;
+        background-image: radial-gradient(antiquewhite 0.5px, transparent 0.5px),
+                        radial-gradient(antiquewhite 0.5px, transparent 0.5px);
+        background-size: 5px 5px;
+        background-position: 0 0, 2.5px 2.5px;
+    }
+
+    .board__square.isHighlighted {
+        border: 2px dashed black;
+    }
+
+    .board__square.isHighlighted.gain {
+        animation: rotate-bg-color-gain 1.4s infinite;
+    }
+
+    @keyframes rotate-bg-color-gain {
+        0% {
+            background-color: #9dffa8;
+        }
+        20% {
+            background-color: #89ff9b;
+        }
+        40% {
+            background-color: #6fff81;
+        }
+        60% {
+            background-color: #4fff67;
+        }
+        80% {
+            background-color: #34ff47;
+        }
+        100% {
+            background-color: #00ff00;
+        }
+    }
+    
+    .board__square.isHighlighted.loss {
+        animation: rotate-bg-color-loss 1.4s infinite;
+    }
+
+    @keyframes rotate-bg-color-loss {
+        0% {
+            background-color: #ff0000;
+        }
+        16.7% {
+            background-color: #e60000;
+        }
+        33.3% {
+            background-color: #cc0000;
+        }
+        50% {
+            background-color: #b30000;
+        }
+        66.7% {
+            background-color: #990000;
+        }
+        83.3% {
+            background-color: #800000;
+        }
+        100% {
+            background-color: #660000;
+        }
+    }
+    
     .startingSquare {
         border: 6px dashed lightgrey;
         background-color: salmon;

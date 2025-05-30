@@ -61,5 +61,22 @@ interface ILineItem {
     value: number;
 }
 
-export type { IGameState, ITurn, IDroppedTile, ILineItem };
-export { GameStatus, TurnStatus, DropzoneStatus, Direction }
+enum Axis {
+    X = "x",
+    Y = "y"
+}
+
+interface IKeyMap {
+    [Direction.Horizontal]: Axis,
+    [Direction.Vertical]: Axis,
+}
+
+type IEmptySquare = Record<Axis, number>;
+
+interface IIsValidPlay {
+    isValid: boolean,
+    emptySquares: any[];
+}
+
+export type { IGameState, ITurn, IDroppedTile, ILineItem, IKeyMap, IIsValidPlay, IEmptySquare };
+export { GameStatus, TurnStatus, DropzoneStatus, Direction, Axis }

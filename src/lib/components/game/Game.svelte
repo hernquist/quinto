@@ -5,6 +5,7 @@
 	import PlayerRow from "../player-row/PlayerRow.svelte";
 	import { getPlayerState } from "$lib/state/player/player.svelte";
 	import { getGameState } from "$lib/state/game/game.svelte";
+	import { getToastState, MAIN_TOAST_DURATION, HIGHLIGHT_DURATION } from "$lib/state/toast/toast.svelte";
 	import { getModalState } from "$lib/state/modal-state/modal-state.svelte";
 	import Modal from "$lib/components/modal/modal.svelte";
 	import MainModalWrapper from "$lib/components/main-modal-wrapper/MainModalWrapper.svelte";
@@ -18,19 +19,25 @@
     const playerTileState = getPlayerState();
     const gameState = getGameState();
     const modalState = getModalState();
-
+    const toastState = getToastState();
+    const {numberOfLines } = $derived(toastState);
+    
+    // This is needs more testing and thinking. That calculation should happen out of here probably.
     $effect(() => {
-        if (gameState.game.status === GameStatus.Complete) {
-            modalState.changeScreen(ModalScreen.GameOver);
-            modalState.toggleModalOn();
+        if (gameState.game.status === GameStatus.Complete) { 
+            setTimeout(()=> {
+                modalState.changeScreen(ModalScreen.GameOver);
+                modalState.toggleModalOn();
+            }, numberOfLines * HIGHLIGHT_DURATION + 1 * MAIN_TOAST_DURATION);
         }
 	});
 </script>
 
-<button onclick={(e) => {
-    e.preventDefault();
-    modalState.toggleModalOn()
-}}>show modal</button>
+<button onclick={
+    (e) => {
+        e.preventDefault();
+        modalState.toggleModalOn()
+    }}>show modal</button>
 
 <InitializeGame>
     {#if gameState.game.status === GameStatus.Complete}

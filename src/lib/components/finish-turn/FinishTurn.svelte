@@ -10,8 +10,13 @@
 
     const handleClick = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-        gameState.finishTurn(playerState, toastState);
-    }
+        const play = gameState.isValidPlay();
+        if (play.isValid) {
+            gameState.finishTurn(playerState, toastState);
+        } else {
+            toastState.addHighlights([play.emptySquares], gameState.game.gameMultiple)
+        }
+    };
     
     const disabled = $derived(gameState.game.turn.droppedTiles.length === 0);
 </script>
