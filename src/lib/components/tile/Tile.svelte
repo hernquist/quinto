@@ -42,7 +42,6 @@
     </div>
 {/if}
 
-
 <style>
     .tile {
         background-color: cadetblue;
