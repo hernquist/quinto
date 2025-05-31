@@ -5,7 +5,7 @@
 	import ResetTurn from "../reset-turn/ResetTurn.svelte";
     import PlayerMessage from "$lib/components/toasts/PlayerMessage.svelte"
 
-    const { tiles, playerPosition, activePlayer } = $props();
+    const { tiles, playerPosition, activePlayer, isComputer } = $props();
     const isActive = $derived(activePlayer === playerPosition);
     let toastState = getToastState();
 </script>
@@ -16,8 +16,10 @@
         <PlayerMessage {toastState} {activePlayer} {playerPosition}/>
     {:else}
         <PlayerTiles {tiles} {isActive}/>
-        <FinishTurn {isActive} />
-        <ResetTurn {isActive} />
+        {#if !isComputer}
+            <FinishTurn {isActive} />
+            <ResetTurn {isActive} />
+        {/if}
      {/if}
 </div>
 
