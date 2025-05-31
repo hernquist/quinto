@@ -7,8 +7,10 @@ enum Players {
 
 interface IPlayer {
     score: number;
-    goesFirst: boolean,
-    winner: boolean
+    goesFirst: boolean;
+    winner: boolean;
+    isComputer: boolean;
+
 }
 
 interface IPlayerTiles {
