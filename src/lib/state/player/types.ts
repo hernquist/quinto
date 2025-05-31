@@ -10,7 +10,6 @@ interface IPlayer {
     goesFirst: boolean;
     winner: boolean;
     isComputer: boolean;
-
 }
 
 interface IPlayerTiles {
