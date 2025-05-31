@@ -75,6 +75,7 @@ export class GameState {
 	}
 
 	public updateBoardAfterTileDrop() {
+		console.log("updateBoardAfterTileDrop", this.game.board)
 		const allowList = this.getDropzoneAllowlist() || [];
 
 		for (let x = 0; x < this.game.columns; x++) {
@@ -100,6 +101,23 @@ export class GameState {
 	public updateTurn(x: number, y: number, tile: ITile): void {
 		const droppedTile: IDroppedTile = { x, y, tile };
 		this.game.turn.droppedTiles.push(droppedTile);
+		this.updateTurnStatus();
+		this.updateBoardAfterTileDrop();
+	}
+
+	// for computer play
+	public updateBulkTurn(droppedTiles: IDroppedTile[]): void {
+		// TODO: this needs to be dynamic
+		// right now I am forcing the issue....
+		this.game.turn.turnStatus = TurnStatus.MultiPlaced;
+		// also we need to set horizontal and vertical placement here 
+
+		droppedTiles.forEach((droppedTile) => {
+			const { x, y, tile } = droppedTile;
+			this.updateBoardSquareWithTile(x, y, tile);
+		});
+		
+		this.game.turn.droppedTiles = droppedTiles;
 		this.updateTurnStatus();
 		this.updateBoardAfterTileDrop();
 	}
