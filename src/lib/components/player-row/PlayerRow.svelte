@@ -1,5 +1,7 @@
 <script lang="ts">
     import { getToastState } from "$lib/state/toast/toast.svelte";
+    import { getGameState } from "$lib/state/game/game.svelte";
+    import { getPlayerState } from "$lib/state/player/player.svelte";
 	import FinishTurn from "../finish-turn/FinishTurn.svelte";
     import PlayerTiles from "../player-tiles/PlayerTiles.svelte";
 	import ResetTurn from "../reset-turn/ResetTurn.svelte";
@@ -8,6 +10,33 @@
     const { tiles, playerPosition, activePlayer, isComputer } = $props();
     const isActive = $derived(activePlayer === playerPosition);
     let toastState = getToastState();
+
+    let gameState = getGameState();
+    let playerState = getPlayerState();
+
+    // TODO: remove
+    const mockTurn = {
+        "firstTurnOfRound":true,
+        "droppedTiles":
+            [
+                {"x":0,"y":2,"tile":{"id":0,"text":2,"value":2}},
+                {"x":1,"y":2,"tile":{"id":1,"text":6,"value":6}},
+                {"x":2,"y":2,"tile":{"id":3,"text":5,"value":5}}
+            ],
+        "turnStatus":"multiPlaced", // TURN_STATUS.MULTI_PLACED;
+        "direction":"horizontal"
+    }
+
+    $effect(() => {
+        if (isComputer && isActive) {
+            setTimeout(() => {
+                console.log("UPDATE WITH DROPPED TILES");
+                gameState.updateBulkTurn(mockTurn.droppedTiles);
+                console.log("FIRE COMPUTER TURN");
+                gameState.finishTurn(playerState, toastState);
+            }, 5000)
+        }
+    })
 </script>
 
 <div class="playerRow__container">
