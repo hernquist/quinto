@@ -16,7 +16,7 @@
     
     const { Top, Bottom } = Players;
 
-    const playerTileState = getPlayerState();
+    const playerState = getPlayerState();
     const gameState = getGameState();
     const modalState = getModalState();
     const toastState = getToastState();
@@ -31,6 +31,8 @@
             }, numberOfLines * HIGHLIGHT_DURATION + 1 * MAIN_TOAST_DURATION);
         }
 	});
+
+    $inspect("[Game]playerState", playerState.player);
 </script>
 
 <button onclick={
@@ -45,9 +47,19 @@
     {/if}
     <pre>Player: {gameState.game.activePlayer}  # tiles: {gameState.game.tiles.length} Round: {gameState.game.round} Turn: {gameState.game.turn.turnStatus} Direction: {gameState.game.turn.direction} </pre>
     <Score />
-    <PlayerRow playerPosition={Top} activePlayer={gameState.game.activePlayer} tiles={playerTileState.tiles[Top]}/>
+    <PlayerRow 
+        playerPosition={Top} 
+        activePlayer={gameState.game.activePlayer} 
+        tiles={playerState.tiles[Top]} 
+        isComputer={playerState.player[Top].isComputer}
+    />
     <Board activePlayer={gameState.game.activePlayer}/>
-    <PlayerRow playerPosition={Bottom} activePlayer={gameState.game.activePlayer} tiles={playerTileState.tiles[Bottom]}/>
+    <PlayerRow 
+        playerPosition={Bottom} 
+        activePlayer={gameState.game.activePlayer} 
+        tiles={playerState.tiles[Bottom]} 
+        isComputer={playerState.player[Bottom].isComputer}
+    />
     {#if modalState.showModal === true}
         <Modal>
             {#snippet header()}
