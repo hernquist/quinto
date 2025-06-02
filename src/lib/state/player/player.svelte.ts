@@ -35,6 +35,10 @@ export class PlayerState {
     constructor() {
     }
 
+    public getTiles(playerPosition: Players): ITile[] {
+        return this.tiles[playerPosition];
+    }
+
     public updateTiles(playerPosition: Players, playerTiles: ITile[]) {
 		this.tiles[playerPosition] = playerTiles;
 	}

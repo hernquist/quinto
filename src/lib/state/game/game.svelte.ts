@@ -4,7 +4,7 @@ import initState from './gameInitialState';
 import { Direction, TurnStatus, type IDroppedTile, type IGameState, type ILineItem, GameStatus, type ITurn, type IIsValidPlay } from "$lib/state/game/types";
 import { Players } from '$lib/state/player/types';
 import type { IPlayerState, PlayerState } from "../player/player.svelte";
-import type { ITiles, ITile, IBoard, ICoordTuple } from "$lib/components/game/types";
+import type { ITile, IBoard, ICoordTuple } from "$lib/components/game/types";
 import { ToastType, type IToastState } from '$lib/state/toast/types';
 import type { ToastState } from '../toast/toast.svelte';
 
@@ -22,7 +22,7 @@ export class GameState {
 		this.game = initState;
 	}
 
-	public updateGameTiles (tiles: ITiles) {
+	public updateGameTiles (tiles: ITile[]) {
 		this.game.tiles = tiles;
 	}
 

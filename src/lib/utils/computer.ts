@@ -1,4 +1,4 @@
-import type { IBoard, ITiles } from "$lib/components/game/types"
+import type { IBoard, ITile } from "$lib/components/game/types"
 import type { GameState } from "$lib/state/game/game.svelte";
 import { sumTotalScore } from "$lib/state/game/synchronousCalculateScore";
 import { Direction, TurnStatus, type IDroppedTile, type IGameState, type ITurn } from "$lib/state/game/types"
@@ -16,7 +16,7 @@ export interface ICandidateMove {
     candidateMove: ITurn
 }
 
-function tryTilesHorizontal(gameState: GameState, tiles: ITiles, numberOfTiles: number, x: number, y: number): ICandidateMove[] {
+function tryTilesHorizontal(gameState: GameState, tiles: ITile[], numberOfTiles: number, x: number, y: number): ICandidateMove[] {
     let candidateTiles: IDroppedTile[] = [];
     let candidateMoves = []
     // iterate for each tile
@@ -65,7 +65,7 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
     const computerPlayer: IPlayer = playerState.player[Players.Bottom]; // TODO: needs to be dynamic
     
     // get computer's tiles
-    const computerTiles: ITiles = playerState.getTiles(Players.Bottom); // TODO: needs to be dynamic
+    const computerTiles: ITile[] = playerState.getTiles(Players.Bottom); // TODO: needs to be dynamic
     const numberOfTiles = computerTiles.length;
     console.log("[computer].getComputerTurn--computerTiles", JSON.stringify(computerTiles));
 

@@ -1,4 +1,4 @@
-import type { ITiles } from "$lib/components/game/types";
+import type { ITile } from "$lib/components/game/types";
 
 enum Players {
     Top = 'TOP',
@@ -13,8 +13,8 @@ interface IPlayer {
 }
 
 interface IPlayerTiles {
-    [Players.Top]: ITiles;
-    [Players.Bottom]: ITiles;
+    [Players.Top]: ITile[];
+    [Players.Bottom]: ITile[];
 };
 
 interface IPlayers {
