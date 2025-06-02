@@ -47,6 +47,7 @@ interface IGameState {
 	gameMultiple: number;
     board: IBoard;
     turn: ITurn;
+    computerCandidateTurn: ITurn;
 }
 
 enum Direction {
