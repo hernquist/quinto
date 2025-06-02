@@ -17,6 +17,9 @@
             toastState.addHighlights([play.emptySquares], gameState.game.gameMultiple)
         }
     };
+    // TODO: remove
+    $inspect("[FinishTurn]gameState.game.turn", gameState.game.turn)
+    $inspect("[FinishTurn]gameState.game.turn", JSON.stringify(gameState.game.turn))
     
     const disabled = $derived(gameState.game.turn.droppedTiles.length === 0);
 </script>
