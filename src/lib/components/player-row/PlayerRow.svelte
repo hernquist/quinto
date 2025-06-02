@@ -5,6 +5,7 @@
 	import FinishTurn from "../finish-turn/FinishTurn.svelte";
     import PlayerTiles from "../player-tiles/PlayerTiles.svelte";
 	import ResetTurn from "../reset-turn/ResetTurn.svelte";
+    import { getComputerTurn, type IComputerTurn } from "$lib/utils/computer";
     import PlayerMessage from "$lib/components/toasts/PlayerMessage.svelte"
 
     const { tiles, playerPosition, activePlayer, isComputer } = $props();
@@ -30,9 +31,10 @@
     $effect(() => {
         if (isComputer && isActive) {
             setTimeout(() => {
-                console.log("UPDATE WITH DROPPED TILES");
-                gameState.updateBulkTurn(mockTurn.droppedTiles);
-                console.log("FIRE COMPUTER TURN");
+                const cpuTurn: IComputerTurn = getComputerTurn(gameState, playerState);
+                gameState.updateBulkTurn(cpuTurn.droppedTiles);
+                // TODO: gameState.updateTurnStatus(cpuTurn.turnStatus);
+                // TODO: gameState.setDirectio (cpuTurn.direction);
                 gameState.finishTurn(playerState, toastState);
             }, 5000)
         }
