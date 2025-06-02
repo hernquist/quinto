@@ -2,6 +2,7 @@ import type { IBoard, ICoordTuple } from "$lib/components/game/types";
 import { ToastType, type IToastState } from "$lib/state/toast/types";
 import { HIGHLIGHT_DURATION } from "../toast/toast.svelte";
 import { dependentKeyMap, independentKeyMap } from "./constants";
+import { sumScores } from "./synchronousCalculateScore";
 import { Axis, Direction, type IDroppedTile, type IGameState, type IIsValidPlay, type ILineItem, type ITurn } from "./types";
 
 export function checkSurroundSquaresForASingleTile (board: IBoard, x: number, y: number): boolean {
@@ -33,15 +34,9 @@ export function addDropzoneOptions(length: number, firstTile: IDroppedTile, dire
     return dropzoneOptions;
 }
 
-export function getScoredLineValue (line: ILineItem[], gameMultiple: number): number {
-    const lineValue = line.reduce((acc: number, { value }: { value: number}) => acc + value, 0);
-    const scoredValue = lineValue % gameMultiple === 0 ? lineValue : 0 - lineValue;
-    return scoredValue
-}
-
 export async function readLinesForScore(lines: ILineItem[][], gameMultiple: number, toastState: IToastState): Promise<number> {
     return new Promise ((resolve) => {
-        const totalLineScore = lines.reduce((acc: number, line: ILineItem[]) => acc + getScoredLineValue(line, gameMultiple), 0);
+        const totalLineScore = sumScores(lines, gameMultiple);
         toastState.addHighlights(lines, gameMultiple);
         setTimeout(() => { 
             resolve(totalLineScore);
@@ -99,4 +94,10 @@ export function checkForContinuousTiles(min: IDroppedTile, max: IDroppedTile, ga
         isValid: !noMatch,
         emptySquares
     }
+}
+
+export function orderTilesByDimension(tileA:IDroppedTile, tileB: IDroppedTile, key: "x" | "y"): number {
+    if (tileA[key] > tileB[key]) return 1;
+    if (tileA[key] < tileB[key]) return -1;
+    return 0;
 }
