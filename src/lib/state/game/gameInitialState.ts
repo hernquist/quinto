@@ -17,6 +17,12 @@ const initState: IGameState = {
 		droppedTiles: [],
 		turnStatus: TurnStatus.ZeroPlaced,
         direction: Direction.Undecided
+	},
+	computerCandidateTurn: {
+		firstTurnOfRound: true,
+		droppedTiles: [],
+		turnStatus: TurnStatus.ZeroPlaced,
+        direction: Direction.Undecided
 	}
 }
 
