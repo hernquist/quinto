@@ -1,5 +1,5 @@
 import { setContext, getContext } from 'svelte';
-import { addDropzoneOptions, checkForContinuousTiles, checkSurroundSquaresForASingleTile, getMinMaxTile, readLinesForScore } from './gameUtils';
+import { addDropzoneOptions, checkForContinuousTiles, checkSurroundSquaresForASingleTile, getMinMaxTile, orderTilesByDimension, readLinesForScore } from './gameUtils';
 import initState from './gameInitialState';
 import { Direction, TurnStatus, type IDroppedTile, type IGameState, type ILineItem, GameStatus, type ITurn, type IIsValidPlay } from "$lib/state/game/types";
 import { Players } from '$lib/state/player/types';
@@ -52,6 +52,14 @@ export class GameState {
 
 	public reInitializeGame() {
 		this.game = initState
+	}
+
+	public updateComputerCandidateTurn (update: ITurn): void {
+		this.game.computerCandidateTurn = { ...this.game.computerCandidateTurn, ...update };
+	}
+
+	public resetComputerCandidateTurn(): void {
+		this.game.computerCandidateTurn = initState.computerCandidateTurn;
 	}
 
 	public isValidPlay(): IIsValidPlay {
@@ -204,6 +212,8 @@ export class GameState {
 		return Top;
 	}
 
+	// TODO: start using sychronousCalculateScore with this async func
+	// TODO: add? ": Promise<number>" return type
 	private async calculateScore(toastState: IToastState) {
 		const { turn: { direction, droppedTiles}, gameMultiple } = this.game;
 		let lines: ILineItem[][] = [];
@@ -256,7 +266,7 @@ export class GameState {
 				lines.push(line);
 			}
 
-			// up and and down
+			// up and down
 			hasAdjacentTile = true;
 			// shift "up"
 			line = [];
@@ -304,13 +314,6 @@ export class GameState {
 				lines.push([{ x, y, value } ])
 			}
 			return readLinesForScore(lines, gameMultiple, toastState);
-		}
-
-		// TODO: move
-		function orderTilesByDimension(tileA:IDroppedTile, tileB: IDroppedTile, key: "x" | "y"): number {
-			if (tileA[key] > tileB[key]) return 1;
-			if (tileA[key] < tileB[key]) return -1;
-			return 0;
 		}
 
 		// ------------------------------------
