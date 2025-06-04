@@ -94,7 +94,7 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
         // TODO: make play based on level
     console.log("[computer].getComputerTurn--candidateMoves", candidateMoves);
     const selectedPlay = findSelectedPlay(candidateMoves);
-    console.log("[computer].getComputerTurn--selectedPlay", selectedPlay);
+    console.log("[computer].getComputerTurn--selectedPlay", JSON.parse(JSON.stringify(selectedPlay)));
     
     return ({
         droppedTiles: selectedPlay.candidateMove.droppedTiles,
