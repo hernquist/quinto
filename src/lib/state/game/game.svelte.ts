@@ -6,7 +6,7 @@ import { Players } from '$lib/state/player/types';
 import type { IPlayerState, PlayerState } from "../player/player.svelte";
 import type { ITile, IBoard, ICoordTuple } from "$lib/components/game/types";
 import { ToastType, type IToastState } from '$lib/state/toast/types';
-import type { ToastState } from '../toast/toast.svelte';
+import { HIGHLIGHT_DURATION, MAIN_TOAST_DURATION, type ToastState } from '../toast/toast.svelte';
 
 const { Top, Bottom} = Players;
 
@@ -109,12 +109,19 @@ export class GameState {
 	public updateTurn(x: number, y: number, tile: ITile): void {
 		const droppedTile: IDroppedTile = { x, y, tile };
 		this.game.turn.droppedTiles.push(droppedTile);
+
 		this.updateTurnStatus();
 		this.updateBoardAfterTileDrop();
 	}
+	// 	setTimeout(() => {
+	// 		this.updateTurnStatus();
+	// 		this.updateBoardAfterTileDrop();
+	// 	}, numberOfLines * HIGHLIGHT_DURATION + 1 * MAIN_TOAST_DURATION)
+	// 	}, numberOfLines * HIGHLIGHT_DURATION + 1 * MAIN_TOAST_DURATION)
+	// }
 
 	// for computer play
-	public updateBulkTurn(droppedTiles: IDroppedTile[]): void {
+	public updateBulkTurn(droppedTiles: IDroppedTile[], playerState: PlayerState): void {
 		// TODO: this needs to be dynamic
 		// right now I am forcing the issue....
 		this.game.turn.turnStatus = TurnStatus.MultiPlaced;
@@ -123,6 +130,8 @@ export class GameState {
 		droppedTiles.forEach((droppedTile) => {
 			const { x, y, tile } = droppedTile;
 			this.updateBoardSquareWithTile(x, y, tile);
+			// is this activePlayer working with the asynchronous computer play?
+			playerState.removeTile(this.game.activePlayer, tile.id);
 		});
 		
 		this.game.turn.droppedTiles = droppedTiles;
@@ -214,7 +223,7 @@ export class GameState {
 
 	// TODO: start using sychronousCalculateScore with this async func
 	// TODO: add? ": Promise<number>" return type
-	private async calculateScore(toastState: IToastState) {
+	private async calculateScore(toastState: ToastState) {
 		const { turn: { direction, droppedTiles}, gameMultiple } = this.game;
 		let lines: ILineItem[][] = [];
 
@@ -531,7 +540,7 @@ export class GameState {
 		return 0;
 	}
 
-	private async updateScore(playerState: IPlayerState, toastState: IToastState): void {
+	private async updateScore(playerState: IPlayerState, toastState: ToastState): void {
 		const score = await this.calculateScore(toastState);
 		playerState.player[this.finishTurnActivePlayer].score += score; 
 	}
@@ -607,31 +616,33 @@ export class GameState {
 			this.skippedTurn = false;
 		}
 
-		this.updateActivePlayer(this.getInactivePlayer());
-		// if second turn of round increment to next round
-		if (!this.game.turn.firstTurnOfRound) {
-			this.game.round++;
-		}
-		this.checkForEndOfGameStatus(playerState);
-
-		if (this.game.status === GameStatus.Complete) {
-			// handle game over
-			const { isTieGame } = playerState.setWinner(this.game);
-			if (isTieGame) {
-				this.game.status = GameStatus.Tie;
+		setTimeout(() => {
+			this.updateActivePlayer(this.getInactivePlayer());
+			// if second turn of round increment to next round
+			if (!this.game.turn.firstTurnOfRound) {
+				this.game.round++;
 			}
-		} 
-		this.resetForNextTurn();
-		this.updateBoardAfterTileDrop();
-
-		// if active player has no tiles but the other play does...
-		if (playerState.hasNoTiles(this.game.activePlayer) && !playerState.hasNoTiles(this.getInactivePlayer())) {
-			toastState.addQueuedMessage("", `${this.game.activePlayer} has no tiles... ${this.getInactivePlayer()}'s turn`, this.game.activePlayer, ToastType.PLAYER_MESSGAGE);
-			this.skippedTurn = true;
-			this.finishTurn(playerState, toastState);
-		} else {
-			this.captureBoard();
-		}
+			this.checkForEndOfGameStatus(playerState);
+	
+			if (this.game.status === GameStatus.Complete) {
+				// handle game over
+				const { isTieGame } = playerState.setWinner(this.game);
+				if (isTieGame) {
+					this.game.status = GameStatus.Tie;
+				}
+			} 
+			this.resetForNextTurn();
+			this.updateBoardAfterTileDrop();
+	
+			// if active player has no tiles but the other play does...
+			if (playerState.hasNoTiles(this.game.activePlayer) && !playerState.hasNoTiles(this.getInactivePlayer())) {
+				toastState.addQueuedMessage("", `${this.game.activePlayer} has no tiles... ${this.getInactivePlayer()}'s turn`, this.game.activePlayer, ToastType.PLAYER_MESSGAGE);
+				this.skippedTurn = true;
+				this.finishTurn(playerState, toastState);
+			} else {
+				this.captureBoard();
+			}
+		},  HIGHLIGHT_DURATION * toastState.numberOfLines + MAIN_TOAST_DURATION);
 
 		toastState.fireMessages();
 	}
