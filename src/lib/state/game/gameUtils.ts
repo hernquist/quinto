@@ -1,6 +1,6 @@
 import type { IBoard, ICoordTuple } from "$lib/components/game/types";
-import { ToastType, type IToastState } from "$lib/state/toast/types";
-import { HIGHLIGHT_DURATION } from "../toast/toast.svelte";
+import { ToastType } from "$lib/state/toast/types";
+import { HIGHLIGHT_DURATION, ToastState } from "../toast/toast.svelte";
 import { dependentKeyMap, independentKeyMap } from "./constants";
 import { sumScores } from "./synchronousCalculateScore";
 import { Axis, Direction, type IDroppedTile, type IGameState, type IIsValidPlay, type ILineItem, type ITurn } from "./types";
@@ -34,7 +34,7 @@ export function addDropzoneOptions(length: number, firstTile: IDroppedTile, dire
     return dropzoneOptions;
 }
 
-export async function readLinesForScore(lines: ILineItem[][], gameMultiple: number, toastState: IToastState): Promise<number> {
+export async function readLinesForScore(lines: ILineItem[][], gameMultiple: number, toastState: ToastState): Promise<number> {
     return new Promise ((resolve) => {
         const totalLineScore = sumScores(lines, gameMultiple);
         toastState.addHighlights(lines, gameMultiple);
