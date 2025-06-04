@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getToastState } from "$lib/state/toast/toast.svelte";
+    import { COMPUTER_THINKING_DURATION, getToastState } from "$lib/state/toast/toast.svelte";
     import { getGameState } from "$lib/state/game/game.svelte";
     import { getPlayerState } from "$lib/state/player/player.svelte";
 	import FinishTurn from "../finish-turn/FinishTurn.svelte";
@@ -7,11 +7,13 @@
 	import ResetTurn from "../reset-turn/ResetTurn.svelte";
     import { getComputerTurn, type IComputerTurn } from "$lib/utils/computer";
     import PlayerMessage from "$lib/components/toasts/PlayerMessage.svelte"
+	import { ToastType } from "$lib/state/toast/types";
+
+    let shouldFire: boolean = $state(true);
 
     const { tiles, playerPosition, activePlayer, isComputer } = $props();
     const isActive = $derived(activePlayer === playerPosition);
     let toastState = getToastState();
-
     let gameState = getGameState();
     let playerState = getPlayerState();
 
@@ -30,13 +32,19 @@
 
     $effect(() => {
         if (isComputer && isActive) {
+            if (shouldFire) {
+                shouldFire = false;
+                toastState.add("TITLE", "Computer is thinking...", ToastType.PLAYER_MESSGAGE, COMPUTER_THINKING_DURATION )
+            }
+
             setTimeout(() => {
                 const cpuTurn: IComputerTurn = getComputerTurn(gameState, playerState);
-                gameState.updateBulkTurn(cpuTurn.droppedTiles);
+                gameState.updateBulkTurn(cpuTurn.droppedTiles, playerState);
                 // TODO: gameState.updateTurnStatus(cpuTurn.turnStatus);
                 // TODO: gameState.setDirectio (cpuTurn.direction);
                 gameState.finishTurn(playerState, toastState);
-            }, 5000)
+                shouldFire = true;
+            }, COMPUTER_THINKING_DURATION)
         }
     })
 </script>
