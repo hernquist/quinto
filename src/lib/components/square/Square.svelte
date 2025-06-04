@@ -3,7 +3,7 @@
 	import { getPlayerState } from "$lib/state/player/player.svelte";
 	import { getGameState } from "$lib/state/game/game.svelte";
 	import { type Players } from "$lib/state/player/types";
-	import type { ISquare, ITile, ITiles } from "../game/types";
+	import type { ISquare, ITile } from "../game/types";
 	import Tile from "../tile/Tile.svelte";
 
     interface ISquareProps {
@@ -18,7 +18,7 @@
     let { square, x, y, activePlayer, highlightedSquares }: ISquareProps = $props();
     const { tile, startingSquare, id, hasDropzone, hasDroppedTile, hovering } = $derived(square);
     const playerTileState = getPlayerState();
-    let tiles: ITiles = $derived(playerTileState.tiles[activePlayer]);
+    let tiles: ITile[] = $derived(playerTileState.tiles[activePlayer]);
    
     const onDropzone = (tileId: number): void => {
         const foundTile: ITile | undefined = tiles.find(tile => tile.id == tileId);
