@@ -1,8 +1,8 @@
 import { getContext, onDestroy, setContext } from 'svelte';
 import type { IHighlightedItem, IHighlightedSquare, IQueuedMessgage, IToast, ToastType } from './types';
 import type { ILineItem } from '../game/types';
-import { getScoredLineValue } from '../game/gameUtils';
 import type { Players } from '../player/types';
+import { getScoredLineValue } from '../game/synchronousCalculateScore';
 
 export const HIGHLIGHT_DURATION = 1400; // remember to tie to Square.svelte animations "1.4s"
 export const MAIN_TOAST_DURATION = 1000;
