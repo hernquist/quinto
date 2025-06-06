@@ -57,8 +57,6 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
     
     // get board
     const { board }: { board: IBoard} = gameState.game;
-    console.log("[computer].getComputerTurn--gameState", gameState);
-    console.log("[computer].getComputerTurn--board", JSON.stringify(board));
 
     // get computer as player 
     // TODO: do we need?
@@ -67,7 +65,6 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
     // get computer's tiles
     const computerTiles: ITile[] = playerState.getTiles(Players.Bottom); // TODO: needs to be dynamic
     const numberOfTiles = computerTiles.length;
-    console.log("[computer].getComputerTurn--computerTiles", JSON.stringify(computerTiles));
 
     // loop through board try each tile
     const numberOfColumns = board.length;
@@ -92,9 +89,7 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
     // sort scores ??? not sure if I'll do it this way
         // make play
         // TODO: make play based on level
-    console.log("[computer].getComputerTurn--candidateMoves", candidateMoves);
     const selectedPlay = findSelectedPlay(candidateMoves);
-    console.log("[computer].getComputerTurn--selectedPlay", JSON.parse(JSON.stringify(selectedPlay)));
     
     return ({
         droppedTiles: selectedPlay.candidateMove.droppedTiles,
