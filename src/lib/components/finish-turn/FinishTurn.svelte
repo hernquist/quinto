@@ -8,19 +8,23 @@
     const playerState = getPlayerState();
     const toastState = getToastState();
 
-    const handleClick = (e: { preventDefault: () => void; }) => {
+    const handleClick = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         const play = gameState.isValidPlay();
         if (play.isValid) {
-            gameState.finishTurn(playerState, toastState);
+            console.log("[FinishTurn] finishTurn");
+            const time = await gameState.finishTurn(playerState, toastState);
+            // if computer player "on", then run computer turn
+            console.log("[FinishTurn] computerTurn");
+            setTimeout(async () => {
+                console.log("[FinishTurn] Computer turn starting");
+                await gameState.computerTurn(playerState, toastState);
+                console.log("[FinishTurn] Computer turn finished");
+            }, time);
         } else {
             toastState.addHighlights([play.emptySquares], gameState.game.gameMultiple)
         }
     };
-    // TODO: remove
-    $inspect("[FinishTurn]gameState.game.turn", gameState.game.turn)
-    $inspect("[FinishTurn]gameState.game.turn", JSON.stringify(gameState.game.turn))
-    
     const disabled = $derived(gameState.game.turn.droppedTiles.length === 0);
 </script>
 
