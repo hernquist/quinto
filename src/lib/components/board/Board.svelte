@@ -13,7 +13,6 @@
 
     // TODO: why are puttiing this in props AND grabbing game info from context
     const { activePlayer } = $props();
-    $inspect("[Board]gameState.game:", gameState.game);
 </script>
 
 <div class="board__container">
