@@ -32,7 +32,6 @@
         }
 	});
 
-    $inspect("[Game]playerState", playerState.player);
 </script>
 
 <button onclick={
