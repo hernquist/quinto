@@ -6,7 +6,8 @@ import { Players } from '$lib/state/player/types';
 import type { IPlayerState, PlayerState } from "../player/player.svelte";
 import type { ITile, IBoard, ICoordTuple } from "$lib/components/game/types";
 import { ToastType, type IToastState } from '$lib/state/toast/types';
-import { HIGHLIGHT_DURATION, MAIN_TOAST_DURATION, type ToastState } from '../toast/toast.svelte';
+import { COMPUTER_THINKING_DURATION, HIGHLIGHT_DURATION, MAIN_TOAST_DURATION, type ToastState } from '../toast/toast.svelte';
+import { getComputerTurn, type IComputerTurn } from '$lib/utils/computer';
 
 const { Top, Bottom} = Players;
 
@@ -83,7 +84,6 @@ export class GameState {
 	}
 
 	public updateBoardAfterTileDrop() {
-		console.log("updateBoardAfterTileDrop", this.game.board)
 		const allowList = this.getDropzoneAllowlist() || [];
 
 		for (let x = 0; x < this.game.columns; x++) {
@@ -124,7 +124,9 @@ export class GameState {
 	public updateBulkTurn(droppedTiles: IDroppedTile[], playerState: PlayerState): void {
 		// TODO: this needs to be dynamic
 		// right now I am forcing the issue....
-		this.game.turn.turnStatus = TurnStatus.MultiPlaced;
+		//TODO: need to figure this out BIG TODO
+		this.game.turn.turnStatus = TurnStatus.OnePlaced;
+		// this.game.turn.turnStatus = TurnStatus.MultiPlaced;
 		// also we need to set horizontal and vertical placement here 
 
 		droppedTiles.forEach((droppedTile) => {
@@ -606,7 +608,7 @@ export class GameState {
 		}
 	}
 
-	public finishTurn(playerState: PlayerState, toastState: ToastState): void {
+	public async finishTurn(playerState: PlayerState, toastState: ToastState): Promise<number> {
 		this.finishTurnActivePlayer = this.game.activePlayer;
 
 		if (!this.skippedTurn) {
@@ -645,8 +647,28 @@ export class GameState {
 		},  HIGHLIGHT_DURATION * toastState.numberOfLines + MAIN_TOAST_DURATION);
 
 		toastState.fireMessages();
+		return HIGHLIGHT_DURATION * toastState.numberOfLines + MAIN_TOAST_DURATION
+	}
+
+	public async computerTurn(playerState: PlayerState, toastState: ToastState): Promise<void> {
+        toastState.add("TITLE", "Computer is thinking...", ToastType.PLAYER_MESSGAGE, COMPUTER_THINKING_DURATION)
+
+        const interval = setTimeout(() => {
+			const cpuTurn: IComputerTurn = getComputerTurn(this, playerState);
+			this.updateBulkTurn(cpuTurn.droppedTiles, playerState);
+			// TODO: gameState.updateTurnStatus(cpuTurn.turnStatus);
+			// TODO: gameState.setDirectio (cpuTurn.direction);
+			this.finishTurn(playerState, toastState);
+		}, COMPUTER_THINKING_DURATION )
+
+		// how do I handle the clear interval?
+        // return () => {
+        //     clearTimeout(interval);
+        //     console.log("[PlayerRow] Computer turn cleared");
+        // }
 	}
 	
+
 	public captureBoard() {
 		this.capturedBoard = JSON.parse(JSON.stringify(this.game.board));
 	}
