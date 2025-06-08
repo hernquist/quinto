@@ -101,3 +101,7 @@ export function orderTilesByDimension(tileA:IDroppedTile, tileB: IDroppedTile, k
     if (tileA[key] < tileB[key]) return -1;
     return 0;
 }
+
+export function sleep(cb: () => void, ms: number): Promise<void> {
+	return new Promise(resolve => setTimeout(() => {cb(); resolve()}, ms));
+}
