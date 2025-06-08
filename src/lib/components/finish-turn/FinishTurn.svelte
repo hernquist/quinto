@@ -2,6 +2,7 @@
     import { getGameState } from "../../state/game/game.svelte";
     import { getPlayerState } from "$lib/state/player/player.svelte";
 	import { getToastState } from "$lib/state/toast/toast.svelte";
+	import { asyncWhileLoop } from "$lib/state/game/gameUtils";
     
     const { isActive } = $props();
     const gameState = getGameState();
@@ -13,14 +14,14 @@
         const play = gameState.isValidPlay();
         if (play.isValid) {
             console.log("[FinishTurn] finishTurn");
-            const time = await gameState.finishTurn(playerState, toastState);
+            await gameState.finishTurn(playerState, toastState);
             // if computer player "on", then run computer turn
-            console.log("[FinishTurn] computerTurn");
+            console.log("[FinishTurn] human done, computerTurn on");
             setTimeout(async () => {
                 console.log("[FinishTurn] Computer turn starting");
-                await gameState.computerTurn(playerState, toastState);
+                await asyncWhileLoop(gameState, playerState, toastState);
                 console.log("[FinishTurn] Computer turn finished");
-            }, time);
+            }, 20);
         } else {
             toastState.addHighlights([play.emptySquares], gameState.game.gameMultiple)
         }
