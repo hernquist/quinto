@@ -1,20 +1,8 @@
 <script lang="ts">
-	import { getToastState, MAIN_TOAST_DURATION } from '$lib/state/toast/toast.svelte';
-	import type { IToastState } from '$lib/state/toast/types';
+	import { getToastState, ToastState } from '$lib/state/toast/toast.svelte';
   import Toast from "./Toast.svelte";
 
-	const toastState: IToastState = getToastState();
-
-  // TODO: not working
-  // function fadeBlur(node, { duration }) {
-	// 	return {
-	// 		duration,
-	// 		css: (t, u) => `
-  //       backdrop-filter: blur(${t * 15}px);
-  //       background-color: rgba(0, 0, 0, ${t * 0.4});
-  //     `
-	// 	};
-	// }
+	const toastState: ToastState = getToastState();
 </script>
 
 <div 

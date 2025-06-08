@@ -20,7 +20,8 @@ function initializePlayers(playerState: PlayerState, gameState: GameState) {
     const top: IPlayer = {
         goesFirst: topPlayerFirst,
         score: 0,
-        winner: false
+        winner: false,
+        isComputer: false // setting it equal to false
     };
 
     // update top player
@@ -35,7 +36,8 @@ function initializePlayers(playerState: PlayerState, gameState: GameState) {
     const bottom: IPlayer = {
         goesFirst: bottomPlayerFirst,
         score: 0,
-        winner: false
+        winner: false,
+        isComputer: true, // forcing it to be true
     };
 
     // update bottom player

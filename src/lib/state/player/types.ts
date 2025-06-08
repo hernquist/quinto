@@ -1,4 +1,4 @@
-import type { ITiles } from "$lib/components/game/types";
+import type { ITile } from "$lib/components/game/types";
 
 enum Players {
     Top = 'TOP',
@@ -7,13 +7,14 @@ enum Players {
 
 interface IPlayer {
     score: number;
-    goesFirst: boolean,
-    winner: boolean
+    goesFirst: boolean;
+    winner: boolean;
+    isComputer: boolean;
 }
 
 interface IPlayerTiles {
-    [Players.Top]: ITiles;
-    [Players.Bottom]: ITiles;
+    [Players.Top]: ITile[];
+    [Players.Bottom]: ITile[];
 };
 
 interface IPlayers {

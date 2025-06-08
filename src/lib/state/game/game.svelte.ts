@@ -1,12 +1,13 @@
 import { setContext, getContext } from 'svelte';
-import { addDropzoneOptions, checkForContinuousTiles, checkSurroundSquaresForASingleTile, getMinMaxTile, readLinesForScore } from './gameUtils';
+import { addDropzoneOptions, checkForContinuousTiles, checkSurroundSquaresForASingleTile, getMinMaxTile, orderTilesByDimension, readLinesForScore, sleep } from './gameUtils';
 import initState from './gameInitialState';
 import { Direction, TurnStatus, type IDroppedTile, type IGameState, type ILineItem, GameStatus, type ITurn, type IIsValidPlay } from "$lib/state/game/types";
 import { Players } from '$lib/state/player/types';
 import type { IPlayerState, PlayerState } from "../player/player.svelte";
-import type { ITiles, ITile, IBoard, ICoordTuple } from "$lib/components/game/types";
+import type { ITile, IBoard, ICoordTuple } from "$lib/components/game/types";
 import { ToastType, type IToastState } from '$lib/state/toast/types';
-import type { ToastState } from '../toast/toast.svelte';
+import { COMPUTER_THINKING_DURATION, HIGHLIGHT_DURATION, MAIN_TOAST_DURATION, type ToastState } from '../toast/toast.svelte';
+import { getComputerTurn, type IComputerTurn } from '$lib/utils/computer';
 
 const { Top, Bottom} = Players;
 
@@ -22,7 +23,7 @@ export class GameState {
 		this.game = initState;
 	}
 
-	public updateGameTiles (tiles: ITiles) {
+	public updateGameTiles (tiles: ITile[]) {
 		this.game.tiles = tiles;
 	}
 
@@ -51,7 +52,16 @@ export class GameState {
 	}
 
 	public reInitializeGame() {
-		this.game = initState
+		this.game = initState;
+		this.skippedTurn = false;
+	}
+
+	public updateComputerCandidateTurn (update: ITurn): void {
+		this.game.computerCandidateTurn = { ...this.game.computerCandidateTurn, ...update };
+	}
+
+	public resetComputerCandidateTurn(): void {
+		this.game.computerCandidateTurn = initState.computerCandidateTurn;
 	}
 
 	public isValidPlay(): IIsValidPlay {
@@ -100,7 +110,30 @@ export class GameState {
 	public updateTurn(x: number, y: number, tile: ITile): void {
 		const droppedTile: IDroppedTile = { x, y, tile };
 		this.game.turn.droppedTiles.push(droppedTile);
+
 		this.updateTurnStatus();
+		this.updateBoardAfterTileDrop();
+	}
+	
+	// for computer play
+	public updateBulkTurn(droppedTiles: IDroppedTile[], playerState: PlayerState): void {
+		// TODO: this needs to be dynamic
+		// right now I am forcing the issue....
+		//TODO: need to figure this out BIG TODO
+		this.game.turn.turnStatus = TurnStatus.OnePlaced;
+		console.log("updateBulkTurn", this.game.turn.turnStatus);
+		// this.game.turn.turnStatus = TurnStatus.MultiPlaced;
+		// also we need to set horizontal and vertical placement here 
+
+		droppedTiles.forEach((droppedTile) => {
+			const { x, y, tile } = droppedTile;
+			this.updateBoardSquareWithTile(x, y, tile);
+			// is this activePlayer working with the asynchronous computer play?
+			playerState.removeTile(this.game.activePlayer, tile.id);
+		});
+		
+		this.game.turn.droppedTiles = droppedTiles;
+		// this.updateTurnStatus();
 		this.updateBoardAfterTileDrop();
 	}
 
@@ -120,7 +153,7 @@ export class GameState {
 	private getMultiPlacedDropzoneOptions() {
 		const multiTilesPlaced = this.game.turn.droppedTiles;
 		if (multiTilesPlaced.length < 2) {
-			console.error("{getMultiPlacedDropzoneOptions} error: internal game state borken -- number of tiles", multiTilesPlaced.length);
+			console.error("{ getMultiPlacedDropzoneOptions } error: internal game state borken -- number of tiles", multiTilesPlaced.length);
 			return;
 		}
 		const [firstTile, secondTile] = multiTilesPlaced;
@@ -180,13 +213,15 @@ export class GameState {
 		return this.game.round === 0 && this.game.turn.firstTurnOfRound;
 	}
 
-	private getInactivePlayer(): Players {
+	public getInactivePlayer(): Players {
 		const activePlayer = this.game.activePlayer;
 		if (activePlayer === Top) return Bottom;
 		return Top;
 	}
 
-	private async calculateScore(toastState: IToastState) {
+	// TODO: start using sychronousCalculateScore with this async func
+	// TODO: add? ": Promise<number>" return type
+	private async calculateScore(toastState: ToastState) {
 		const { turn: { direction, droppedTiles}, gameMultiple } = this.game;
 		let lines: ILineItem[][] = [];
 
@@ -238,7 +273,7 @@ export class GameState {
 				lines.push(line);
 			}
 
-			// up and and down
+			// up and down
 			hasAdjacentTile = true;
 			// shift "up"
 			line = [];
@@ -286,13 +321,6 @@ export class GameState {
 				lines.push([{ x, y, value } ])
 			}
 			return readLinesForScore(lines, gameMultiple, toastState);
-		}
-
-		// TODO: move
-		function orderTilesByDimension(tileA:IDroppedTile, tileB: IDroppedTile, key: "x" | "y"): number {
-			if (tileA[key] > tileB[key]) return 1;
-			if (tileA[key] < tileB[key]) return -1;
-			return 0;
 		}
 
 		// ------------------------------------
@@ -510,7 +538,7 @@ export class GameState {
 		return 0;
 	}
 
-	private async updateScore(playerState: IPlayerState, toastState: IToastState): void {
+	private async updateScore(playerState: IPlayerState, toastState: ToastState): void {
 		const score = await this.calculateScore(toastState);
 		playerState.player[this.finishTurnActivePlayer].score += score; 
 	}
@@ -576,7 +604,7 @@ export class GameState {
 		}
 	}
 
-	public finishTurn(playerState: PlayerState, toastState: ToastState): void {
+	public async finishTurn(playerState: PlayerState, toastState: ToastState): Promise<void> {
 		this.finishTurnActivePlayer = this.game.activePlayer;
 
 		if (!this.skippedTurn) {
@@ -586,35 +614,52 @@ export class GameState {
 			this.skippedTurn = false;
 		}
 
-		this.updateActivePlayer(this.getInactivePlayer());
-		// if second turn of round increment to next round
-		if (!this.game.turn.firstTurnOfRound) {
-			this.game.round++;
-		}
-		this.checkForEndOfGameStatus(playerState);
-
-		if (this.game.status === GameStatus.Complete) {
-			// handle game over
-			const { isTieGame } = playerState.setWinner(this.game);
-			if (isTieGame) {
-				this.game.status = GameStatus.Tie;
+		await sleep(() => {
+			this.updateActivePlayer(this.getInactivePlayer());
+			// if second turn of round increment to next round
+			if (!this.game.turn.firstTurnOfRound) {
+				this.game.round++;
 			}
-		} 
-		this.resetForNextTurn();
-		this.updateBoardAfterTileDrop();
-
-		// if active player has no tiles but the other play does...
-		if (playerState.hasNoTiles(this.game.activePlayer) && !playerState.hasNoTiles(this.getInactivePlayer())) {
-			toastState.addQueuedMessage("", `${this.game.activePlayer} has no tiles... ${this.getInactivePlayer()}'s turn`, this.game.activePlayer, ToastType.PLAYER_MESSGAGE);
-			this.skippedTurn = true;
-			this.finishTurn(playerState, toastState);
-		} else {
-			this.captureBoard();
-		}
+			this.checkForEndOfGameStatus(playerState);
+	
+			if (this.game.status === GameStatus.Complete) {
+				// handle game over
+				const { isTieGame } = playerState.setWinner(this.game);
+				if (isTieGame) {
+					this.game.status = GameStatus.Tie;
+				}
+			} 
+			this.resetForNextTurn();
+			this.updateBoardAfterTileDrop();
+	
+			// if active player has no tiles but the other play does...
+			console.log("from finishTurn sleep activePlayer:",this.game.activePlayer);
+			console.log("from finishTurn sleep inActivePlayer:",this.getInactivePlayer(), playerState);
+			if (playerState.hasNoTiles(this.game.activePlayer) && !playerState.hasNoTiles(this.getInactivePlayer())) {
+				toastState.addQueuedMessage("", `${this.game.activePlayer} has no tiles... ${this.getInactivePlayer()}'s turn`, this.game.activePlayer, ToastType.PLAYER_MESSGAGE);
+				// set skippedTurn to true so we can activate a finishTurn in the component
+				this.skippedTurn = true;
+				console.log("skippedTurn set to true");
+			} else {
+				this.captureBoard();
+			}
+		},  HIGHLIGHT_DURATION * toastState.numberOfLines + MAIN_TOAST_DURATION);
 
 		toastState.fireMessages();
 	}
-	
+
+	public async computerTurn(playerState: PlayerState, toastState: ToastState): Promise<void> {
+        toastState.add("TITLE", "Computer is thinking...", ToastType.PLAYER_MESSGAGE, COMPUTER_THINKING_DURATION)
+
+		await sleep(async () => {
+			const cpuTurn: IComputerTurn = getComputerTurn(this, playerState);
+			this.updateBulkTurn(cpuTurn.droppedTiles, playerState);
+			// TODO: gameState.updateTurnStatus(cpuTurn.turnStatus);
+			// TODO: gameState.setDirection (cpuTurn.direction);
+		}, COMPUTER_THINKING_DURATION);
+		await this.finishTurn(playerState, toastState);
+	};
+
 	public captureBoard() {
 		this.capturedBoard = JSON.parse(JSON.stringify(this.game.board));
 	}

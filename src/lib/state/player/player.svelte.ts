@@ -9,6 +9,7 @@ const initPlayer: IPlayer = {
     score: 0,
 	goesFirst: false,
     winner: false,
+    isComputer: false // not needed, it is set in the initializePlayers func
 }
 
 export interface ISetWinner {
@@ -32,6 +33,10 @@ export class PlayerState {
     })
 
     constructor() {
+    }
+
+    public getTiles(playerPosition: Players): ITile[] {
+        return this.tiles[playerPosition];
     }
 
     public updateTiles(playerPosition: Players, playerTiles: ITile[]) {

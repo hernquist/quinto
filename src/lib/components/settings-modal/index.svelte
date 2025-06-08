@@ -1,17 +1,19 @@
 <script lang="ts">
     import { getGameState } from "$lib/state/game/game.svelte";
 	import { getPlayerState } from "$lib/state/player/player.svelte";
+	import { getToastState, ToastState } from "$lib/state/toast/toast.svelte";
 	import { initializeGame } from "../initialize-game/utils/initializeGame";
 
     let gameState = getGameState();
     let playerState = getPlayerState();
+    let toastState = getToastState();
 
     let rows = $state(gameState.game.rows);
 	let columns = $state(gameState.game.columns);
 
     function onSave(e) {
         e.preventDefault();
-        initializeGame(gameState, playerState, { rows, columns });
+        initializeGame(gameState, playerState, toastState, { rows, columns });
     }
 </script>
 

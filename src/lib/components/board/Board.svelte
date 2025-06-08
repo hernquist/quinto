@@ -15,7 +15,6 @@
     const { activePlayer } = $props();
 </script>
 
-<!-- <pre>{JSON.stringify(highlightedSquares)}</pre> -->
 <div class="board__container">
     {#each board as column, x}
         <div class="board_row">
