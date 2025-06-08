@@ -1,6 +1,8 @@
 import type { GameState } from "$lib/state/game/game.svelte";
+import { asyncWhileLoop } from "$lib/state/game/gameUtils";
 import type { PlayerState } from "$lib/state/player/player.svelte";
 import { Players } from "$lib/state/player/types";
+import type { ToastState } from "$lib/state/toast/toast.svelte";
 import generateGameTiles from "./generateGameTiles";
 import initializeBoard from "./initializeBoard";
 import initializePlayers from "./initializePlayers";
@@ -10,7 +12,7 @@ const COLUMNS = 4;
 
 const { Top, Bottom } = Players;
 
-export function initializeGame(gameState: GameState, playerTileState: PlayerState, options = {}) {
+export function initializeGame(gameState: GameState, playerState: PlayerState, toastState: ToastState, options = {}) {
     let defaults = {
         rows: ROWS,
         columns: COLUMNS
@@ -23,10 +25,10 @@ export function initializeGame(gameState: GameState, playerTileState: PlayerStat
     // initialize game tiles
     generateGameTiles(gameState);
     // initialize player and produce initialze player tiles
-    const { topPlayerTiles, bottomPlayerTiles } = initializePlayers(playerTileState, gameState);
+    const { topPlayerTiles, bottomPlayerTiles } = initializePlayers(playerState, gameState);
 
-    playerTileState.updateTiles(Top, topPlayerTiles);
-    playerTileState.updateTiles(Bottom, bottomPlayerTiles)
+    playerState.updateTiles(Top, topPlayerTiles);
+    playerState.updateTiles(Bottom, bottomPlayerTiles)
     // finish initializing board
     initializeBoard(gameState);
     gameState.setStartingSquare();
@@ -34,4 +36,14 @@ export function initializeGame(gameState: GameState, playerTileState: PlayerStat
     gameState.updateBoardAfterTileDrop();
     // make a copy of the board before game play starts
     gameState.captureBoard();
+    console.log("[initializeGame] gameState.game:", JSON.parse(JSON.stringify(gameState.game)));
+    console.log("[initializeGame] playerState.isComputer:", playerState.player[gameState.game.activePlayer].isComputer);
+    if (playerState.player[gameState.game.activePlayer].isComputer) {
+        console.log("[initializeGame] computer player, starting computer turn"); 
+        setTimeout(async () => {
+            console.log("[FinishTurn] Computer turn starting");
+            await asyncWhileLoop(gameState, playerState, toastState);
+            console.log("[FinishTurn] Computer turn finished");
+        }, 400);
+    }
 }
