@@ -18,7 +18,7 @@
     <button onclick={(e)=> {
         e.preventDefault();
         modalState.toggleModalOn();
-        initializeGame(gameState, playerState);
+        initializeGame(gameState, playerState, toastState);
         toastState.removeAllToasts();
     }}>NEW GAME</button>
 </div>
