@@ -17,7 +17,7 @@
             await gameState.finishTurn(playerState, toastState);
             // if computer player "on", then run computer turn
             console.log("[FinishTurn] human done, computerTurn on");
-            // make a function to share with initializeGame though it is reall
+            // make a function to share with initializeGame though it is really just a setTimeout
             setTimeout(async () => {
                 console.log("[FinishTurn] Computer turn starting");
                 await asyncWhileLoop(gameState, playerState, toastState);
