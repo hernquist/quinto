@@ -15,13 +15,15 @@ const { Top, Bottom } = Players;
 export function initializeGame(gameState: GameState, playerState: PlayerState, toastState: ToastState, options = {}) {
     let defaults = {
         rows: ROWS,
-        columns: COLUMNS
+        columns: COLUMNS,
+        gameMultiple: 5// default game multiple
     };
     const args = Object.assign({}, defaults, options);
 
     // initialize board
     gameState.reInitializeGame();
     gameState.updateBoardDimensions(args);
+    gameState.updateGameMultiple(args.gameMultiple);
     // initialize game tiles
     generateGameTiles(gameState);
     // initialize player and produce initialze player tiles

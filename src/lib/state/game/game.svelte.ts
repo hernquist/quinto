@@ -671,6 +671,10 @@ export class GameState {
 		this.game.startingNumberOfSquares = rows * columns;
 	}
 
+	public updateGameMultiple(gameMultiple: number): void {
+		this.game.gameMultiple = gameMultiple;
+	}
+
 	public getStartingSquareCoordinates(): ICoordTuple {
 		const x = Math.trunc((this.game.columns - 1) /2);
 		const y = Math.trunc((this.game.rows -1) /2);

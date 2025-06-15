@@ -10,10 +10,16 @@
 
     let rows = $state(gameState.game.rows);
 	let columns = $state(gameState.game.columns);
+    let gameMultiple = $state(gameState.game.gameMultiple);
 
     function onSave(e) {
         e.preventDefault();
-        initializeGame(gameState, playerState, toastState, { rows, columns });
+        const options = {
+            rows,
+            columns,
+            gameMultiple
+        };
+        initializeGame(gameState, playerState, toastState, options);
     }
 </script>
 
@@ -28,6 +34,10 @@
     </div>
     <div>
         columns {columns} <input type="range" bind:value={columns} min="4" max="10" />
+    </div>
+    ----------------------------------------------------------------------
+    <div>
+        game multiple {gameMultiple} <input type="range" bind:value={gameMultiple} min="3" max="10" />
     </div>
 
     <button onclick={onSave}> SAVE </button>
