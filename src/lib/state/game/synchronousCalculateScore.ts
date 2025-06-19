@@ -23,9 +23,9 @@ export function sumTotalScore(gameState: GameState): number {
     return totalLineScore;
 }
 
-export function synchronousCalculateScore (gameState: GameState, isCandidateMove: boolean): ICalculateScore {
+export function synchronousCalculateScore (gameState: GameState, isComputerCandidateMove: boolean): ICalculateScore {
     const { gameMultiple, board } = gameState.game;
-     const { direction, droppedTiles} = isCandidateMove? gameState.game.computerCandidateTurn : gameState.game.turn;
+     const { direction, droppedTiles} = isComputerCandidateMove? gameState.game.computerCandidateTurn : gameState.game.turn;
 
     let lines: ILineItem[][] = [];
     if (direction === Direction.Undecided && droppedTiles.length > 0) {
@@ -132,10 +132,10 @@ export function synchronousCalculateScore (gameState: GameState, isCandidateMove
         // order dropped tiles from the left to right
         let orderedDroppedTiles = droppedTiles.sort((a, b) => orderTilesByDimension(a, b, "x"));
 
-        // TODO: fix type error
-        const lastSquare: IDroppedTile = orderedDroppedTiles.pop() ;
-        const [firstSquare, ...middleSquares]: IDroppedTile[] = orderedDroppedTiles;
-        
+        const lastIndex = orderedDroppedTiles.length - 1;
+        const lastSquare: IDroppedTile = orderedDroppedTiles[lastIndex];
+        const firstSquare: IDroppedTile = orderedDroppedTiles[0]
+        const middleSquares: IDroppedTile[] = orderedDroppedTiles.slice(1, lastIndex];);
         
         // determine "line" for horizontal placement
         // some init

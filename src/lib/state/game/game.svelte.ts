@@ -120,8 +120,9 @@ export class GameState {
 		// TODO: this needs to be dynamic
 		// right now I am forcing the issue....
 		//TODO: need to figure this out BIG TODO
-		this.game.turn.turnStatus = TurnStatus.OnePlaced;
+		this.game.turn.turnStatus = droppedTiles.length === 1 ? TurnStatus.OnePlaced : TurnStatus.MultiPlaced;
 		console.log("updateBulkTurn", this.game.turn.turnStatus);
+		console.log("updateBulkTurn", JSON.parse(JSON.stringify(playerState)));
 		// this.game.turn.turnStatus = TurnStatus.MultiPlaced;
 		// also we need to set horizontal and vertical placement here 
 
