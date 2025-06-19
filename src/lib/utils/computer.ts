@@ -62,13 +62,11 @@ function permute(arr) {
     return res;
 }
 
-function tryTilesHorizontal(gameState: GameState, permutations: ITile[][], x: number, y: number): ICandidateMove[] {
+function tryTilesHorizontal(gameState: GameState, permutations: ITile[][], x: number, y: number, direction: number): ICandidateMove[] {
     const board: IBoard = gameState.game.board;
-    
-    // let candidateTiles: IDroppedTile[] = [];
     let candidateMoves = []
-
     const permuatationsLength = permutations.length;
+    
     for (let permutationIndex = 0; permutationIndex < permuatationsLength; permutationIndex++) {        
         const currentPermutation = permutations[permutationIndex];
 
@@ -78,30 +76,31 @@ function tryTilesHorizontal(gameState: GameState, permutations: ITile[][], x: nu
         let xShift = 1;
 
         for (let permutationTileIndex = 0; permutationTileIndex < currentPermutationLength; permutationTileIndex++) {
-            // if first or if 
+            // if first tile being laid 
             if (permutationTileIndex == 0) {
                 const tile = currentPermutation[permutationTileIndex];
                 candidateTiles.push({ tile, x, y });
                 console.log("candidateTiles {permutationTileIndex: 0} -- ", JSON.parse(JSON.stringify(candidateTiles)));
             } else {
                 let keepChecking = true
-                if (!board[x + xShift]?.[y]) {
+                if (!board[x + (direction * xShift)]?.[y]) {
                     keepChecking = false;
                     permutationTileIndex =+ currentPermutationLength
+                    // go back and check in the other direction??
                 }
                 while (keepChecking) {
                     // check if square is available
-                    if (board[x + xShift]?.[y]?.tile) {
+                    if (board[x + (direction * xShift)]?.[y]?.tile) {
                         xShift++;
-                    // } else if (board[x + xShift]?.[y]?.hasDropzone) {
-                    } else if (board[x + xShift]?.[y]) {
+                    } else if (board[x + (direction * xShift)]?.[y]) {
                         const tile = currentPermutation[permutationTileIndex];
-                        candidateTiles.push({ tile, x: x + xShift, y });
+                        candidateTiles.push({ tile, x: x + (direction * xShift), y });
                         keepChecking = false;
                         xShift++;
                     } else {
                         permutationTileIndex =+ currentPermutationLength
-                        keepChecking = false;                        
+                        keepChecking = false;  
+                          // go back and check in the other direction??                      
                     }
                 }
                 console.log("candidateTiles { permutationTileIndex: 1+ } -- ", JSON.parse(JSON.stringify(candidateTiles))); 
@@ -134,8 +133,78 @@ function tryTilesHorizontal(gameState: GameState, permutations: ITile[][], x: nu
     return candidateMoves;
 }
 
+function tryTilesVertical(gameState: GameState, permutations: ITile[][], x: number, y: number, direction: number): ICandidateMove[] {
+    const board: IBoard = gameState.game.board;
+    let candidateMoves = []
+    const permuatationsLength = permutations.length;
+    
+    for (let permutationIndex = 0; permutationIndex < permuatationsLength; permutationIndex++) {        
+        const currentPermutation = permutations[permutationIndex];
+
+        const currentPermutationLength = currentPermutation.length;
+        console.log("currentPermutation:", JSON.parse(JSON.stringify(currentPermutation)));
+        const candidateTiles: IDroppedTile[] = [];
+        let yShift = 1;
+
+        for (let permutationTileIndex = 0; permutationTileIndex < currentPermutationLength; permutationTileIndex++) {
+            // if first tile being laid 
+            if (permutationTileIndex == 0) {
+                const tile = currentPermutation[permutationTileIndex];
+                candidateTiles.push({ tile, x, y });
+                console.log("candidateTiles {permutationTileIndex: 0} -- ", JSON.parse(JSON.stringify(candidateTiles)));
+            } else {
+                let keepChecking = true
+                if (!board[x]?.[y + (direction * yShift)]) {
+                    keepChecking = false;
+                    permutationTileIndex =+ currentPermutationLength
+                    // go back and check in the other direction??
+                }
+                while (keepChecking) {
+                    // check if square is available
+                    if (board[x]?.[y + (direction * yShift) ]?.tile) {
+                        yShift++;
+                    } else if (board[x]?.[y + (direction * yShift)]) {
+                        const tile = currentPermutation[permutationTileIndex];
+                        candidateTiles.push({ tile, x, y: y + (direction * yShift) });
+                        keepChecking = false;
+                        yShift++;
+                    } else {
+                        permutationTileIndex =+ currentPermutationLength
+                        keepChecking = false;  
+                          // go back and check in the other direction??                      
+                    }
+                }
+                console.log("candidateTiles { permutationTileIndex: 1+ } -- ", JSON.parse(JSON.stringify(candidateTiles))); 
+            }
+        }
+
+        const candidateTurn = {
+            direction: candidateTiles.length === 1 ? Direction.Undecided : Direction.Vertical,
+            turnStatus: candidateTiles.length === 1 ? TurnStatus.OnePlaced : TurnStatus.MultiPlaced,
+            droppedTiles: candidateTiles,
+            firstTurnOfRound: false // blarg
+        };
+
+        console.log("candidateTurn:", JSON.parse(JSON.stringify(candidateTurn)));
+        // get score
+        gameState.updateComputerCandidateTurn(candidateTurn);
+        console.log("gameState.game.computerCandidateTurn:", JSON.parse(JSON.stringify(gameState.game.computerCandidateTurn)));
+        const score = sumTotalScore(gameState);
+
+        candidateMoves.push ({
+            score,
+            candidateMove: gameState.game.computerCandidateTurn
+        });
+
+        // reset
+        gameState.resetComputerCandidateTurn();  // needed?
+        // candidateTiles = [];
+    }
+
+    return candidateMoves;
+}
+
 function findSelectedPlay(candidateMoves: ICandidateMove[]): ICandidateMove {
-    console.log("candidateMoves:", JSON.parse(JSON.stringify(candidateMoves)));
     return candidateMoves.reduce((prev, current) => {
         return prev.score > current.score ? prev : current;
     });
@@ -170,24 +239,22 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
             // only look at dropzone "available" squares
             if (board[x][y].hasDropzone) {
                 console.log("hasDropzone at:", x, y);
-                candidateMoves = [...candidateMoves, ...tryTilesHorizontal(gameState, permutations, x, y)];
+                const directions = [-1, 1];
+                const [left, right] =  directions;
+                const [up, down] =  directions;
+                candidateMoves = [
+                    ...candidateMoves, 
+                    ...tryTilesHorizontal(gameState, permutations, x, y, right), 
+                    ...tryTilesHorizontal(gameState, permutations, x, y, left),
+                    ...tryTilesVertical(gameState, permutations, x, y, -1),
+                    ...tryTilesVertical(gameState, permutations, x, y, 1),
+                ];
             } else {
                 console.log("no hasDropzone at:", x, y);
             }
         }
     }
-
-        // capture each play and attach a score to it
-            // try an "adjacent square" going horizontally right for each remaining tile
-            // capture each play and attach a score to it
-                    // repeat until no dropzone sqaure are available 
-            // try an "adjacent square" going vertical down for each remaining tile
-            // capture each play and attach a score to it
-                // repeat until no dropzone sqaure are available  
-
-    // sort scores ??? not sure if I'll do it this way
-        // make play
-        // TODO: make play based on level
+    console.log("number of candidate moves:", candidateMoves.length);
     const selectedPlay = findSelectedPlay(candidateMoves);
     
     return ({
