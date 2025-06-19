@@ -135,7 +135,7 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
         const lastIndex = orderedDroppedTiles.length - 1;
         const lastSquare: IDroppedTile = orderedDroppedTiles[lastIndex];
         const firstSquare: IDroppedTile = orderedDroppedTiles[0]
-        const middleSquares: IDroppedTile[] = orderedDroppedTiles.slice(1, lastIndex];);
+        const middleSquares: IDroppedTile[] = orderedDroppedTiles.slice(1, lastIndex);
         
         // determine "line" for horizontal placement
         // some init
