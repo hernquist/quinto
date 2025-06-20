@@ -246,8 +246,8 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
                     ...candidateMoves, 
                     ...tryTilesHorizontal(gameState, permutations, x, y, right), 
                     ...tryTilesHorizontal(gameState, permutations, x, y, left),
-                    ...tryTilesVertical(gameState, permutations, x, y, -1),
-                    ...tryTilesVertical(gameState, permutations, x, y, 1),
+                    ...tryTilesVertical(gameState, permutations, x, y, up),
+                    ...tryTilesVertical(gameState, permutations, x, y, down),
                 ];
             } else {
                 console.log("no hasDropzone at:", x, y);
