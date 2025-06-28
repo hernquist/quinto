@@ -18,7 +18,7 @@ export function sumScores (lines: ILineItem[][], gameMultiple: number): number {
 }
 
 export function sumTotalScore(gameState: GameState): number {
-    const { lines, gameMultiple} = synchronousCalculateScore(gameState, true)
+    const { lines, gameMultiple } = synchronousCalculateScore(gameState, true)
     const totalLineScore = sumScores(lines, gameMultiple);
     return totalLineScore;
 }
@@ -229,16 +229,17 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
 
         return { lines, gameMultiple }
     }
-    
-    // -VERTICAL-----------------------------------------------------------------
+
+    // vertical
     if (direction === Direction.Vertical) {
         // order dropped tiles from top to bottom
-        let orderedDroppedTiles: IDroppedTile[] = droppedTiles.sort((a, b) => orderTilesByDimension(a, b, "y"));
 
-        // TODO: fix type error
-        // const lastSquare: IDroppedTile = orderedDroppedTiles.pop() || { x: -1, y: 1, tile: { id: -1, text: -1, value: -1 }};
-        const lastSquare: IDroppedTile | undefined = orderedDroppedTiles.pop();
-        const [firstSquare, ...middleSquares]: IDroppedTile[] = orderedDroppedTiles;
+        let orderedDroppedTiles = droppedTiles.sort((a, b) => orderTilesByDimension(a, b, "x"));
+
+        const lastIndex = orderedDroppedTiles.length - 1;
+        const lastSquare: IDroppedTile = orderedDroppedTiles[lastIndex];
+        const firstSquare: IDroppedTile = orderedDroppedTiles[0]
+        const middleSquares: IDroppedTile[] = orderedDroppedTiles.slice(1, lastIndex);
 
         // determine "line" for vertical placement
         // some init
@@ -287,8 +288,6 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
         for (let i = 0; i < newConstitutedDroppedTiles.length; i++) {
             hasAdjacentTile = true;
             line = [];
-
-            // TODO: fix tile error -- see above
             const { x, y, tile: { value }} = newConstitutedDroppedTiles[i];
             // checking left
             let shiftLeft = 1;
