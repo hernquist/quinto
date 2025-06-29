@@ -326,13 +326,13 @@ export class GameState {
 
 		// ------------------------------------
 		if (direction === Direction.Horizontal) {
-			
 			// order dropped tiles from the left to right
-			let orderedDroppedTiles = droppedTiles.sort((a, b) => orderTilesByDimension(a, b, "x"));
+			const orderedDroppedTiles = droppedTiles.sort((a, b) => orderTilesByDimension(a, b, "x"));
 
-			// TODO: fix type error
-			const lastSquare: IDroppedTile = orderedDroppedTiles.pop() ;
-			const [firstSquare, ...middleSquares]: IDroppedTile[] = orderedDroppedTiles;
+			const lastIndex = orderedDroppedTiles.length - 1;
+			const firstSquare: IDroppedTile = orderedDroppedTiles[0];
+			const middleSquares: IDroppedTile[] = orderedDroppedTiles.slice(1, lastIndex);
+			const lastSquare: IDroppedTile = orderedDroppedTiles[lastIndex];
 			
 			
 			// determine "line" for horizontal placement
@@ -434,12 +434,12 @@ export class GameState {
 		// ------------------------------------------------------------------
 		if (direction === Direction.Vertical) {
 			// order dropped tiles from top to bottom
-			let orderedDroppedTiles: IDroppedTile[] = droppedTiles.sort((a, b) => orderTilesByDimension(a, b, "y"));
+			const orderedDroppedTiles: IDroppedTile[] = droppedTiles.sort((a, b) => orderTilesByDimension(a, b, "y"));
 
-			// TODO: fix type error
-			// const lastSquare: IDroppedTile = orderedDroppedTiles.pop() || { x: -1, y: 1, tile: { id: -1, text: -1, value: -1 }};
-			const lastSquare: IDroppedTile | undefined = orderedDroppedTiles.pop();
-			const [firstSquare, ...middleSquares]: IDroppedTile[] = orderedDroppedTiles;
+			const lastIndex = orderedDroppedTiles.length - 1;
+			const firstSquare: IDroppedTile = orderedDroppedTiles[0];
+			const middleSquares: IDroppedTile[] = orderedDroppedTiles.slice(1, lastIndex);
+			const lastSquare: IDroppedTile = orderedDroppedTiles[lastIndex];
 	
 			// determine "line" for vertical placement
 			// some init
