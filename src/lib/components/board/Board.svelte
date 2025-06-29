@@ -2,14 +2,12 @@
 	import { getGameState } from "../../state/game/game.svelte";
     import { getToastState } from "../../state/toast/toast.svelte";
 	import Square from "../square/Square.svelte";
-    import { type IHighlightedSquare, ToastType } from "$lib/state/toast/types.ts"
+    import { type IHighlightedSquare, type IToast, ToastType } from "$lib/state/toast/types"
     
     const gameState = getGameState();
     let { board } = $derived(gameState.game);
-
     const toastState = getToastState();
     let { highlightedSquares, toasts }: { highlightedSquares: IHighlightedSquare[], toasts: IToast[] } = $derived(toastState);
-    let totalScoreEffect = $derived(toasts[0]?.type === ToastType.TOTAL_LINE_SCORE);
 
     // TODO: why are puttiing this in props AND grabbing game info from context
     const { activePlayer } = $props();
