@@ -128,7 +128,6 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
 
     // horizontal
     if (direction === Direction.Horizontal) {
-        
         // order dropped tiles from the left to right
         let orderedDroppedTiles = droppedTiles.sort((a, b) => orderTilesByDimension(a, b, "x"));
 
@@ -232,7 +231,6 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
     // vertical
     if (direction === Direction.Vertical) {
         // order dropped tiles from top to bottom
-
         let orderedDroppedTiles = droppedTiles.sort((a, b) => orderTilesByDimension(a, b, "x"));
 
         const lastIndex = orderedDroppedTiles.length - 1;
