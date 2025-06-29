@@ -20,7 +20,7 @@
     const gameState = getGameState();
     const modalState = getModalState();
     const toastState = getToastState();
-    const {numberOfLines } = $derived(toastState);
+    const { numberOfLines } = $derived(toastState);
     
     // This is needs more testing and thinking. That calculation should happen out of here probably.
     $effect(() => {
