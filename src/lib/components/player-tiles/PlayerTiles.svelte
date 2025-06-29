@@ -3,7 +3,6 @@
 
     // or just spread props into Tile
     let { isActive, tiles } = $props();
-
 </script>
 
 <div class="tiles__container">
