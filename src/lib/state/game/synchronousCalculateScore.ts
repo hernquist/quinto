@@ -18,7 +18,7 @@ export function sumScores (lines: ILineItem[][], gameMultiple: number): number {
 }
 
 export function sumTotalScore(gameState: GameState): number {
-    const { lines, gameMultiple } = synchronousCalculateScore(gameState, true)
+    const { lines, gameMultiple } = synchronousCalculateScore(gameState, true);
     const totalLineScore = sumScores(lines, gameMultiple);
     return totalLineScore;
 }
@@ -32,7 +32,7 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
         // search left
         const [square] = droppedTiles;
         const { x, y, tile: { value }} = square;
-                // set up -- shift left
+        // set up -- shift left
         let hasAdjacentTile = true
 
         let line: ILineItem[] = [];
@@ -126,7 +126,7 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
         return { lines, gameMultiple }
     }
 
-    // -HORIZONTAL-----------------------------------------------------------------
+    // horizontal
     if (direction === Direction.Horizontal) {
         
         // order dropped tiles from the left to right
@@ -180,7 +180,6 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
 
         // check each droppedTiles vertical "line" possibility
         // orginal droppedTiles 
-        // TODO: this is a little suspect and somewhat typed to the type error above
         const newConstitutedDroppedTiles = [firstSquare, ...middleSquares, lastSquare];
         for (let i = 0; i < newConstitutedDroppedTiles.length; i++) {
             hasAdjacentTile = true;
@@ -283,7 +282,6 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
 
         // check each droppedTiles horizontal "line" possibility
         // orginal droppedTiles 
-        // TODO: this is a little suspect and somewhat typed to the type error above
         const newConstitutedDroppedTiles = [firstSquare, ...middleSquares, lastSquare];
         for (let i = 0; i < newConstitutedDroppedTiles.length; i++) {
             hasAdjacentTile = true;
