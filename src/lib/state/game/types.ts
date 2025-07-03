@@ -79,5 +79,10 @@ interface IIsValidPlay {
     emptySquares: any[];
 }
 
-export type { IGameState, ITurn, IDroppedTile, ILineItem, IKeyMap, IIsValidPlay, IEmptySquare };
+type ICalculateScore = {
+    lines: ILineItem[][],
+    gameMultiple: number
+}
+
+export type { IGameState, ITurn, IDroppedTile, ILineItem, IKeyMap, IIsValidPlay, IEmptySquare, ICalculateScore };
 export { GameStatus, TurnStatus, DropzoneStatus, Direction, Axis }

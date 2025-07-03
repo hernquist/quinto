@@ -1,7 +1,5 @@
 <script lang="ts">
     import { getToastState } from "$lib/state/toast/toast.svelte";
-    import { getGameState } from "$lib/state/game/game.svelte";
-    import { getPlayerState } from "$lib/state/player/player.svelte";
 	import FinishTurn from "../finish-turn/FinishTurn.svelte";
     import PlayerTiles from "../player-tiles/PlayerTiles.svelte";
 	import ResetTurn from "../reset-turn/ResetTurn.svelte";
@@ -29,7 +27,7 @@
 <div class="playerRow__container">
     <!-- TODO: fix, this is not right [0]-->
     {#if Boolean(toastState.firedQueuedMessages.length) && playerPosition === toastState.firedQueuedMessages[0]?.activePlayer}
-        <PlayerMessage {toastState} {activePlayer} {playerPosition}/>
+        <PlayerMessage {toastState} {playerPosition}/>
     {:else}
         <PlayerTiles {tiles} {isActive}/>
         {#if !isComputer}
