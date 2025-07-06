@@ -16,14 +16,17 @@ export function initializeGame(gameState: GameState, playerState: PlayerState, t
     let defaults = {
         rows: ROWS,
         columns: COLUMNS,
-        gameMultiple: 5// default game multiple
+        gameMultiple: 5, // default game multiple
+        playLevel: 5 // default play level
     };
+    console.log("[initializeGame] options:", options);
     const args = Object.assign({}, defaults, options);
 
     // initialize board
     gameState.reInitializeGame();
     gameState.updateBoardDimensions(args);
     gameState.updateGameMultiple(args.gameMultiple);
+    gameState.updatePlayLevel(args.playLevel);
     // initialize game tiles
     generateGameTiles(gameState);
     // initialize player and produce initialze player tiles
