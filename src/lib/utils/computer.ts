@@ -212,6 +212,7 @@ function findSelectedPlay(candidateMoves: ICandidateMove[]): ICandidateMove {
 
 export function getComputerTurn(gameState: GameState, playerState: PlayerState): IComputerTurn  {
     let candidateMoves: ICandidateMove[] = [];
+    const playLevel = gameState.game.playLevel;
     
     // get board
     const { board }: { board: IBoard } = gameState.game;
@@ -255,8 +256,19 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
         }
     }
     console.log("number of candidate moves:", candidateMoves.length);
-    const selectedPlay = findSelectedPlay(candidateMoves);
+    const sortedCandidateMoves = candidateMoves.sort((a, b) => b.score - a.score);
+    const numberOfCandidateMoves = sortedCandidateMoves.length;
+    console.log("number of candidate moves sorted:", numberOfCandidateMoves);
     
+    const slicer = (5 - playLevel) * 0.1;
+    console.log("slicer:", slicer);
+    const percentOfRemovedMoves = Math.floor(numberOfCandidateMoves * slicer);
+    console.log("percentOfRemovedMoves:", percentOfRemovedMoves);
+    const selectedCandidateMoves = sortedCandidateMoves.slice(0, numberOfCandidateMoves - percentOfRemovedMoves);
+    console.log("selectedCandidateMoves.length:", selectedCandidateMoves.length);
+    console.log("selectedCandidateMoves:", selectedCandidateMoves);
+    const selectedPlay = findSelectedPlay(selectedCandidateMoves);
+
     return ({
         droppedTiles: selectedPlay.candidateMove.droppedTiles,
         turnStatus: selectedPlay.candidateMove.turnStatus,

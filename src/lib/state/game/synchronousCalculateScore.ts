@@ -1,11 +1,6 @@
 import type { GameState } from "./game.svelte";
 import { orderTilesByDimension } from "./gameUtils";
-import { Direction, type IDroppedTile, type ILineItem } from "./types";
-
-type ICalculateScore = {
-    lines: ILineItem[][],
-    gameMultiple: number
-}
+import { Direction, type ICalculateScore, type IDroppedTile, type ILineItem } from "./types";
 
 export function getScoredLineValue (line: ILineItem[], gameMultiple: number): number {
     const lineValue = line.reduce((acc: number, { value }: { value: number}) => acc + value, 0);

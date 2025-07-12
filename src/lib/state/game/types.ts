@@ -48,6 +48,7 @@ interface IGameState {
     board: IBoard;
     turn: ITurn;
     computerCandidateTurn: ITurn;
+    playLevel: number;
 }
 
 enum Direction {
@@ -85,4 +86,4 @@ type ICalculateScore = {
 }
 
 export type { IGameState, ITurn, IDroppedTile, ILineItem, IKeyMap, IIsValidPlay, IEmptySquare, ICalculateScore };
-export { GameStatus, TurnStatus, DropzoneStatus, Direction, Axis }
+export { GameStatus, TurnStatus, DropzoneStatus, Direction, Axis };

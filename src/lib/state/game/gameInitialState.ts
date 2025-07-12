@@ -23,7 +23,8 @@ const initState: IGameState = {
 		droppedTiles: [],
 		turnStatus: TurnStatus.ZeroPlaced,
         direction: Direction.Undecided
-	}
+	},
+	playLevel: 5
 }
 
 export default initState;
