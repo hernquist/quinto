@@ -13,6 +13,7 @@
 	import { ModalScreen } from "$lib/state/modal-state/types";
     import { GameStatus } from "$lib/state/game/types";
 	import { Players } from "$lib/state/player/types";
+	import MenuBar from "../menu-bar/MenuBar.svelte";
     
     const { Top, Bottom } = Players;
 
@@ -34,17 +35,14 @@
 
 </script>
 
-<button onclick={
-    (e) => {
-        e.preventDefault();
-        modalState.toggleModalOn()
-    }}>show modal</button>
-
 <InitializeGame>
+    <!-- TODO: think of new way determine game status and winner -->
     {#if gameState.game.status === GameStatus.Complete}
         <pre>DONE</pre>
     {/if}
-    <pre>Player: {gameState.game.activePlayer}  # tiles: {gameState.game.tiles.length} Round: {gameState.game.round} Turn: {gameState.game.turn.turnStatus} Direction: {gameState.game.turn.direction} </pre>
+    <MenuBar />
+
+    <!-- <pre>Player: {gameState.game.activePlayer}  # tiles: {gameState.game.tiles.length} Round: {gameState.game.round} Turn: {gameState.game.turn.turnStatus} Direction: {gameState.game.turn.direction} </pre> -->
     <Score />
     <PlayerRow 
         playerPosition={Top} 
