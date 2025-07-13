@@ -33,7 +33,7 @@
 
 
 <button disabled={!isActive || disabled} onclick={handleClick}>
-    Finish Turn
+    Finish
 </button>
 
 <style>
