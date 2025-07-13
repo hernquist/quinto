@@ -1,12 +1,15 @@
 <script>
-	import Tiles from './menu-items/tiles/Tiles.svelte';
     import ViewList from './menu-items/view-list/ViewList.svelte';
+    import MenuBarTiles from './menu-items/menu-bar-tiles/MenuBarTiles.svelte';
+    import GameMultiple from './menu-items/game-multiple/GameMultiple.svelte';
+	import Level from './menu-items/level/Level.svelte';
 </script>
 
 <ul>
     <li><ViewList /></li>
-    <li><Tiles /> </li>
-    <li>level   </li>
+    <li><MenuBarTiles /> </li>
+    <li><GameMultiple /></li>
+    <li><Level /></li>
    <li>USER</li>
 </ul>
 
@@ -23,16 +26,19 @@
         position: fixed; /* Makes the navbar fixed at the top */
         top: 0; /* Positions the navbar at the top */
         width: 100%; /* Makes the navbar span the full width */
+        height: 64px; /* Sets a fixed height for the navbar */
     }
+
     li {
-        background-color: #f0f0f0;
+        background-color: lemonchiffon;
         border-radius: 5px;
         display: block; /* Allows for padding and margin */
         text-align: center;
-        padding: 8px 8px;
+        padding: 0px 2px;
         text-decoration: none;
         margin: 4px 0;
     }
+
     li:hover {
         background-color: #e0e0e0;
         color: black;
