@@ -21,6 +21,7 @@
         justify-content: center;
         width: 40px;
         cursor: pointer;
+        margin: 7px 6px;
     }
 
     .view-list:hover {
