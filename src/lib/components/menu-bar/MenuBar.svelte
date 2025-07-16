@@ -3,6 +3,7 @@
     import MenuBarTiles from './menu-items/menu-bar-tiles/MenuBarTiles.svelte';
     import GameMultiple from './menu-items/game-multiple/GameMultiple.svelte';
 	import Level from './menu-items/level/Level.svelte';
+	import User from './menu-items/user/User.svelte';
 </script>
 
 <ul>
@@ -10,7 +11,7 @@
     <li><MenuBarTiles /> </li>
     <li><GameMultiple /></li>
     <li><Level /></li>
-   <li>USER</li>
+   <li><User /></li>
 </ul>
 
 <style>
