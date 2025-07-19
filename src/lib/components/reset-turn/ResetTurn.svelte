@@ -1,6 +1,7 @@
 <script lang="ts">
     import { getGameState } from "../../state/game/game.svelte";
     import { getPlayerState } from "$lib/state/player/player.svelte";
+	import ResetIcon from "../icons/ResetIcon.svelte";
     
     const { isActive } = $props();
     const gameState = getGameState();
@@ -16,7 +17,7 @@
 
 
 <button disabled={!isActive || disabled} onclick={handleClick}>
-    Reset
+    <ResetIcon width="24" height="24" />
 </button>
 
 <style>
@@ -25,7 +26,7 @@
         background-color: cornflowerblue;
         padding: 2px;
         border: 2px solid gray;
-        border-radius: 20px;
+        border-radius: 2px;
         height: 40px;
         margin: 2px 2px 2px 8px;
 
