@@ -11,11 +11,11 @@
     {:else if numberOfTiles > 0}
         <div class="number-of-tiles__blocks">
             {#each Array(numberOfTiles) as _, i}
-                <div class="number-of-tiles__block"/>
+                <div class="number-of-tiles__block"></div>
             {/each}
         </div>
     {:else}
-        <span class="number-of-tiles__count number-of-tiles__count--none">no more</span>
+        <span class="number-of-tiles__count number-of-tiles__count--none"></span>
     {/if}
 </div>
 
@@ -53,7 +53,7 @@
     }
 
     .number-of-tiles__count--none {
-        font-size: 2rem;
+        font-size: 1rem;
     }
 </style>
 
