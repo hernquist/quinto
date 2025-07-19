@@ -29,10 +29,12 @@
     {#if Boolean(toastState.firedQueuedMessages.length) && playerPosition === toastState.firedQueuedMessages[0]?.activePlayer}
         <PlayerMessage {toastState} {playerPosition}/>
     {:else}
+        {#if !isComputer}
+            <ResetTurn {isActive} />
+        {/if}
         <PlayerTiles {tiles} {isActive}/>
         {#if !isComputer}
             <FinishTurn {isActive} />
-            <ResetTurn {isActive} />
         {/if}
      {/if}
 </div>
