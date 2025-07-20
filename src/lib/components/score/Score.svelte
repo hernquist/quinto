@@ -1,56 +1,48 @@
 <script lang="ts">
     import { slide } from "svelte/transition";
     import { getPlayerState } from "$lib/state/player/player.svelte";
-	import { Players } from "$lib/state/player/types";
+	import type { IScoreProps } from "./types";
 
-    const { Top, Bottom } = Players;
+    let { playerPosition, name }: IScoreProps = $props();
     let playerState = getPlayerState();
-
-    let topPlayerScore = $derived(playerState.player[Top].score);
-    let bottomPlayerScore = $derived(playerState.player[Bottom].score);
+    let playerScore = $derived(playerState.player[playerPosition]?.score);
     const duration = 300;
 </script>
 
-<!-- TODO: spotty transition due to score layout -->
-<div class="scoreboard">
-    {#key topPlayerScore}
+<div class="scoreboard__container">
+    <div class="scoreboard__name">
+        {name}
+    </div>
+    {#key playerScore}
         <div
             in:slide={{ duration, delay: duration }}
             out:slide={{ duration }}
-            class="score"
+            class="scoreboard__score"
         >
-            {topPlayerScore} 
-        </div>
-    {/key}
-        <div class="temp_text">
-            to
-        </div>
-    {#key bottomPlayerScore}
-        <div     
-            in:slide={{ duration, delay: duration }}
-            out:slide={{ duration }}
-            class="score"
-        >
-            {bottomPlayerScore} 
+            {playerScore} 
         </div>
     {/key}
 </div>
 
 <style>
-    .scoreboard {
+    .scoreboard__container {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        align-items: baseline;
     }
 
-    .score {
-        width: 20px;
+    .scoreboard__name {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        width: 100px;
+    }
+
+    .scoreboard__score {
         display: flex;
         flex-direction: row;
         justify-content: center;
-    }
-
-    .temp_text {
-        margin: 0 8px;
+        font-size: 24px;
     }
 </style>
