@@ -5,21 +5,26 @@
 	import { getPlayerState } from "$lib/state/player/player.svelte";
 	import { getGameState } from "$lib/state/game/game.svelte";
 	import { Players } from "$lib/state/player/types";
+	import { textLevelTuple } from "$lib/utils/textual";
 	import PlayerTurnControls from "../player-turn-controls/PlayerTurnControls.svelte";
     
     const { Top, Bottom } = Players;
 
     const gameState = getGameState();
     const playerState = getPlayerState();
+    const levelIndex = $derived(gameState.game.playLevel - 1);
+
 </script>
 
+<!-- <pre>Player: {gameState.game.activePlayer}  # tiles: {gameState.game.tiles.length} Round: {gameState.game.round} Turn: {gameState.game.turn.turnStatus} Direction: {gameState.game.turn.direction} </pre> -->
 <div class="game-play__fullscreen">
-    <!-- <pre>Player: {gameState.game.activePlayer}  # tiles: {gameState.game.tiles.length} Round: {gameState.game.round} Turn: {gameState.game.turn.turnStatus} Direction: {gameState.game.turn.direction} </pre> -->
-    <Score />
-    <PlayerTurnControls 
-        playerPosition={gameState.game.activePlayer} 
-        activePlayer={gameState.game.activePlayer}
-    />
+    <div class="game-play__score">
+        <Score playerPosition={Top} name={"HUMAN"}/>
+        <PlayerTurnControls 
+            playerPosition={gameState.game.activePlayer} 
+            activePlayer={gameState.game.activePlayer}
+        />
+    </div>
     <PlayerRow 
         playerPosition={Top} 
         activePlayer={gameState.game.activePlayer} 
@@ -31,7 +36,9 @@
         activePlayer={gameState.game.activePlayer} 
         tiles={playerState.tiles[Bottom]} 
     />
-    <Score />
+    <div class="game-play__score">
+        <Score playerPosition={Bottom} name={textLevelTuple[levelIndex]}/>
+    </div>
 </div>
         
 <style>
@@ -40,14 +47,16 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 64px 0 0 0;
+        padding: 64px 6px 0 6px;
         width: 100%;
         height: 100vh;
     }
 
-    .game-play__container {
+    .game-play__score {
         display: flex;
-        flex-direction: column;
-
+        flex-direction: row;
+        justify-content: space-between;
+        width: calc(100% - 12px);
+        margin: 20px 0;
     }
 </style>
