@@ -24,9 +24,9 @@
     button {
         color: rgb(239, 244, 239);
         background-color: cornflowerblue;
-        padding: 2px;
+        padding: 4px;
         border: 2px solid gray;
-        border-radius: 2px;
+        border-radius: 8px;
         height: 40px;
         margin: 2px 2px 2px 8px;
 
