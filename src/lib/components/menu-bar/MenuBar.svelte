@@ -11,7 +11,7 @@
     <li><MenuBarTiles /> </li>
     <li><GameMultiple /></li>
     <li><Level /></li>
-   <li><User /></li>
+    <li><User /></li>
 </ul>
 
 <style>
