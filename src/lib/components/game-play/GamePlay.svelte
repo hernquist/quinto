@@ -16,47 +16,58 @@
 
 </script>
 
-<!-- <pre>Player: {gameState.game.activePlayer}  # tiles: {gameState.game.tiles.length} Round: {gameState.game.round} Turn: {gameState.game.turn.turnStatus} Direction: {gameState.game.turn.direction} </pre> -->
 <div class="game-play__fullscreen">
-    <div class="game-play__score">
-        <Score playerPosition={Top} name={"HUMAN"}/>
-        <PlayerTurnControls 
-            playerPosition={gameState.game.activePlayer} 
-            activePlayer={gameState.game.activePlayer}
+    <div class="game-play__gamescreen">
+        <!-- TODO: make separate component -->
+        <div class="game-play__score">
+            <Score playerPosition={Top} name={"HUMAN"}/>
+            <PlayerTurnControls 
+                playerPosition={gameState.game.activePlayer} 
+                activePlayer={gameState.game.activePlayer}
+            />
+            <Score playerPosition={Bottom} name={textLevelTuple[levelIndex]}/>
+        </div>
+
+        <PlayerRow 
+            playerPosition={Top} 
+            activePlayer={gameState.game.activePlayer} 
+            tiles={playerState.tiles[Top]} 
         />
-    </div>
-    <PlayerRow 
-        playerPosition={Top} 
-        activePlayer={gameState.game.activePlayer} 
-        tiles={playerState.tiles[Top]} 
-    />
-    <Board activePlayer={gameState.game.activePlayer}/>
-    <PlayerRow 
-        playerPosition={Bottom} 
-        activePlayer={gameState.game.activePlayer} 
-        tiles={playerState.tiles[Bottom]} 
-    />
-    <div class="game-play__score">
-        <Score playerPosition={Bottom} name={textLevelTuple[levelIndex]}/>
+        <Board activePlayer={gameState.game.activePlayer}/>
+        <PlayerRow 
+            playerPosition={Bottom} 
+            activePlayer={gameState.game.activePlayer} 
+            tiles={playerState.tiles[Bottom]} 
+        />
     </div>
 </div>
         
 <style>
     .game-play__fullscreen {
+        position: fixed;
+        top: 64px;
+        width: 100%;
+    }
+
+    .game-play__gamescreen {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 64px 6px 0 6px;
+        padding: 0 6px 0 6px;
         width: 100%;
-        height: 100vh;
+        height: calc(100% - 64px);
     }
 
     .game-play__score {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        width: calc(100% - 12px);
+        width: calc(100% - 12px); 
         margin: 20px 0;
+
+        @media screen and (min-width: 420px) {
+            width: 396px;
+        }
     }
 </style>
