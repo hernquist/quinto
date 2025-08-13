@@ -36,7 +36,6 @@
         font-size: 24px;
         font-weight: bold;
         text-align: center;
-        width: 100px;
     }
 
     .scoreboard__score {
@@ -44,5 +43,6 @@
         flex-direction: row;
         justify-content: center;
         font-size: 24px;
+        padding-left: 6px;
     }
 </style>
