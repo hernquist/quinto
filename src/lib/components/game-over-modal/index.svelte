@@ -9,16 +9,17 @@
     let playerState = getPlayerState();
     let modalState = getModalState();
     let toastState = getToastState();
-
 </script>
 
 <div >
     WINNER {playerState.getWinner().name}
 
-    <button onclick={(e)=> {
-        e.preventDefault();
-        modalState.toggleModalOn();
-        initializeGame(gameState, playerState, toastState);
-        toastState.removeAllToasts();
-    }}>NEW GAME</button>
+    <button 
+        onclick={(e)=> {
+            e.preventDefault();
+            modalState.toggleModalOn();
+            initializeGame(gameState, playerState, toastState);
+            toastState.removeAllToasts();
+        }}
+    >NEW GAME</button>
 </div>
