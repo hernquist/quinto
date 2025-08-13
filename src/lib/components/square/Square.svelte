@@ -79,15 +79,26 @@
 
 <style>
     .board__square {
-        width: 60px;
-        height: 60px;
+        flex-grow: 1;
         background-color: lightsalmon;
         border: 2px solid gray;
         border-radius: 1px;
-        margin: 6px;
+        margin: 2px;
         display: flex;
         justify-content: center;
         align-items: center;
+
+        @media screen and (min-width: 420px) {
+            margin: 3px;
+        }
+
+        @media screen and (min-width: 600px) {
+            margin: 4px;   
+        }
+
+        @media screen and (min-width: 768px) {
+            margin: 6px;
+        }
 
         &:hover {
             border: 2px solid #040404;
