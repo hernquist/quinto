@@ -1,4 +1,5 @@
 import type { IBoard, ITile } from "$lib/components/game/types";
+import type { Sizes } from "$lib/constants/boards";
 import type { Players } from "../player/types";
 
 enum GameStatus {
@@ -42,6 +43,7 @@ interface IGameState {
 	tiles: ITile[];
 	rows: number;
 	columns: number;
+    boardType: Sizes;
 	startingNumberOfSquares: number;
     tilesPerPlayer: number;
 	gameMultiple: number;
