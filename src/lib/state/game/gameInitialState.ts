@@ -1,3 +1,4 @@
+import { Sizes } from "$lib/constants/boards";
 import { Players } from "../player/types";
 import { Direction, GameStatus, TurnStatus, type IGameState } from "./types";
 
@@ -8,6 +9,7 @@ const initState: IGameState = {
 	tiles: [],
 	rows: 0,
 	columns: 0,
+	boardType: Sizes.FiveByFive,
 	startingNumberOfSquares: 0,
 	tilesPerPlayer: 5,
 	gameMultiple: 5,
