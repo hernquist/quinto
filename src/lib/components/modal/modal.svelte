@@ -13,20 +13,25 @@
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
-	<dialog 
-		bind:this={dialog} 
-		onclose={modalState.toggleModalOff}
-		onclick={(e) => { if (e.target === dialog) dialog.close(); } }
-	>
-		<div>
-			{@render header?.()}
-			<hr />
-			{@render children?.()}
-			<hr />
-			<!-- svelte-ignore a11y_autofocus -->
-			<button autofocus onclick={(e) => {e.preventDefault();modalState.toggleModalOff();}}>close modal</button>
-		</div>
-	</dialog>
+<dialog 
+	bind:this={dialog} 
+	onclose={modalState.toggleModalOff}
+	onclick={(e) => {if (e.target === dialog) dialog.close();}}
+>
+	<div>
+		{@render header?.()}
+		<hr />
+		{@render children?.()}
+		<!-- svelte-ignore a11y_autofocus -->
+		<button 
+			autofocus 
+			class="modal__close-button"
+			aria-label="Close modal"
+			aria-keyshortcuts="Escape"
+			onclick={(e) => {e.preventDefault();modalState.toggleModalOff();}}
+		>CLOSE</button>
+	</div>
+</dialog>
 
 <style>
 	dialog {
@@ -73,5 +78,19 @@
 	
 	button {
 		display: block;
+	}
+
+	.modal__close-button {
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 16px;
+        padding: 6px 12px;
+        border: 1px solid black;
+        border-radius: 2px;
+        background-color: tan;
+        cursor: pointer;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+		margin: 26px 0 0 0;
 	}
 </style>
