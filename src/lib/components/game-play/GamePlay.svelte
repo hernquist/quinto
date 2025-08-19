@@ -64,7 +64,7 @@
         flex-direction: row;
         justify-content: space-between;
         width: calc(100% - 12px); 
-        margin: 20px 0;
+        margin: 8px 0 4px;
 
         @media screen and (min-width: 420px) {
             width: 396px;
