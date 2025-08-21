@@ -20,7 +20,6 @@
 >
 	<div>
 		{@render header?.()}
-		<hr />
 		{@render children?.()}
 		<!-- svelte-ignore a11y_autofocus -->
 		<button 
@@ -40,6 +39,7 @@
 		border: none;
 		padding: 0;
 		margin: auto;
+		height: 300px; /* Can we get away with this? */
 	}
 
 	dialog::backdrop {
