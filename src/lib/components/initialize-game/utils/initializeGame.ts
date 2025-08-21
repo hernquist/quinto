@@ -1,4 +1,5 @@
 import type { GameState } from "$lib/state/game/game.svelte";
+import initState from "$lib/state/game/gameInitialState";
 import { asyncWhileLoop } from "$lib/state/game/gameUtils";
 import type { PlayerState } from "$lib/state/player/player.svelte";
 import { Players } from "$lib/state/player/types";
@@ -7,15 +8,12 @@ import generateGameTiles from "./generateGameTiles";
 import initializeBoard from "./initializeBoard";
 import initializePlayers from "./initializePlayers";
 
-const ROWS = 4;
-const COLUMNS = 4;
-
 const { Top, Bottom } = Players;
 
 export function initializeGame(gameState: GameState, playerState: PlayerState, toastState: ToastState, options = {}) {
     let defaults = {
-        rows: ROWS,
-        columns: COLUMNS,
+        rows: initState.rows,
+        columns: initState.columns,
         gameMultiple: 5, // default game multiple
         playLevel: 5 // default play level
     };

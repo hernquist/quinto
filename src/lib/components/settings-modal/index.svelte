@@ -14,6 +14,7 @@
     let gameMultiple = $state(gameState.game.gameMultiple);
     let playLevel = $state(gameState.game.playLevel);
     let boardType = $state(gameState.game.boardType); 
+    
     const { Small, MediumSmall, MediumLarge, Large } = ScreenSizes;
     let allowedBoards: IBoardDimensions[] = $state([]); 
 
