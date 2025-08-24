@@ -1,6 +1,6 @@
 import { setContext, getContext } from 'svelte';
 import type { ITile } from '$lib/components/game/types';
-import { Players, type IPlayer, type IPlayerTiles, type IPlayers } from './types';
+import { Players, type IPlayer, type IPlayerTiles, type IPlayers, type IHumanPlayer } from './types';
 import { GameStatus, type IGameState } from '../game/types';
 
 const { Top, Bottom } = Players; 
@@ -19,6 +19,7 @@ export interface ISetWinner {
 export interface IPlayerState {
     tiles: IPlayerTiles;
     player: IPlayers
+    humanPlayer: IHumanPlayer;
 } 
 
 export class PlayerState {
@@ -31,6 +32,12 @@ export class PlayerState {
         [Top]: initPlayer,
         [Bottom]: initPlayer
     })
+
+    humanPlayer = $state<IHumanPlayer>({
+        position: Players.Top,
+        name: "Human",
+        id: 0
+    });
 
     constructor() {
     }
@@ -96,6 +103,10 @@ export class PlayerState {
 
         console.error("error: setWinner checked while gameState status not COMPLETE");
         return tieGameStatus;
+    }
+
+    public getPlayerName(): string {
+        return this.humanPlayer.name;
     }
 }
 

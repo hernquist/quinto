@@ -11,15 +11,54 @@
     let toastState = getToastState();
 </script>
 
-<div >
-    WINNER {playerState.getWinner().name}
+<div class="gameOverModal__container">
+    <div class="gameOverModal__title">
+        WINNER {playerState.getPlayerName()}
+    </div>
 
-    <button 
-        onclick={(e)=> {
-            e.preventDefault();
-            modalState.toggleModalOn();
-            initializeGame(gameState, playerState, toastState);
-            toastState.removeAllToasts();
-        }}
-    >NEW GAME</button>
+    <div>
+        
+
+        <button 
+            class="modal__button"
+            onclick={(e)=> {
+                e.preventDefault();
+                modalState.toggleModalOn();
+                initializeGame(gameState, playerState, toastState);
+                toastState.removeAllToasts();
+            }}
+        >NEW GAME</button>
+    </div>
 </div>
+
+<style>
+    .gameOverModal__container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background-color: #f9f9f9;
+        flex: 1;
+    }
+
+    .gameOverModal__title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .modal__button {
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 16px;
+        padding: 6px 12px;
+        border: 1px solid black;
+        border-radius: 2px;
+        background-color: tan;
+        cursor: pointer;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+		margin: 26px 0 0 0;
+	}
+</style>

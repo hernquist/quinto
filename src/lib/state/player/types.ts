@@ -22,5 +22,11 @@ interface IPlayers {
     [Players.Bottom]: IPlayer;
 }
 
-export type { IPlayer, IPlayerTiles, IPlayers };
+interface IHumanPlayer {
+    position: Players;
+    name: string;
+    id: number;
+}
+
+export type { IPlayer, IPlayerTiles, IPlayers, IHumanPlayer };
 export { Players };
