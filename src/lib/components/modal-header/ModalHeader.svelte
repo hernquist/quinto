@@ -41,6 +41,8 @@
     border: 2px solid #000000;
     border-radius: 4px;
     margin: 0px;
+    display: flex;
+    flex-wrap: nowrap;
   }
 
   /* Style the header links */
@@ -50,7 +52,6 @@
     text-align: center;
     font-size: 12px;
     line-height: 16px;
-
     padding: 10px;
     text-decoration: none;
     border-right:#000000 2px solid;
@@ -63,7 +64,6 @@
     @media screen and (min-width: 360px) {
       font-size: 14px;
       line-height: 18px;
-      padding: 12px;
     }
 
     @media screen and (min-width: 500px) {
@@ -83,5 +83,4 @@
     background-color: #ADD8E6;
     color: black;
   }
-
 </style>
