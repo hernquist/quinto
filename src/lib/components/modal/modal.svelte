@@ -47,7 +47,11 @@
 	}
 
 	dialog > div {
-		padding: 1em;
+		padding: .5em;
+
+		 @media screen and (min-width: 360px) {
+			padding: 1em;
+		 }
 	}
 
 	dialog[open] {
