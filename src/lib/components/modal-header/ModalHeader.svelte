@@ -48,15 +48,27 @@
     float: left;
     color: black;
     text-align: center;
-    padding: 12px;
+    font-size: 12px;
+    line-height: 16px;
+
+    padding: 10px;
     text-decoration: none;
-    font-size: 18px;
-    line-height: 25px;
     border-right:#000000 2px solid;
     background-color: tan;
 
     &:last-child {
       border-right: none; 
+    }
+
+    @media screen and (min-width: 360px) {
+      font-size: 14px;
+      line-height: 18px;
+      padding: 12px;
+    }
+
+    @media screen and (min-width: 500px) {
+        font-size: 18px;
+        line-height: 25px;
     }
   }
 
@@ -72,20 +84,4 @@
     color: black;
   }
 
-  /* Add media queries for responsiveness - when the screen is 500px wide or less, stack the links on top of each other */
-  @media screen and (max-width: 500px) {
-    .header button {
-      display: block;
-      text-align: left;
-      font-size: 14px;
-      line-height: 18px;
-    }
-  }
-
-  @media screen and (max-width: 360px) {
-    .header button {
-      font-size: 12px;
-      line-height: 16px;
-    }
-  }
 </style>
