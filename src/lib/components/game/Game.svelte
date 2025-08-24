@@ -25,7 +25,6 @@
             }, numberOfLines * HIGHLIGHT_DURATION + 1 * MAIN_TOAST_DURATION);
         }
 	});
-
 </script>
 
 <InitializeGame>
