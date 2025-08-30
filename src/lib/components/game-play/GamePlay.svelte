@@ -47,6 +47,8 @@
         position: fixed;
         top: 64px;
         width: 100%;
+        height: 100vh;
+        background: lightseagreen;
     }
 
     .game-play__gamescreen {

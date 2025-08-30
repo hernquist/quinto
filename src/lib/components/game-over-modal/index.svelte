@@ -9,6 +9,13 @@
     let playerState = getPlayerState();
     let modalState = getModalState();
     let toastState = getToastState();
+
+    function handleNewGame(e: MouseEvent): void {
+        e.preventDefault();
+        initializeGame(gameState, playerState, toastState);
+        toastState.removeAllToasts();
+        modalState.toggleModalOff();
+    }
 </script>
 
 <div class="gameOverModal__container">
@@ -17,16 +24,9 @@
     </div>
 
     <div>
-        
-
         <button 
             class="modal__button"
-            onclick={(e)=> {
-                e.preventDefault();
-                modalState.toggleModalOn();
-                initializeGame(gameState, playerState, toastState);
-                toastState.removeAllToasts();
-            }}
+            onclick={handleNewGame}
         >NEW GAME</button>
     </div>
 </div>

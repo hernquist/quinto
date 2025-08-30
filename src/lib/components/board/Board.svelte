@@ -49,6 +49,6 @@
         grid-template-rows: repeat(var(--num-of-rows), minmax(25px, 100px));
         /* aspect-ratio: 1 / 1; */
         height: calc(100vw - 24px); /* width here is key */
-        max-height: 472px;
+        max-height: 496px;
     }
 </style>
