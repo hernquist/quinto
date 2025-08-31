@@ -49,8 +49,6 @@
         };
         const boardTypes = Object.keys(boards) as Sizes[];
 
-        $inspect("boardTypes", boardTypes);
-
         let allBoards = [];
 
         for (let boardType of boardTypes) {

@@ -35,7 +35,7 @@ export function initializeGame(gameState: GameState, playerState: PlayerState, t
     // finish initializing board
     initializeBoard(gameState);
     gameState.setStartingSquare();
-    // update board after setStartingSquare since it affects 
+    // update board after setStartingSquare since it affects
     gameState.updateBoardAfterTileDrop();
     // make a copy of the board before game play starts
     gameState.captureBoard();

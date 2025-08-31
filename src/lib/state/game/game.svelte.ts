@@ -102,7 +102,7 @@ export class GameState {
 	private removeDroppedTileImprintFromBoard() {
 		for (let x = 0; x < this.game.columns; x++) {
 			for (let y = 0; y < this.game.rows; y++) {
-					this.game.board[x][y] = { ...this.game.board[x][y], hasDroppedTile: false}
+				this.game.board[x][y] = { ...this.game.board[x][y], hasDroppedTile: false}
 			}
 		}
 	}
@@ -688,7 +688,20 @@ export class GameState {
 
 	public setStartingSquare(): void {
 		const [x, y] = this.getStartingSquareCoordinates();
-		this.game.board[x][y] = { ...this.game.board[x][y], startingSquare: true}
+		this.game.board[x][y] = { ...this.game.board[x][y], startingSquare: true }
+		if (!this.hasTile(x, y)) {
+			this.dropStartingSquareTile(x , y);
+		}
+	}
+
+	// TODO: is this a drop or not
+	private dropStartingSquareTile(x: number, y: number): void {
+		console.log("dropStartingSquareTile.this.game.tiles -- before pop", this.game.tiles);
+		const startingTile = this.game.tiles.pop();
+		console.log("dropStartingSquareTile", startingTile);
+		console.log("dropStartingSquareTile.this.game.tiles", this.game.tiles);
+		this.game.board[x][y] = { ...this.game.board[x][y], tile: startingTile };
+		console.log("dropStartingSquareTile.this.game.board", this.game.board);
 	}
 }
 
