@@ -58,16 +58,14 @@
     <div 
         role="cell"
         tabindex={x*y}
-        class="board__square"
+        class="board__square board__square-hasDropzone"
         class:startingSquare
         class:hovering
         class:isGapSquare={isHighlighted}
 		ondragenter={() => gameState.setHoveringTrue(x, y)}
      	ondragleave={() => gameState.setHoveringFalse(x, y)}
         id={String(id)} 
-        use:dropzone={{
-            on_dropzone: onDropzone, 
-        }}
+        use:dropzone={{ on_dropzone: onDropzone }}
     ></div>
 {:else}
     <div 
@@ -192,5 +190,10 @@
     .startingSquare {
         border: 6px dashed lightgrey;
         background-color: salmon;
+    }
+
+    .board__square-hasDropzone {
+        border: 2px solid lightgray; 
+        background-color: #FFAA33;
     }
 </style>
