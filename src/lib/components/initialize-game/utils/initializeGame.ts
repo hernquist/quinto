@@ -17,7 +17,6 @@ export function initializeGame(gameState: GameState, playerState: PlayerState, t
         gameMultiple: 5, // default game multiple
         playLevel: 5 // default play level
     };
-    console.log("[initializeGame] options:", options);
     const args = Object.assign({}, defaults, options);
 
     // initialize board
@@ -36,17 +35,13 @@ export function initializeGame(gameState: GameState, playerState: PlayerState, t
     initializeBoard(gameState);
     gameState.setStartingSquare();
     // update board after setStartingSquare since it affects
-    gameState.updateBoardAfterTileDrop();
+    // gameState.updateBoardAfterTileDrop();
     // make a copy of the board before game play starts
     gameState.captureBoard();
     console.log("[initializeGame] gameState.game:", JSON.parse(JSON.stringify(gameState.game)));
-    console.log("[initializeGame] playerState.isComputer:", playerState.player[gameState.game.activePlayer].isComputer);
     if (playerState.player[gameState.game.activePlayer].isComputer) {
-        console.log("[initializeGame] computer player, starting computer turn"); 
         setTimeout(async () => {
-            console.log("[FinishTurn] Computer turn starting");
             await asyncWhileLoop(gameState, playerState, toastState);
-            console.log("[FinishTurn] Computer turn finished");
         }, 400);
     }
 }
