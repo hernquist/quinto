@@ -114,41 +114,30 @@ export async function asyncWhileLoop(gameState: GameState, playerState: PlayerSt
 
     while (condition) {
         // Asynchronous operation (e.g., fetching data)
-        console.log("[FinishTurn] asyncWhileLoop game-pre", JSON.parse(JSON.stringify(gameState.game)));
         const inactivePlayer = gameState.getInactivePlayer();
-        console.log("[FinishTurn] asyncWhileLoop inactivePlayer", inactivePlayer);
         const hasNoTiles = playerState.hasNoTiles(inactivePlayer);
-        console.log("[FinishTurn] asyncWhileLoop inactivePlayer hasNoTiles", hasNoTiles);
         if (!hasNoTiles) {
             condition = false
         }
 
         const activePlayer = gameState.game.activePlayer;
         if (playerState.hasNoTiles(activePlayer)) {
-            console.log("[FinishTurn] asyncWhileLoop activePlayer hasNoTiles, skipping loop");
             // await gameState.finishTurn(playerState, toastState);
             gameState.skippedTurn = true; // Set skippedTurn to true if the active player has no tiles
             condition = false;
         } else {
-            console.log("[FinishTurn] asyncWhileLoop player-pre", JSON.parse(JSON.stringify(playerState.player)));
             await gameState.computerTurn(playerState, toastState);
         }
 
         // Update the condition or counter based on the result
-        console.log("[FinishTurn] asyncWhileLoop iteration", counter);
-        console.log("[FinishTurn] asyncWhileLoop game-post", JSON.parse(JSON.stringify(gameState.game)));
-        console.log("[FinishTurn] asyncWhileLoop player-post", JSON.parse(JSON.stringify(playerState.player)));
         if (gameState.skippedTurn) {
             await gameState.finishTurn(playerState, toastState);
-            console.log("[FinishTurn] asyncWhileLoop skippedTurn finishing");
         }
         if (playerState.hasNoTiles(gameState.getInactivePlayer()) && playerState.hasNoTiles(gameState.game.activePlayer)) {
-            console.log("[FinishTurn] asyncWhileLoop hasNoTiles");
             condition = false;
         }
         counter++;
     }
 
-    console.log("[FinishTurn] asyncWhileLoop completed");
     gameState.skippedTurn = false; // Reset skippedTurn after the loop
 }
