@@ -13,16 +13,13 @@
         e.preventDefault();
         const play = gameState.isValidPlay();
         if (play.isValid) {
-            console.log("[FinishTurn] finishTurn");
             await gameState.finishTurn(playerState, toastState);
             // if computer player "on", then run computer turn
-            console.log("[FinishTurn] human done, computerTurn on");
             // make a function to share with initializeGame though it is really just a setTimeout
             setTimeout(async () => {
                 console.log("[FinishTurn] Computer turn starting");
                 console.log("[FinishTurn] ---------------------------------");
                 await asyncWhileLoop(gameState, playerState, toastState);
-                console.log("[FinishTurn] Computer turn finished");
             }, 20);
         } else {
             toastState.addHighlights([play.emptySquares], gameState.game.gameMultiple)
