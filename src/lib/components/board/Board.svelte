@@ -1,7 +1,8 @@
 <script lang="ts">
+	import { onMount } from "svelte";
+	import Square from "../square/Square.svelte";
 	import { getGameState } from "../../state/game/game.svelte";
     import { getToastState } from "../../state/toast/toast.svelte";
-	import Square from "../square/Square.svelte";
     import { type IHighlightedSquare, type IToast, ToastType } from "$lib/state/toast/types"
     
     const gameState = getGameState();
@@ -11,6 +12,10 @@
 
     // TODO: why are puttiing this in props AND grabbing game info from context
     const { activePlayer } = $props();
+
+    onMount(() => {
+        gameState.specialUpdate();
+    });
 </script>
 
 <div class="outerBoard__container">
