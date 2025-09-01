@@ -119,10 +119,8 @@ export class GameState {
 	public updateBulkTurn(droppedTiles: IDroppedTile[], playerState: PlayerState): void {
 		// TODO: this needs to be dynamic
 		// right now I am forcing the issue....
-		//TODO: need to figure this out BIG TODO
+		// TODO: need to figure this out BIG TODO
 		this.game.turn.turnStatus = droppedTiles.length === 1 ? TurnStatus.OnePlaced : TurnStatus.MultiPlaced;
-		console.log("updateBulkTurn", this.game.turn.turnStatus);
-		console.log("updateBulkTurn", JSON.parse(JSON.stringify(playerState)));
 		// this.game.turn.turnStatus = TurnStatus.MultiPlaced;
 		// also we need to set horizontal and vertical placement here 
 
@@ -634,13 +632,10 @@ export class GameState {
 			this.updateBoardAfterTileDrop();
 	
 			// if active player has no tiles but the other play does...
-			console.log("from finishTurn sleep activePlayer:",this.game.activePlayer);
-			console.log("from finishTurn sleep inActivePlayer:",this.getInactivePlayer(), playerState);
 			if (playerState.hasNoTiles(this.game.activePlayer) && !playerState.hasNoTiles(this.getInactivePlayer())) {
 				toastState.addQueuedMessage("", `${this.game.activePlayer} has no tiles... ${this.getInactivePlayer()}'s turn`, this.game.activePlayer, ToastType.PLAYER_MESSGAGE);
 				// set skippedTurn to true so we can activate a finishTurn in the component
 				this.skippedTurn = true;
-				console.log("skippedTurn set to true");
 			} else {
 				this.captureBoard();
 			}
@@ -688,6 +683,7 @@ export class GameState {
 
 	public setStartingSquare(): void {
 		const [x, y] = this.getStartingSquareCoordinates();
+		console.log("setStartingSquare", x, y);
 		this.game.board[x][y] = { ...this.game.board[x][y], startingSquare: true }
 		if (!this.hasTile(x, y)) {
 			this.dropStartingSquareTile(x , y);
@@ -696,12 +692,19 @@ export class GameState {
 
 	// TODO: is this a drop or not
 	private dropStartingSquareTile(x: number, y: number): void {
-		console.log("dropStartingSquareTile.this.game.tiles -- before pop", this.game.tiles);
 		const startingTile = this.game.tiles.pop();
-		console.log("dropStartingSquareTile", startingTile);
-		console.log("dropStartingSquareTile.this.game.tiles", this.game.tiles);
 		this.game.board[x][y] = { ...this.game.board[x][y], tile: startingTile };
-		console.log("dropStartingSquareTile.this.game.board", this.game.board);
+		
+		// for the computer player to work properly we need to invoke this special update
+		this.specialUpdate();
+	}
+
+	public specialUpdate() {
+		const [x, y] = this.getStartingSquareCoordinates();
+		this.game.board[x][y-1] = { ...this.game.board[x][y-1], hasDropzone: true };
+		this.game.board[x][y+1] = { ...this.game.board[x][y+1], hasDropzone: true };
+		this.game.board[x-1][y] = { ...this.game.board[x-1][y], hasDropzone: true };
+		this.game.board[x+1][y] = { ...this.game.board[x+1][y], hasDropzone: true };
 	}
 }
 
