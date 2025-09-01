@@ -71,7 +71,7 @@ function tryTilesHorizontal(gameState: GameState, permutations: ITile[][], x: nu
         const currentPermutation = permutations[permutationIndex];
 
         const currentPermutationLength = currentPermutation.length;
-        console.log("currentPermutation:", JSON.parse(JSON.stringify(currentPermutation)));
+        // console.log("currentPermutation:", JSON.parse(JSON.stringify(currentPermutation)));
         const candidateTiles: IDroppedTile[] = [];
         let xShift = 1;
 
@@ -80,7 +80,7 @@ function tryTilesHorizontal(gameState: GameState, permutations: ITile[][], x: nu
             if (permutationTileIndex == 0) {
                 const tile = currentPermutation[permutationTileIndex];
                 candidateTiles.push({ tile, x, y });
-                console.log("candidateTiles {permutationTileIndex: 0} -- ", JSON.parse(JSON.stringify(candidateTiles)));
+                // console.log("candidateTiles {permutationTileIndex: 0} -- ", JSON.parse(JSON.stringify(candidateTiles)));
             } else {
                 let keepChecking = true
                 if (!board[x + (direction * xShift)]?.[y]) {
@@ -103,7 +103,7 @@ function tryTilesHorizontal(gameState: GameState, permutations: ITile[][], x: nu
                           // go back and check in the other direction??                      
                     }
                 }
-                console.log("candidateTiles { permutationTileIndex: 1+ } -- ", JSON.parse(JSON.stringify(candidateTiles))); 
+                // console.log("candidateTiles { permutationTileIndex: 1+ } -- ", JSON.parse(JSON.stringify(candidateTiles))); 
             }
         }
 
@@ -114,10 +114,10 @@ function tryTilesHorizontal(gameState: GameState, permutations: ITile[][], x: nu
             firstTurnOfRound: false // blarg
         };
 
-        console.log("candidateTurn:", JSON.parse(JSON.stringify(candidateTurn)));
+        // console.log("candidateTurn:", JSON.parse(JSON.stringify(candidateTurn)));
         // get score
         gameState.updateComputerCandidateTurn(candidateTurn);
-        console.log("gameState.game.computerCandidateTurn:", JSON.parse(JSON.stringify(gameState.game.computerCandidateTurn)));
+        // console.log("gameState.game.computerCandidateTurn:", JSON.parse(JSON.stringify(gameState.game.computerCandidateTurn)));
         const score = sumTotalScore(gameState);
 
         candidateMoves.push ({
@@ -142,7 +142,7 @@ function tryTilesVertical(gameState: GameState, permutations: ITile[][], x: numb
         const currentPermutation = permutations[permutationIndex];
 
         const currentPermutationLength = currentPermutation.length;
-        console.log("currentPermutation:", JSON.parse(JSON.stringify(currentPermutation)));
+        // console.log("currentPermutation:", JSON.parse(JSON.stringify(currentPermutation)));
         const candidateTiles: IDroppedTile[] = [];
         let yShift = 1;
 
@@ -151,7 +151,7 @@ function tryTilesVertical(gameState: GameState, permutations: ITile[][], x: numb
             if (permutationTileIndex == 0) {
                 const tile = currentPermutation[permutationTileIndex];
                 candidateTiles.push({ tile, x, y });
-                console.log("candidateTiles {permutationTileIndex: 0} -- ", JSON.parse(JSON.stringify(candidateTiles)));
+                // console.log("candidateTiles {permutationTileIndex: 0} -- ", JSON.parse(JSON.stringify(candidateTiles)));
             } else {
                 let keepChecking = true
                 if (!board[x]?.[y + (direction * yShift)]) {
@@ -174,7 +174,7 @@ function tryTilesVertical(gameState: GameState, permutations: ITile[][], x: numb
                           // go back and check in the other direction??                      
                     }
                 }
-                console.log("candidateTiles { permutationTileIndex: 1+ } -- ", JSON.parse(JSON.stringify(candidateTiles))); 
+                // console.log("candidateTiles { permutationTileIndex: 1+ } -- ", JSON.parse(JSON.stringify(candidateTiles))); 
             }
         }
 
@@ -185,10 +185,10 @@ function tryTilesVertical(gameState: GameState, permutations: ITile[][], x: numb
             firstTurnOfRound: false // blarg
         };
 
-        console.log("candidateTurn:", JSON.parse(JSON.stringify(candidateTurn)));
+        // console.log("candidateTurn:", JSON.parse(JSON.stringify(candidateTurn)));
         // get score
         gameState.updateComputerCandidateTurn(candidateTurn);
-        console.log("gameState.game.computerCandidateTurn:", JSON.parse(JSON.stringify(gameState.game.computerCandidateTurn)));
+        // console.log("gameState.game.computerCandidateTurn:", JSON.parse(JSON.stringify(gameState.game.computerCandidateTurn)));
         const score = sumTotalScore(gameState);
 
         candidateMoves.push ({
@@ -230,7 +230,7 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
         const permuted = permute(combination);
         permutations.push(...permuted);
     });
-    console.log("permutations:", JSON.parse(JSON.stringify(permutations)));
+    // console.log("permutations:", JSON.parse(JSON.stringify(permutations)));
 
     // loop through board try each tile
     const numberOfColumns = board.length;
@@ -239,7 +239,7 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
         for (let y = 0; y < numberOfRows; y++) {
             // only look at dropzone "available" squares
             if (board[x][y].hasDropzone) {
-                console.log("hasDropzone at:", x, y);
+                // console.log("hasDropzone at:", x, y);
                 const directions = [-1, 1];
                 const [left, right] =  directions;
                 const [up, down] =  directions;
@@ -251,22 +251,22 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
                     ...tryTilesVertical(gameState, permutations, x, y, down),
                 ];
             } else {
-                console.log("no hasDropzone at:", x, y);
+                // console.log("no hasDropzone at:", x, y);
             }
         }
     }
-    console.log("number of candidate moves:", candidateMoves.length);
+    // console.log("number of candidate moves:", candidateMoves.length);
     const sortedCandidateMoves = candidateMoves.sort((a, b) => b.score - a.score);
     const numberOfCandidateMoves = sortedCandidateMoves.length;
-    console.log("number of candidate moves sorted:", numberOfCandidateMoves);
+    // console.log("number of candidate moves sorted:", numberOfCandidateMoves);
     
     const slicer = (5 - playLevel) * 0.1;
-    console.log("slicer:", slicer);
+    // console.log("slicer:", slicer);
     const percentOfRemovedMoves = Math.floor(numberOfCandidateMoves * slicer);
-    console.log("percentOfRemovedMoves:", percentOfRemovedMoves);
+    // console.log("percentOfRemovedMoves:", percentOfRemovedMoves);
     const selectedCandidateMoves = sortedCandidateMoves.slice(0, numberOfCandidateMoves - percentOfRemovedMoves);
-    console.log("selectedCandidateMoves.length:", selectedCandidateMoves.length);
-    console.log("selectedCandidateMoves:", selectedCandidateMoves);
+    // console.log("selectedCandidateMoves.length:", selectedCandidateMoves.length);
+    // console.log("selectedCandidateMoves:", selectedCandidateMoves);
     const selectedPlay = findSelectedPlay(selectedCandidateMoves);
 
     return ({

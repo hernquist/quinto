@@ -13,12 +13,10 @@
     const gameState = getGameState();
     const playerState = getPlayerState();
     const levelIndex = $derived(gameState.game.playLevel - 1);
-
 </script>
 
 <div class="game-play__fullscreen">
     <div class="game-play__gamescreen">
-        <!-- TODO: make separate component -->
         <div class="game-play__score">
             <Score playerPosition={Top} name={"HUMAN"}/>
             <PlayerTurnControls 

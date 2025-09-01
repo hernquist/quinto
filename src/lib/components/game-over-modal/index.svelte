@@ -12,6 +12,7 @@
 
     function handleNewGame(e: MouseEvent): void {
         e.preventDefault();
+        // TODO: need options
         initializeGame(gameState, playerState, toastState);
         toastState.removeAllToasts();
         modalState.toggleModalOff();
