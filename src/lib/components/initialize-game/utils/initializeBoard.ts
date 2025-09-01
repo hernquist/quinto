@@ -7,9 +7,8 @@ function makeSquareId (x: number, y: number, columns: number): number {
 }
 
 function initializeBoard(gameState: GameState) {
-    
+    console.log("[initializeBoard] initializing board");
     const { rows, columns } = gameState.game;
-
     let board: IBoard = [];
     const initialSquare = {
         hovering: false, hasDropzone: false, hasDroppedTile: false
@@ -23,6 +22,7 @@ function initializeBoard(gameState: GameState) {
         }
         board[x] = column;
     }
+    
     gameState.setDuringGameStatus()
     gameState.updateBoard(board);
 }
