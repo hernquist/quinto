@@ -44,7 +44,9 @@
         class="board__square {scoredValue > 0 ? 'gain' : 'loss'}" 
         id={String(id)} 
         class:hasDroppedTile
-        class:isHighlighted 
+        class:isHighlighted
+        class:highColumns={gameState.game.columns >= 9}
+        class:mediumColumns={gameState.game.columns == 8}
     >
         <Tile 
             tile={tile} 
@@ -54,7 +56,7 @@
             {scoredValue}
         />
     </div>
-{:else if hasDropzone}
+    {:else if hasDropzone}
     <div 
         role="cell"
         tabindex={x*y}
@@ -62,16 +64,20 @@
         class:startingSquare
         class:hovering
         class:isGapSquare={isHighlighted}
-		ondragenter={() => gameState.setHoveringTrue(x, y)}
-     	ondragleave={() => gameState.setHoveringFalse(x, y)}
+        ondragenter={() => gameState.setHoveringTrue(x, y)}
+        ondragleave={() => gameState.setHoveringFalse(x, y)}
         id={String(id)} 
         use:dropzone={{ on_dropzone: onDropzone }}
-    ></div>
-{:else}
-    <div 
+        class:highColumns={gameState.game.columns >= 9}
+        class:mediumColumns={gameState.game.columns == 8}
+        ></div>
+        {:else}
+        <div 
         class="board__square"
         class:startingSquare
         id={String(id)} 
+        class:highColumns={gameState.game.columns >= 9} 
+        class:mediumColumns={gameState.game.columns == 8}
     ></div>
 {/if}
 
@@ -96,6 +102,14 @@
 
         @media screen and (min-width: 768px) {
             margin: 6px;
+        }
+        
+        &.mediumColumns {
+            margin: 4px;
+        }
+
+        &.highColumns {
+            margin: 2px;
         }
 
         &:hover {
