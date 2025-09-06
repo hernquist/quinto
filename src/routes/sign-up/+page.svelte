@@ -7,7 +7,7 @@
     <!-- {#if form}
       <h4 class="text-red-600 font-light text-md text-center" />
     {/if} -->
-    <div class="mb-2">
+    <!-- <div class="mb-2">
       <label for="first_name" class="block font-light text-neutral-800 ml-2"
         >first name</label
       >
@@ -18,8 +18,8 @@
         placeholder="John"
         class="w-full p-2 border border-neutral-800 rounded-lg"
       />
-    </div>
-    <div class="mb-2">
+    </div> -->
+    <!-- <div class="mb-2">
       <label for="last_name" class="block font-light text-neutral-800 ml-2"
         >last name</label
       >
@@ -28,6 +28,18 @@
         id="last_name"
         name="last_name"
         placeholder="Smith"
+        class="w-full p-2 border border-neutral-800 rounded-lg"
+      />
+    </div> -->
+    <div class="mb-2">
+      <label for="username" class="block font-light text-neutral-800 ml-2"
+        >username</label
+      >
+      <input
+        type="username"
+        id="username"
+        name="username"
+        placeholder="RexTheDog"
         class="w-full p-2 border border-neutral-800 rounded-lg"
       />
     </div>
