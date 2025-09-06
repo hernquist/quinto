@@ -5,6 +5,7 @@
 	import { type Players } from "$lib/state/player/types";
 	import type { ISquare, ITile } from "../game/types";
 	import Tile from "../tile/Tile.svelte";
+	import type { IHighlightedSquare } from "$lib/state/toast/types";
 
     interface ISquareProps {
         square: ISquare, 
@@ -33,7 +34,7 @@
     let isHighlighted = $derived.by(() => 
         highlightedSquares?.reduce((isHighlighted, square) =>
             square.x === x && square.y === y ? true : isHighlighted, false
-        )
+        ) || false
     );
 
     let scoredValue = $derived(highlightedSquares[0]?.scoredValue || 0)
@@ -56,7 +57,7 @@
             {scoredValue}
         />
     </div>
-    {:else if hasDropzone}
+{:else if hasDropzone}
     <div 
         role="cell"
         tabindex={x*y}
@@ -70,9 +71,9 @@
         use:dropzone={{ on_dropzone: onDropzone }}
         class:highColumns={gameState.game.columns >= 9}
         class:mediumColumns={gameState.game.columns == 8}
-        ></div>
-        {:else}
-        <div 
+    ></div>
+{:else}
+    <div 
         class="board__square"
         class:startingSquare
         id={String(id)} 

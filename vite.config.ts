@@ -1,3 +1,4 @@
+import devtoolsJson from 'vite-plugin-devtools-json';
 import tailwindcss from '@tailwindcss/vite';
 import { svelteTesting } from '@testing-library/svelte/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
@@ -5,12 +6,13 @@ import { defineConfig } from 'vite';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { storybookTest } from '@storybook/experimental-addon-test/vitest-plugin';
+
 const dirname =
 	typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
 // More info at: https://storybook.js.org/docs/writing-tests/test-addon
 export default defineConfig({
-	plugins: [tailwindcss(), sveltekit()],
+	plugins: [tailwindcss(), sveltekit(), devtoolsJson()],
 	test: {
 		workspace: [
 			{
@@ -49,11 +51,7 @@ export default defineConfig({
 						enabled: true,
 						headless: true,
 						provider: 'playwright',
-						instances: [
-							{
-								browser: 'chromium'
-							}
-						]
+						instances: [{ browser: 'chromium' }]
 					},
 					setupFiles: ['.storybook/vitest.setup.ts']
 				}
