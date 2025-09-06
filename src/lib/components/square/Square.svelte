@@ -34,7 +34,7 @@
     let isHighlighted = $derived.by(() => 
         highlightedSquares?.reduce((isHighlighted, square) =>
             square.x === x && square.y === y ? true : isHighlighted, false
-        )
+        ) || false
     );
 
     let scoredValue = $derived(highlightedSquares[0]?.scoredValue || 0)
