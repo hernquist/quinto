@@ -5,8 +5,7 @@ import * as jose from "jose";
 const JWT_SECRET = "your-256-bit-secret"; // Replace with your actual secret or use environment variable
 
 type JWTPayload = {
-  firstName: string;
-  lastName: string;
+  username: string;
   email: string;
   id: number;
 };
