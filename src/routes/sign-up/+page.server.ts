@@ -30,18 +30,20 @@ export const actions = {
 
     const hash = bcrypt.hashSync(password?.toString(), 10);
 
-    const nUser = await db.insert(usersTable).values({
+    const [nUser] = await db.insert(usersTable).values({
     //   first_name: first_name.toString(),
     //   last_name: last_name.toString(),
       username: username.toString(),
       email: email.toString(),
       password: hash,
-    });
+    }).returning();
+
+    console.log("nUser1----------------------------", nUser);
 
     const token = await createAuthJWT({
       username: username.toString(),
       email: email.toString(),
-      id: parseInt(nUser.insertId),
+      id: parseInt(nUser?.id),
     });
 
     event.cookies.set("auth_token", token, {
