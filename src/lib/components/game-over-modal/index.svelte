@@ -21,7 +21,7 @@
 
 <div class="gameOverModal__container">
     <div class="gameOverModal__title">
-        WINNER {playerState.getWinner().name}
+        WINNER {playerState.getWinnerName(gameState)}
     </div>
 
     <div>
