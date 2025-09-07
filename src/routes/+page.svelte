@@ -1,9 +1,15 @@
 <script>
 	import Game from "$lib/components/game/Game.svelte";
+	import { getPlayerState } from "$lib/state/player/player.svelte";
 
-    export let data;
-    console.log("data from +page.svelte-----------------", data);
-    console.log("token from +page.svelte-----------------", data?.token);
+    const { data } = $props();
+    const playerState = getPlayerState();
+
+    $effect(() => {
+        if (data?.token) {
+            playerState.setUser(data?.user[0]);
+        };
+    });
 
 </script>
 
