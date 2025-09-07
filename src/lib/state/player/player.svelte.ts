@@ -100,7 +100,6 @@ export class PlayerState {
     }
 
     public getPlayerName(): string {
-        console.log("getPlayerName", this.humanPlayer);
         return this.isLoggedIn() ? this.humanPlayer.user?.username || "" : this.humanPlayer.name;
     }
 
@@ -108,11 +107,9 @@ export class PlayerState {
         return this.humanPlayer.isLoggedIn;
     }
 
-    public setUser(user: { id: number; username: string; email: string; }) {
+    public setUser(user: { id: number; username: string; email: string; }): void {
         this.humanPlayer.user = user;
         this.humanPlayer.isLoggedIn = true;
-
-        console.log("setUser in player state", this.humanPlayer);     
     }
     
     public clearUser() {
