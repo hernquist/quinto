@@ -1,10 +1,18 @@
 import { redirect } from "@sveltejs/kit";
 
-export const load = async (event) => {
-  // remove the cookie
-  event.cookies.set("auth_token", "", { path: "/" });
+export const config = {
+    runtime: "nodejs18.x",
+};
 
-  // redirect to the sign-in page
-  // TODO: "/sign-in" or play page???
-  throw redirect(301, "/sign-in");
+export const load = async (event) => {
+    // remove the cookie
+    console.log("----------------------------------------------");
+    console.log("Signing out user by clearing auth_token cookie");
+    console.log("----------------------------------------------");
+
+    event.cookies.set("auth_token", "", { path: "/" });
+
+    // redirect to the sign-in page
+    // TODO: "/sign-in" or play page???
+    throw redirect(301, "/sign-in");
 };
