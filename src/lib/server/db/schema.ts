@@ -1,19 +1,10 @@
 import { pgTable, serial, text, varchar, integer, timestamp } from 'drizzle-orm/pg-core';
 
 export const user = pgTable('users', {
-	// id: text('id').primaryKey(),
-	// age: integer('age')
 	id: serial("id").primaryKey(),
-	// first_name: varchar("first_name"),
-	// last_name: varchar("last_name"),
 	username: varchar("username"),
 	email: varchar("email"),  //.uniqueIndex(),
 	password: varchar("password"),
-
-//   first_name: text("first_name", { length: 255 }).notNull(),
-//   last_name: text("last_name", { length: 255 }).notNull(),
-//   email: text("email", { length: 255 }).notNull(),
-//   password: text("password", { length: 255 }).notNull(),
 });
 
 export const session = pgTable('session', {

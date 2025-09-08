@@ -1,8 +1,5 @@
-// import { JWT_SECRET } from "$env/static/private";
 import { error } from "@sveltejs/kit";
 import * as jose from "jose";
-
-const JWT_SECRET = "your-256-bit-secret"; // Replace with your actual secret or use environment variable
 
 type JWTPayload = {
   username: string;
@@ -10,10 +7,17 @@ type JWTPayload = {
   id: number;
 };
 
+export const getJwtSecret = (): string => {
+  if (!process.env.JWT_SECRET) throw new Error('JWT_SECRET is not set');
+
+  return process.env.JWT_SECRET;
+}
+
 export const createAuthJWT = async (data: JWTPayload) => {
+  
   const jwt = await new jose.SignJWT(data)
     .setProtectedHeader({ alg: "HS256" })
-    .sign(new TextEncoder().encode(JWT_SECRET));
+    .sign(new TextEncoder().encode(getJwtSecret()));
   return jwt;
 };
 
@@ -21,7 +25,7 @@ export const verifyAuthJWT = async (token: string) => {
   try {
     const { payload } = await jose.jwtVerify(
       token,
-      new TextEncoder().encode(JWT_SECRET)
+      new TextEncoder().encode(getJwtSecret())
     );
     return payload as JWTPayload;
   } catch {
