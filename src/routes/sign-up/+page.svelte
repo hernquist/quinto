@@ -74,5 +74,8 @@
         >Submit</button
       >
     </div>
+    <div class="w-full flex justify-center mt-8">
+      <a href="/sign-in">Sign In</a>
+    </div>
   </form>
 </main>
