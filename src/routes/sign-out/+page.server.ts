@@ -1,10 +1,6 @@
 import { redirect } from "@sveltejs/kit";
 import { getPlayerState } from "$lib/state/player/player.svelte.js";
 
-export const config = {
-    runtime: "nodejs18.x",
-};
-
 export const load = async (event) => {
     // logout user by clearing auth_token cookie
     console.log("----------------------------------------------");
