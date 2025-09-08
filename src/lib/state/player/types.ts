@@ -25,7 +25,12 @@ interface IPlayers {
 interface IHumanPlayer {
     position: Players;
     name: string;
-    id: number;
+    isLoggedIn: boolean;
+    user?: {
+        id: number;
+        username: string;
+        email: string;
+    }
 }
 
 export type { IPlayer, IPlayerTiles, IPlayers, IHumanPlayer };

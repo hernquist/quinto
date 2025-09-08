@@ -2,6 +2,8 @@ import { setContext, getContext } from 'svelte';
 import type { ITile } from '$lib/components/game/types';
 import { Players, type IPlayer, type IPlayerTiles, type IPlayers, type IHumanPlayer } from './types';
 import { GameStatus, type IGameState } from '../game/types';
+import { textLevelTuple } from '$lib/utils/textual';
+import type { GameState } from '../game/game.svelte';
 
 const { Top, Bottom } = Players; 
 
@@ -36,7 +38,7 @@ export class PlayerState {
     humanPlayer = $state<IHumanPlayer>({
         position: Players.Top,
         name: "Human",
-        id: 0
+        isLoggedIn: false,
     });
 
     constructor() {
@@ -62,24 +64,16 @@ export class PlayerState {
         return this.tiles[playerPosition].length === 0;
     }
 
-    public getWinner() {
+    public getWinnerName(gameState: GameState): string {
         if (this.player[Top].winner) {
-            return ({
-                name: Top,
-                player: this.player[Top]
-            })
+            return this.getPlayerName();
         }
         if (this.player[Bottom].winner) {
-            return ({
-                name: Bottom,
-                player: this.player[Bottom]
-            })
+            const levelIndex = gameState.game.playLevel - 1
+            return textLevelTuple[levelIndex]
         }
 
-        return ({
-            name: "", 
-            player: null
-        })
+        return "";
     }
 
     public setWinner(gameState: IGameState): ISetWinner {
@@ -106,7 +100,21 @@ export class PlayerState {
     }
 
     public getPlayerName(): string {
-        return this.humanPlayer.name;
+        return this.isLoggedIn() ? this.humanPlayer.user?.username || "" : this.humanPlayer.name;
+    }
+
+    public isLoggedIn(): boolean {
+        return this.humanPlayer.isLoggedIn;
+    }
+
+    public setUser(user: { id: number; username: string; email: string; }): void {
+        this.humanPlayer.user = user;
+        this.humanPlayer.isLoggedIn = true;
+    }
+    
+    public clearUser() {
+        this.humanPlayer.user = undefined;
+        this.humanPlayer.isLoggedIn = false;
     }
 }
 

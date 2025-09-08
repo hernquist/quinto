@@ -18,7 +18,7 @@
 <div class="game-play__fullscreen">
     <div class="game-play__gamescreen">
         <div class="game-play__score">
-            <Score playerPosition={Top} name={"HUMAN"}/>
+            <Score playerPosition={Top} name={playerState.getPlayerName()}/>
             <PlayerTurnControls 
                 playerPosition={gameState.game.activePlayer} 
                 activePlayer={gameState.game.activePlayer}

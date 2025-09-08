@@ -3,7 +3,9 @@
 </script>
 
 <div class="user">
-    <UserAccountIcon />
+    <a href="/sign-up" aria-label="Sign Up">
+        <UserAccountIcon />
+    </a>
 </div>
 
 <style>
