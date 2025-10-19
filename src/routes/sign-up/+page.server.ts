@@ -41,18 +41,5 @@ export const actions = {
     });
 
     throw redirect(301, "/");
-  },
-  createNewGame: async (event) => {
-        db.insert(gamesTable).values({
-        user_id: 1, // TEMPORARY USER ID
-        top_player: "H", // TEMPORARY TOP PLAYER
-        bottom_player: "C", // TEMPORARY BOTTOM PLAYER
-        winner: null,
-        top_score: 0,
-        bottom_score: 0,
-        rows: 4,
-        columns: 6,
-        multiple: 5,
-        skill_level: 3,
-    })
+  }
 };
