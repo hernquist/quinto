@@ -28,6 +28,7 @@
         <button 
             class="modal__button"
             onclick={handleNewGame}
+            formaction="?/createNewGame"
         >NEW GAME</button>
     </div>
 </div>

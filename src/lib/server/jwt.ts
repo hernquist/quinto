@@ -28,7 +28,8 @@ export const verifyAuthJWT = async (token: string) => {
       new TextEncoder().encode(getJwtSecret())
     );
     return payload as JWTPayload;
-  } catch {
-    throw error(401, "invalid or missing JWT, you are not logged in");
+  } catch(e) {
+    throw error(401, `Invalid or missing JWT, you are not logged in 
+      \n ${e}`);
   }
 };

@@ -107,7 +107,7 @@
         {/each}
     </div>
 
-    <button class="settings-modal__button" onclick={onSave}> SAVE </button>
+    <button formaction="?/createNewGame" class="settings-modal__button" onclick={onSave}> SAVE </button>
 </div>
 
 <style>

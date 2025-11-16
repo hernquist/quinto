@@ -41,5 +41,5 @@ export const actions = {
     });
 
     throw redirect(301, "/");
-  },
+  }
 };
