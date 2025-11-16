@@ -7,6 +7,7 @@ import { eq } from "drizzle-orm";
 export const load = async (event) => {
   // get the token from the cookie
   const token = event.cookies.get("auth_token");
+  console.log("token in +page.server.ts load:", token);
 
   // if there is a token, set user in store
   if (!token) {
