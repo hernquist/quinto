@@ -28,8 +28,9 @@ export const load = async (event) => {
 
 export const actions = {
   createNewGame: async () => {
+    console.log("HIT!!!!!!!!!!!!!!!!!!!!!!!!!")
     await db.insert(gamesTable).values({
-      user_id: 1, // TEMPORARY USER ID
+      user_id: 14, // TEMPORARY USER ID
       top_player: "H", // TEMPORARY TOP PLAYER
       bottom_player: "C", // TEMPORARY BOTTOM PLAYER
       winner: null,
