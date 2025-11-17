@@ -14,7 +14,7 @@
     let gameMultiple = $state(gameState.game.gameMultiple);
     let playLevel = $state(gameState.game.playLevel);
     let boardType = $state(gameState.game.boardType); 
-    
+
     const { Small, MediumSmall, MediumLarge, Large } = ScreenSizes;
     let allowedBoards: IBoardDimensions[] = $state([]); 
 
@@ -77,7 +77,7 @@
     <div>BOARDS</div>
     <div class="options__container">
         {#each allowedBoards as allowedBoard}
-            <button 
+            <button
                 onclick={() => { if (allowedBoard.boardType !== undefined) boardType = allowedBoard.boardType; }} 
                 class="options__button {boardType === allowedBoard.boardType ? 'selected' : ''}">
                 {allowedBoard.rows}x{allowedBoard.columns}
@@ -107,8 +107,54 @@
         {/each}
     </div>
 
-    <form method="POST">
+    <form method="POST" >
+        <div>BOARDS</div>
+        <div class="options__container">
+            {#each allowedBoards as allowedBoard}
+                {@const id = allowedBoard.boardType}
+                <input
+                    {id} 
+                    type="radio"
+                    name="boardType"
+                    value={allowedBoard.boardType} 
+                >
+                <label for={id} class="options__button">
+                    {allowedBoard.rows}x{allowedBoard.columns}
+                </label>
+            {/each}
+        </div>
 
+        <div>GAME MULTIPLE</div>
+        <div class="options__container">
+            {#each [3,4,5,6,7,8,9,10] as multiple}
+                {@const id = String(multiple)+"multiple"}
+                <input 
+                    {id}
+                    type="radio"
+                    name="multiple"
+                    value={multiple}
+                >
+                <label for={id} class="options__button">
+                    {multiple}
+                </label>
+            {/each}
+        </div>
+
+        <div>PLAY LEVEL</div>
+        <div class="options__container">
+            {#each [1,2,3,4,5] as level}
+                {@const skillLevel = textLevelTuple[level-1]}
+                <input 
+                    id={skillLevel}
+                    type="radio"
+                    name="skillLevel"
+                    value={level}
+                >
+                <label for={skillLevel} class="options__button">
+                    {skillLevel}
+                </label>
+            {/each}
+        </div>
         <!-- <button formaction="?/createNewGame" class="settings-modal__button" onclick={onSave}> SAVE </button> -->
         <button formaction="?/createNewGame" class="settings-modal__button"> SAVE </button>
     </form>
@@ -142,9 +188,13 @@
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
 
-    .options__button.selected {
+    input[type="radio"]:checked + label {
         background-color: lightblue;
         font-weight: 900;
+    }   
+
+    [type='radio'] {
+        display: none;
     }
 
     .settings-modal__button {
