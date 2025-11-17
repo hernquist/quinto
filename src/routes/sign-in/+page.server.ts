@@ -1,7 +1,7 @@
 import { db } from "$lib/server/db";
+import { eq } from "drizzle-orm";
 import { user as usersTable } from "$lib/server/db/schema";
 import { error, redirect } from "@sveltejs/kit";
-import { eq } from "drizzle-orm";
 import bcrypt from "bcrypt";
 import { createAuthJWT } from "$lib/server/jwt.js";
 
