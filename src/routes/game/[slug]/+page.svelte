@@ -11,10 +11,7 @@
     const playerState = getPlayerState();
     const toastState = getToastState();
 
-
 	let { data }  : PageProps = $props();
-    console.log("data", JSON.stringify(data));
-
     
     const options = {
         rows: data.rows,
@@ -28,7 +25,6 @@
     }
 
     onMount(() => setGame());;
-
 </script>
 
 <Game />
