@@ -5,19 +5,6 @@
 
     let allowedBoards: IBoardDimensions[] = $state([]); 
 
-    // function onSave(e: MouseEvent): void {
-    //     e.preventDefault();
-
-    //     const options = {
-    //         boardType,
-    //         rows: boards[boardType].rows,
-    //         columns: boards[boardType].columns,
-    //         gameMultiple,
-    //         playLevel
-    //     };
-    //     initializeGame(gameState, playerState, toastState, options);
-    // }
-
     $effect(() => {
         allowedBoards = setAllowedBoards(boards);
     })
