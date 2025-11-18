@@ -25,11 +25,13 @@
     </div>
 
     <div>
-        <button 
+        <form method="POST">
+            <button 
             class="modal__button"
             onclick={handleNewGame}
             formaction="?/createNewGame"
-        >NEW GAME</button>
+            >NEW GAME</button>
+        </form>
     </div>
 </div>
 

@@ -1,5 +1,4 @@
 <script>
-	import Game from "$lib/components/game/Game.svelte";
 	import { getPlayerState } from "$lib/state/player/player.svelte";
 
     const { data } = $props();
@@ -12,8 +11,6 @@
     });
 
 </script>
-
-<Game/>
 
 <style lang="postcss">
     @reference "tailwindcss";
