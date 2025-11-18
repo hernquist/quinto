@@ -24,7 +24,7 @@ export const load: PageServerLoad = async ({ params }) => {
   const [gameData] = await db.select({
     id: gamesTable.id,
     rows: gamesTable.rows,
-    colums: gamesTable.columns,
+    columns: gamesTable.columns,
     skillLevel: gamesTable.skill_level,
     multiple: gamesTable.multiple
   })
