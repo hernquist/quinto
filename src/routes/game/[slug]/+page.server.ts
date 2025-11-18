@@ -9,8 +9,6 @@ import type { PageServerLoad } from "./$types";
 import { eq } from "drizzle-orm";
 
 export const load: PageServerLoad = async ({ params }) => {
-  console.log("params load", params);
-  
   if (!params?.slug) {
     throw error(404, 'Game not found');
   }
@@ -50,13 +48,12 @@ export const actions = {
     const skill_level = data.get('skillLevel')
 
     const { rows, columns } = boards[boardType]; 
-    console.log("HIT!!!!!!!!!!!!!!!!!!!!!!!!!", multiple, boardType, skill_level )
 
     const token = cookies.get("auth_token");
 
     // if there is a token, set user in store
     if (!token) {
-      console.log("NO TOKEN IN game page server ts");
+      console.error("NO TOKEN IN game page server ts");
       return {}
     }
     
