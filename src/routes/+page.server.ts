@@ -1,6 +1,5 @@
 import { db } from "$lib/server/db";
 import { user as usersTable } from "$lib/server/db/schema";
-import { game as gamesTable } from "$lib/server/db/schema";
 import { verifyAuthJWT } from "$lib/server/jwt.js";
 import { eq } from "drizzle-orm";
 
