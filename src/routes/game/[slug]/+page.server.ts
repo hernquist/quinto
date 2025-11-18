@@ -29,8 +29,6 @@ export const load: PageServerLoad = async ({ params }) => {
   .from(gamesTable)
   .where(eq(gamesTable.id, gameId));
 
-  console.log("gameData", gameData);
-
   if (!gameData) {
     throw error(404, 'Game not found');
   }
