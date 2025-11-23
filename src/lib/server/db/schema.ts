@@ -28,17 +28,6 @@ export const game = pgTable('games', {
 	multiple: integer("multiple").notNull(),
 	skill_level: integer("skill_level").notNull(),		
 })
-//   id SERIAL,
-//   user_id INTEGER,
-//   top_player VARCHAR(1),
-//   bottom_player VARCHAR(1),
-//   winner VARCHAR(1),
-//   top_score INTEGER,
-//   bottom_score INTEGER,
-//   rows INTEGER,
-//   columns INTEGER,
-//   multiple INTEGER,
-//   skill_level INTEGER,
 
 export type Session = typeof session.$inferSelect;
 

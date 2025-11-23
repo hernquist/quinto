@@ -5,7 +5,7 @@
 	import { getPlayerState } from "$lib/state/player/player.svelte";
 	import { getToastState } from "$lib/state/toast/toast.svelte";
 	import { onMount } from "svelte";
-	import type { PageProps } from './$types';
+	import type { PageProps } from '../../../../$types';
 
     const gameState = getGameState();
     const playerState = getPlayerState();
@@ -14,10 +14,10 @@
 	let { data }  : PageProps = $props();
     
     const options = {
-        rows: data.rows,
-        columns: data.columns,
-        playLevel : data.skillLevel,
-        gameMultiple: data.multiple
+        rows: (data as any)?.rows,
+        columns: (data as any)?.columns,
+        playLevel: (data as any)?.skillLevel,
+        gameMultiple: (data as any)?.multiple
     };
 
     function setGame() {

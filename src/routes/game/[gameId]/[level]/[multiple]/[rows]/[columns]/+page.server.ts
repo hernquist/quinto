@@ -5,15 +5,15 @@ import { boards, Sizes } from "$lib/constants/boards.js";
 
 // TODO: add fail
 import { error, fail, redirect } from '@sveltejs/kit';
-import type { PageServerLoad } from "./$types";
+import type { PageServerLoad } from "../../../$types";
 import { eq } from "drizzle-orm";
 
 export const load: PageServerLoad = async ({ params }) => {
-  if (!params?.slug) {
+  if (!params?.gameId) {
     throw error(404, 'Game not found');
   }
   
-  const gameId = Number(params.slug);
+  const gameId = Number(params.gameId);
   
   if (isNaN(gameId)) {
     throw error(400, 'Invalid game ID');
@@ -39,13 +39,27 @@ export const load: PageServerLoad = async ({ params }) => {
 export const actions = {
     // TODO: move this?
     // TODO: is this a candidate for a remote function?
-  createNewGame: async ({request, cookies}) => {
+  createNewGame: async ({ request, cookies, params }) => {
     const data = await request.formData();
-    const multiple = data.get('multiple');
-    const boardType = data.get('boardType') as Sizes
-    const skill_level = data.get('skillLevel')
+    let multiple, level, rows, columns;
 
-    const { rows, columns } = boards[boardType]; 
+    console.log("createNewGame.data", data);
+    console.log("createNewGame.data.keys", data.keys());
+    console.log("createNewGame.data.isFormData", data instanceof FormData);
+    console.log("createNewGame.data", Object.keys(data).length);
+    
+    if (data instanceof FormData && data.has('multiple') || data.has('boardType') || data.has('skillLevel')) {
+      multiple = data.get('multiple');
+      const boardType = data.get('boardType') as Sizes;
+      level = data.get('skillLevel');
+      rows = boards[boardType].rows;
+      columns = boards[boardType].columns; 
+    } else {
+      multiple = params.multiple;
+      level = params.level;
+      rows = params.rows;
+      columns = params.columns;
+    }
 
     const token = cookies.get("auth_token");
 
@@ -68,9 +82,9 @@ export const actions = {
       rows,
       columns,
       multiple,
-      skill_level,
+      skill_level: level
     }).returning();
 
-    redirect(303, `/game/${game.id}`);
-  }  
+    redirect(303, `/game/${game.id}/${level}/${multiple}/${rows}/${columns}`);
+  },
 };
