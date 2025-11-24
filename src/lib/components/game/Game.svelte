@@ -12,7 +12,6 @@
     import { GameStatus } from "$lib/state/game/types";
 	import MenuBar from "../menu-bar/MenuBar.svelte";
 	import GamePlay from "../game-play/GamePlay.svelte";
-	import { makePutRequest } from "$lib/utils/api";
 	import { updateScore } from "./updateGame.remote";
     
     const gameState = getGameState();
