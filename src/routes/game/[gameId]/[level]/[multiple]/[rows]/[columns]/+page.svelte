@@ -11,13 +11,14 @@
     const playerState = getPlayerState();
     const toastState = getToastState();
 
-	let { data }  : PageProps = $props();
+	const { data } = $props();
+    const { gameData, gameId } = $derived(data);
     
     const options = {
-        rows: (data as any)?.rows,
-        columns: (data as any)?.columns,
-        playLevel: (data as any)?.skillLevel,
-        gameMultiple: (data as any)?.multiple
+        rows: gameData?.rows,
+        columns: gameData?.columns,
+        playLevel: gameData?.skillLevel,
+        gameMultiple: gameData?.multiple
     };
 
     function setGame() {
@@ -27,7 +28,7 @@
     onMount(() => setGame());;
 </script>
 
-<Game />
+<Game gameId={gameId} />
 
 <style lang="postcss">
     @reference "tailwindcss";
