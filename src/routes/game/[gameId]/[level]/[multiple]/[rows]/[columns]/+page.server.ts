@@ -2,9 +2,7 @@ import { db } from "$lib/server/db";
 import { game as gamesTable } from "$lib/server/db/schema";
 import { verifyAuthJWT } from "$lib/server/jwt.js";
 import { boards, Sizes } from "$lib/constants/boards.js";
-
-// TODO: add fail
-import { error, fail, redirect } from '@sveltejs/kit';
+import { error, fail, redirect, type RequestHandler } from '@sveltejs/kit';
 import type { PageServerLoad } from "../../../$types";
 import { eq } from "drizzle-orm";
 
@@ -12,7 +10,7 @@ export const load: PageServerLoad = async ({ params }) => {
   if (!params?.gameId) {
     throw error(404, 'Game not found');
   }
-  
+
   const gameId = Number(params.gameId);
   
   if (isNaN(gameId)) {
@@ -33,8 +31,9 @@ export const load: PageServerLoad = async ({ params }) => {
     throw error(404, 'Game not found');
   }
 
-	return gameData
+	return { gameData, gameId }
 };
+
 
 export const actions = {
     // TODO: move this?
@@ -43,11 +42,6 @@ export const actions = {
     const data = await request.formData();
     let multiple, level, rows, columns;
 
-    console.log("createNewGame.data", data);
-    console.log("createNewGame.data.keys", data.keys());
-    console.log("createNewGame.data.isFormData", data instanceof FormData);
-    console.log("createNewGame.data", Object.keys(data).length);
-    
     if (data instanceof FormData && data.has('multiple') || data.has('boardType') || data.has('skillLevel')) {
       multiple = data.get('multiple');
       const boardType = data.get('boardType') as Sizes;
