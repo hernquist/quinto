@@ -7,29 +7,20 @@
 
     let gameState = getGameState();
     let playerState = getPlayerState();
-    let modalState = getModalState();
-    let toastState = getToastState();
-
-    function handleNewGame(e: MouseEvent): void {
-        e.preventDefault();
-        // TODO: need options
-        initializeGame(gameState, playerState, toastState);
-        toastState.removeAllToasts();
-        modalState.toggleModalOff();
-    }
 </script>
 
 <div class="gameOverModal__container">
     <div class="gameOverModal__title">
         WINNER {playerState.getWinnerName(gameState)}
     </div>
-
+    
     <div>
-        <button 
-            class="modal__button"
-            onclick={handleNewGame}
-            formaction="?/createNewGame"
-        >NEW GAME</button>
+        <form method="POST">
+            <button 
+                class="modal__button"
+                formaction="?/createNewGame"
+            >NEW GAME</button>
+        </form>
     </div>
 </div>
 

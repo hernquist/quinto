@@ -1,6 +1,5 @@
 import { db } from "$lib/server/db";
 import { user as usersTable } from "$lib/server/db/schema";
-import { game as gamesTable } from "$lib/server/db/schema";
 import { verifyAuthJWT } from "$lib/server/jwt.js";
 import { eq } from "drizzle-orm";
 
@@ -16,31 +15,12 @@ export const load = async (event) => {
   const userPayload = await verifyAuthJWT(token);
 
   const user = await db.select({
-        email: usersTable.email,
-        id: usersTable.id,
-        username: usersTable.username,  
-    })
+    email: usersTable.email,
+    id: usersTable.id,
+    username: usersTable.username,  
+  })
     .from(usersTable)
     .where(eq(usersTable.id, userPayload.id));
     
   return { token, user };
 }
-
-export const actions = {
-  createNewGame: async () => {
-    await db.insert(gamesTable).values({
-      user_id: 1, // TEMPORARY USER ID
-      top_player: "H", // TEMPORARY TOP PLAYER
-      bottom_player: "C", // TEMPORARY BOTTOM PLAYER
-      winner: null,
-      top_score: 0,
-      bottom_score: 0,
-      rows: 4,
-      columns: 6,
-      multiple: 2,
-      skill_level: 3,
-    })
-  }  
-};
-
-
