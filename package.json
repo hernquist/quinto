@@ -72,7 +72,6 @@
 		"bcrypt": "^6.0.0",
 		"drizzle-orm": "^0.40.0",
 		"postgres": "^3.4.5",
-		"svelte-kit": "^1.2.0",
 		"valibot": "^1.1.0"
 	}
 }
