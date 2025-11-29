@@ -51,14 +51,7 @@
     <!-- {#if gameState.game.status === GameStatus.Complete}
         <pre>DONE</pre>
     {/if} -->
-    <MenuBar />
+
     <GamePlay />
-    {#if modalState.showModal === true}
-        <Modal>
-            {#snippet header()}
-                <ModalHeader />
-            {/snippet}
-            <MainModalWrapper/>
-        </Modal>
-    {/if}
+
 </InitializeGame>
