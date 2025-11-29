@@ -36,7 +36,7 @@ export const load: PageServerLoad = async ({ params }) => {
 
 
 export const actions = {
-    // TODO: move this?
+    // TODO: this is a duplicated action
     // TODO: is this a candidate for a remote function?
   createNewGame: async ({ request, cookies, params }) => {
     const data = await request.formData();
