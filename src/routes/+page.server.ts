@@ -9,6 +9,7 @@ export const load = async (event) => {
 
   // if there is a token, set user in store
   if (!token) {
+    // TODO: I am not setting the user in the store
     return {};
   }
   
