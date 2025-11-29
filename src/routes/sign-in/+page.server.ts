@@ -11,7 +11,7 @@ export const load = async (event) => {
 
   // if there is a token, redirect to the user page
   if (token && token !== "") {
-    throw redirect(301, "/");
+    throw redirect(301, "/home");
   }
 };
 
@@ -59,10 +59,12 @@ export const actions = {
       email: user[0].email || "",
       id: user[0].id,
     });
+
+    // setting cookies to base path
     event.cookies.set("auth_token", token, {
-      path: "/",
+      path: "/", // TODO: should this match line 68 "/home"?
     });
 
-    throw redirect(301, "/");
+    throw redirect(301, "/home");
   },
 };
