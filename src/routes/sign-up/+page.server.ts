@@ -10,7 +10,7 @@ export const load = async (event) => {
 
   // if there is a token, redirect to the user page
   if (token) {
-    throw redirect(301, "/");
+    throw redirect(301, "/home");
   }
 };
 
@@ -40,6 +40,6 @@ export const actions = {
       path: "/",
     });
 
-    throw redirect(301, "/");
+    throw redirect(301, "/home");
   }
 };
