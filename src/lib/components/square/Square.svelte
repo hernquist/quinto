@@ -85,7 +85,7 @@
 <style>
     .board__square {
         flex-grow: 1;
-        background-color: lightsalmon;
+        background-color: #FFA07A;
         border: 2px solid gray;
         border-radius: 1px;
         margin: 2px;
