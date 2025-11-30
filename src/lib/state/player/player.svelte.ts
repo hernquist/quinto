@@ -37,7 +37,9 @@ export class PlayerState {
 
     humanPlayer = $state<IHumanPlayer>({
         position: Players.Top,
-        name: "Human",
+        user: {
+            
+        },
         isLoggedIn: false,
     });
 
@@ -100,7 +102,7 @@ export class PlayerState {
     }
 
     public getPlayerName(): string {
-        return this.isLoggedIn() ? this.humanPlayer.user?.username || "" : this.humanPlayer.name;
+        return this.isLoggedIn() ? this.humanPlayer.user?.username || "" : "HUMAN";
     }
 
     public isLoggedIn(): boolean {
