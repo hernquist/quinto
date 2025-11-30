@@ -24,7 +24,6 @@ interface IPlayers {
 
 interface IHumanPlayer {
     position: Players;
-    name: string;
     isLoggedIn: boolean;
     user?: {
         id: number;
