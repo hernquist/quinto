@@ -5,7 +5,6 @@
     const playerState = getPlayerState();
     playerState.clearUser();
 
-    $inspecti
 </script>
 
 <div>
