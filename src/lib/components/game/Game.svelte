@@ -51,7 +51,5 @@
     <!-- {#if gameState.game.status === GameStatus.Complete}
         <pre>DONE</pre>
     {/if} -->
-
     <GamePlay />
-
 </InitializeGame>

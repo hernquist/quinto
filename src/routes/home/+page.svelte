@@ -15,10 +15,16 @@
     });
 </script>
 
-<style lang="postcss">
-    @reference "tailwindcss";
-</style>
-
-<div>
+<div class="home__fullscreen">
     HOME
 </div>
+
+<style lang="postcss">
+    .home__fullscreen {
+        position: fixed;
+        top: 64px;
+        width: 100%;
+        height: 100vh;
+        background: #447799;
+    }    
+</style>
