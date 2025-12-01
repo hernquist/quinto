@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { boards, type IBoardDimensions } from "$lib/constants/boards";
+	import { boards, type IBoardDimensions, Sizes } from "$lib/constants/boards";
     import { textLevelTuple } from "$lib/utils/textual";
 	import setAllowedBoards from "./utils";
 
@@ -20,7 +20,8 @@
                     {id} 
                     type="radio"
                     name="boardType"
-                    value={allowedBoard.boardType} 
+                    value={allowedBoard.boardType}
+                    checked={allowedBoard.boardType === "5x5"}
                 >
                 <label for={id} class="options__button">
                     {allowedBoard.rows}x{allowedBoard.columns}
@@ -37,6 +38,7 @@
                     type="radio"
                     name="multiple"
                     value={multiple}
+                    checked={multiple===5}
                 >
                 <label for={id} class="options__button">
                     {multiple}
@@ -53,6 +55,7 @@
                     type="radio"
                     name="skillLevel"
                     value={level}
+                    checked={level===5}
                 >
                 <label for={skillLevel} class="options__button">
                     {skillLevel}
