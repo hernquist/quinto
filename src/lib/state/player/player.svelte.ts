@@ -38,7 +38,9 @@ export class PlayerState {
     humanPlayer = $state<IHumanPlayer>({
         position: Players.Top,
         user: {
-            
+            id: -1,
+            username: "",
+            email: ""
         },
         isLoggedIn: false,
     });
