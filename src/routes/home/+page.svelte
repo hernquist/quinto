@@ -1,22 +1,23 @@
 <script>
 	import { getPlayerState } from "$lib/state/player/player.svelte";
+    import { setUser } from "$lib/utils/setUser";
 
     const { data } = $props();
-    const playerState = getPlayerState();
+    const playerState = $derived(getPlayerState());
 
     $inspect("[from home/page.svelte].data", data);
-    console.log("[from home/page.svelte].data", data);
+    $inspect("[from home/page.svelte].playerState", playerState)
+    $inspect("[from home/page.svelte].playerState.isLoggedin()", playerState.isLoggedIn())
 
     $effect(() => {
-        if (data?.token) {
-            console.log("data", data);
-            playerState.setUser(data?.user[0]);
-        };
+        setUser(playerState, data);
     });
 </script>
 
 <div class="home__fullscreen">
-    HOME
+    HOME {playerState?.humanPlayer.user?.username}
+    - {playerState?.humanPlayer.user}
+    - {JSON.stringify(playerState?.humanPlayer.user)}
 </div>
 
 <style lang="postcss">
