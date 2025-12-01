@@ -6,14 +6,14 @@
 
     const playerState = getPlayerState();
 
-    const { humanPlayer: { isLoggedIn, user: { username } } } = $derived(playerState);
+    const { humanPlayer: { isLoggedIn, user: { id, username } } } = $derived(playerState);
     // const { humanPlayer: { user } } = $derived(playerState);
     $inspect("[User.svelte].humanPlayer.isLoggedIn", isLoggedIn, username);
     // $inspect("[User.svelte].humanPlayer.user", userName);
 </script>
 
 <div class="user">
-    <a href={isLoggedIn ? "/sign-out" : "/sign-in"} aria-label="Sign Up">
+    <a href={isLoggedIn ? `/user/${Number(id)}` : "/sign-in"} aria-label="Sign Up">
         {#if isLoggedIn}
             <Avatar {username} />
         {:else}
