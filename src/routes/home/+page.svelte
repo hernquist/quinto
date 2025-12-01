@@ -1,16 +1,19 @@
 <script>
-	import { getPlayerState } from "$lib/state/player/player.svelte";
+    import { getPlayerState } from "$lib/state/player/player.svelte";
+    import { getModalState } from "$lib/state/modal-state/modal-state.svelte";
     import { setUser } from "$lib/utils/setUser";
-
+    
     const { data } = $props();
     const playerState = $derived(getPlayerState());
-
+    const modalState = getModalState()
+    
     $inspect("[from home/page.svelte].data", data);
     $inspect("[from home/page.svelte].playerState", playerState)
     $inspect("[from home/page.svelte].playerState.isLoggedin()", playerState.isLoggedIn())
 
     $effect(() => {
         setUser(playerState, data);
+        modalState.toggleModalOn();
     });
 </script>
 
