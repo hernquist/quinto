@@ -41,7 +41,6 @@
 </script>
 
 <Game gameId={gameId} />
-<button style="margin-top: 80px; height: 100px; position: relative" onclick={handleClick}>BUTTON</button>
 
 <style lang="postcss">
     @reference "tailwindcss";
