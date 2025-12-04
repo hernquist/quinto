@@ -7,10 +7,6 @@
     const playerState = $derived(getPlayerState());
     const modalState = getModalState()
     
-    $inspect("[from home/page.svelte].data", data);
-    $inspect("[from home/page.svelte].playerState", playerState)
-    $inspect("[from home/page.svelte].playerState.isLoggedin()", playerState.isLoggedIn())
-
     $effect(() => {
         setUser(playerState, data);
         modalState.toggleModalOn();

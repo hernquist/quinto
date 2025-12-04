@@ -1,15 +1,10 @@
 <script lang="ts">
 	import UserAccountIcon from "$lib/components/icons/UserAccountIcon.svelte";
     import Avatar from "$lib/components/avatar/Avatar.svelte";
-
     import { getPlayerState } from "$lib/state/player/player.svelte";
 
     const playerState = getPlayerState();
-
     const { humanPlayer: { isLoggedIn, user: { id, username } } } = $derived(playerState);
-    // const { humanPlayer: { user } } = $derived(playerState);
-    $inspect("[User.svelte].humanPlayer.isLoggedIn", isLoggedIn, username);
-    // $inspect("[User.svelte].humanPlayer.user", userName);
 </script>
 
 <div class="user">
