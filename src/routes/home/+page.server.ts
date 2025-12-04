@@ -33,21 +33,20 @@ export const actions = {
     // TODO: this is a duplicated action
     // TODO: is this a candidate for a remote function?
     createNewGame: async ({ request, cookies, params }) => {
-        const data = await request.formData();
         let multiple, level, rows, columns;
 
-        if (data instanceof FormData && data.has('multiple') || data.has('boardType') || data.has('skillLevel')) {
-        multiple = data.get('multiple');
-        const boardType = data.get('boardType') as Sizes;
-        level = data.get('skillLevel');
-        rows = boards[boardType].rows;
-        columns = boards[boardType].columns; 
-        } else {
-        multiple = params.multiple;
-        level = params.level;
-        rows = params.rows;
-        columns = params.columns;
-        }
+        // if (data instanceof FormData && data.has('multiple') || data.has('boardType') || data.has('skillLevel')) {
+        //     multiple = data.get('multiple');
+        //     const boardType = data.get('boardType') as Sizes;
+        //     level = data.get('skillLevel');
+        //     rows = boards[boardType].rows;
+        //     columns = boards[boardType].columns; 
+        // } else {
+            multiple = params?.multiple || 5;
+            level = params?.level || 5;
+            rows = params?.rows  || 5;
+            columns = params?.columns || 5;
+        // }
 
         const token = cookies.get("auth_token");
 
