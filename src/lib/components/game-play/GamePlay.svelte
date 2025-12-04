@@ -46,7 +46,7 @@
         top: 64px;
         width: 100%;
         height: 100vh;
-        background: lightseagreen;
+        background: #1EB2AA;
     }
 
     .game-play__gamescreen {

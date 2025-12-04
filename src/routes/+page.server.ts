@@ -7,9 +7,9 @@ export const load = async (event) => {
   // get the token from the cookie
   const token = event.cookies.get("auth_token");
 
-  // if there is a token, set user in store
+  // return null token and null user
   if (!token) {
-    return {};
+    return { token: null, user: null };
   }
   
   const userPayload = await verifyAuthJWT(token);
@@ -22,5 +22,6 @@ export const load = async (event) => {
     .from(usersTable)
     .where(eq(usersTable.id, userPayload.id));
     
+  // if there is a token, set user in store on the client
   return { token, user };
 }
