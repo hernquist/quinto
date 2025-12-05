@@ -5,12 +5,8 @@
 	import { getModalState } from "$lib/state/modal-state/modal-state.svelte";
 	import { getPlayerState } from "$lib/state/player/player.svelte";
     import { Players } from "$lib/state/player/types";
-	import Modal from "$lib/components/modal/modal.svelte";
-	import MainModalWrapper from "$lib/components/main-modal-wrapper/MainModalWrapper.svelte";
-	import ModalHeader from "$lib/components/modal-header/ModalHeader.svelte";
 	import { ModalScreen } from "$lib/state/modal-state/types";
     import { GameStatus } from "$lib/state/game/types";
-	import MenuBar from "../menu-bar/MenuBar.svelte";
 	import GamePlay from "../game-play/GamePlay.svelte";
 	import { updateScore } from "./updateGame.remote";
     
@@ -48,8 +44,5 @@
 
 <InitializeGame>
     <!-- TODO: think of new way determine game status and winner -->
-    <!-- {#if gameState.game.status === GameStatus.Complete}
-        <pre>DONE</pre>
-    {/if} -->
     <GamePlay />
 </InitializeGame>
