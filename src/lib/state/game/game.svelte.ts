@@ -16,6 +16,7 @@ export class GameState {
 	capturedBoard = $state<IBoard>([]);
 
 	skippedTurn = false;
+	isInitialized = false;
 	finishTurnActivePlayer: Players = Players.Top;
 
 	// I don't think we need the initialState here
@@ -25,6 +26,14 @@ export class GameState {
 
 	public updateGameTiles (tiles: ITile[]) {
 		this.game.tiles = tiles;
+	}
+
+	public setInitializeGameTrue () {
+		this.isInitialized = true;
+	}
+
+	private resetInitializedField () {
+		this.isInitialized = false;
 	}
 
 	public setHoveringTrue (x: number, y: number): void {
@@ -590,6 +599,8 @@ export class GameState {
 		// check if game over
 		if (playerState.tiles[Top].length === 0 && playerState.tiles[Bottom].length === 0) {
 			this.game.status = GameStatus.Complete;
+			// set isInitialized to false
+			this.resetInitializedField();
 			// show modal
 		} else {
 			// check for one player down

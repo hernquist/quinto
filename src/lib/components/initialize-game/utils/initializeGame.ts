@@ -11,6 +11,13 @@ import initializePlayers from "./initializePlayers";
 const { Top, Bottom } = Players;
 
 export function initializeGame(gameState: GameState, playerState: PlayerState, toastState: ToastState, options = {}) {
+    if (gameState.isInitialized) {
+        console.log("aborting initializeGame -- already initialized...");
+        return;
+    } else {
+        gameState.setInitializeGameTrue();
+    }
+
     let defaults = {
         rows: initState.rows,
         columns: initState.columns,

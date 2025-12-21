@@ -7,8 +7,6 @@
 	import { getToastState } from "$lib/state/toast/toast.svelte";
     import { setUser } from "$lib/utils/setUser";
 
-	import type { PageProps } from '../../../../$types';
-
     const gameState = getGameState();
     const playerState = getPlayerState();
     const toastState = getToastState();
@@ -28,12 +26,6 @@
     }
 
     onMount(() => setGame());
-
-    function handleClick() {
-        console.log("click playerState", 
-            JSON.parse(JSON.stringify(playerState))
-        );
-    }   
     
     $effect(() => {
         setUser(playerState, data);
