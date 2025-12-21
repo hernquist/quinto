@@ -41,8 +41,4 @@
         }
 	});
 </script>
-
-<InitializeGame>
-    <!-- TODO: think of new way determine game status and winner -->
-    <GamePlay />
-</InitializeGame>
+<GamePlay />
