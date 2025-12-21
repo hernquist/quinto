@@ -1,7 +1,6 @@
 import { db } from "$lib/server/db";
 import { game as gamesTable } from "$lib/server/db/schema";
 import { verifyAuthJWT } from "$lib/server/jwt.js";
-import { boards, Sizes } from "$lib/constants/boards.js";
 import { redirect } from '@sveltejs/kit';
 import { user as usersTable } from "$lib/server/db/schema";
 import { eq } from "drizzle-orm";
