@@ -64,8 +64,8 @@ export const actions = {
 
         if (data instanceof FormData && data.has('multiple') || data.has('boardType') || data.has('skillLevel')) {
             multiple = data.get('multiple');
-            const boardType = data.get('boardType') as Sizes;
             level = data.get('skillLevel');
+            const boardType = data.get('boardType') as Sizes;
             rows = boards[boardType].rows;
             columns = boards[boardType].columns; 
         } else {
