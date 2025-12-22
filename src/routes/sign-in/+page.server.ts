@@ -62,7 +62,7 @@ export const actions = {
 
     // setting cookies to base path
     event.cookies.set("auth_token", token, {
-      path: "/", // TODO: should this match line 68 "/home"?
+      path: "/",
     });
 
     throw redirect(301, "/home");

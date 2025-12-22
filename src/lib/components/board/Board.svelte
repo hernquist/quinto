@@ -13,9 +13,6 @@
     // TODO: why are puttiing this in props AND grabbing game info from context
     const { activePlayer } = $props();
 
-    onMount(() => {
-        gameState.specialUpdate();
-    });
 </script>
 
 <div class="outerBoard__container">
