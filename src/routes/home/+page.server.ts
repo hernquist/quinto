@@ -1,8 +1,8 @@
 import { db } from "$lib/server/db";
-import { verifyAuthJWT } from "$lib/server/jwt.js";
+import { verifyAuthJWT } from "$lib/server/jwt";
 import { user as usersTable } from "$lib/server/db/schema";
 import { eq } from "drizzle-orm";
-import { createNewGame } from "$lib/utils/createNewGame.js";
+import { createNewGame } from "$lib/utils/createNewGame";
 
 export const load = async (event) => {
   // get the token from the cookie

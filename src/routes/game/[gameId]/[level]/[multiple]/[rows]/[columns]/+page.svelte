@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from "svelte";
 	import Game from "$lib/components/game/Game.svelte";
-	import { initializeGame } from "$lib/utils/initialize-game/initializeGame.js";
+	import { initializeGame } from "$lib/utils/initialize-game/initializeGame";
 	import { getGameState } from "$lib/state/game/game.svelte";
 	import { getPlayerState } from "$lib/state/player/player.svelte";
 	import { getToastState } from "$lib/state/toast/toast.svelte";
