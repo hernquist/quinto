@@ -1,14 +1,21 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
     import { getPlayerState } from "$lib/state/player/player.svelte.js";
-
+    import { getModalState } from "$lib/state/modal-state/modal-state.svelte";
+    
     const playerState = getPlayerState();
+    const modalState = getModalState()
     
     function handleRedirect() {        
         // clear player state -- a bit hacky but the client-side clearUser is getting 
         playerState.clearUser();
         goto('/sign-out');
     }
+
+    const turnOnModal = (e: MouseEvent) => {
+        e.preventDefault();
+        modalState.toggleModalOn();
+    };
 </script>
 
 <div class="user__page">
@@ -16,6 +23,7 @@
 
     <div>
         <div>USERNAME: {playerState.humanPlayer.user?.username}</div>
+        <button on:click={turnOnModal}>SETTINGS</button>
         <button on:click={handleRedirect}>SIGN OUT</button>
     </div>
 </div>
