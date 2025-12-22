@@ -1,5 +1,4 @@
 <script lang="ts">
-	import InitializeGame from "../initialize-game/InitializeGame.svelte";
 	import { getGameState } from "$lib/state/game/game.svelte";
 	import { getToastState, MAIN_TOAST_DURATION, HIGHLIGHT_DURATION } from "$lib/state/toast/toast.svelte";
 	import { getModalState } from "$lib/state/modal-state/modal-state.svelte";
@@ -41,4 +40,5 @@
         }
 	});
 </script>
+
 <GamePlay />
