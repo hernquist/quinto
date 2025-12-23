@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { getGameState } from "$lib/state/game/game.svelte";
-	import { getToastState, MAIN_TOAST_DURATION, HIGHLIGHT_DURATION } from "$lib/state/toast/toast.svelte";
 	import { getModalState } from "$lib/state/modal-state/modal-state.svelte";
 	import { getPlayerState } from "$lib/state/player/player.svelte";
     import { Players } from "$lib/state/player/types";
@@ -11,18 +10,13 @@
     
     const gameState = getGameState();
     const modalState = getModalState();
-    const toastState = getToastState();
     const playerState = getPlayerState();
-    const { numberOfLines } = $derived(toastState);
 
     const { gameId } = $props();
     const { Top, Bottom } = Players; 
 
-    // Is this even the right way of doing it?
-    // see below
     let fire = $state(true);
 
-    // This is needs more testing and thinking. That calculation should happen out of here probably.
     $effect(() => {
         if (gameState.game.status === GameStatus.Complete) {
             if (fire) {
@@ -36,7 +30,7 @@
             setTimeout(()=> {
                 modalState.changeScreen(ModalScreen.GameOver);
                 modalState.toggleModalOn();
-            }, numberOfLines * HIGHLIGHT_DURATION + 1 * MAIN_TOAST_DURATION);
+            }, 20);
         }
 	});
 </script>
