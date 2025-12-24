@@ -27,7 +27,15 @@ export const game = pgTable('games', {
 	columns: integer("columns").notNull(),
 	multiple: integer("multiple").notNull(),
 	skill_level: integer("skill_level").notNull(),		
-})
+});
+
+export const highscore = pgTable('highscores', {
+	id: serial("id").primaryKey(),
+	game_id: integer("game_id").notNull().references(() => game.id),
+	category: varchar("category").notNull(),
+	rows: integer("rows").notNull(),
+	columns: integer("columns").notNull()
+});
 
 export type Session = typeof session.$inferSelect;
 
