@@ -38,15 +38,42 @@ const checkForHighScore = async (
     
     console.log("[checkForHighScore].scores", scores);
 
-    const foundByRowAndColumn = scores.find(score => score.rows == rows && score.columns == columns)
+    const foundByRowAndColumn = scores.find(score => score.rows == rows && score.columns == columns);
+
+
     if (foundByRowAndColumn) {
       console.log("category + foundByRowAndColumn:", category, foundByRowAndColumn);
-      // TODO: need to check scores and make insert call based on that
-      // 1. fetch game
-      // 2. compare existing game score with current
-      // 3. if current higher, update highscore
-      // 4. if current lower, do nothing (for now)
+      // 1. Fetch the game by ID; correct usage of drizzle-orm select/where
+      const fetchedGameArr = await db
+        .select()
+        .from(gamesTable)
+        .where(eq(gamesTable.id, foundByRowAndColumn.game_id));
+
+      const fetchedGame = fetchedGameArr[0]; 
+      console.log("[checkForHighScore].fetchedGame", fetchedGame);
+
+      // different category business logic
+      switch(category) {
+        case highscoreCategories[0]: // highscoreStraight 
+          // 2. compare top_scores
+          if (typeof fetchedGame?.top_score === "number" && top_score > fetchedGame.top_score) {
+            // 3. if current score is higher, update highscore
+            await db
+              .update(highscoresTable)
+              .set({ game_id: gameId })
+              .where(eq(highscoresTable.id, foundByRowAndColumn.id));
+            console.log("[checkForHighScore] Highscore updated for highscore id", foundByRowAndColumn.id);
+          } else {
+            // 4. if current lower or equal, do nothing (for now)
+            console.log("[checkForHighScore] No update needed; lower or equal score", foundByRowAndColumn.id);
+          }
+          break;
+        default:
+          // code block
+      }
     }
+
+    // category does not exist for a given row and column
     if (!foundByRowAndColumn) {
       console.log(`${category} category does not exist for ${rows} rows and ${columns} columns`);
       // make insert for category by rowAndColumn if does not exist
@@ -62,7 +89,7 @@ export const updateScoreOnGameComplete = command(v.object({
     rows: v.number(),
     columns: v.number(),
   }), async (requestData) => {
-    const { top_score, bottom_score, gameId, rows, columns } = requestData;
+  const { top_score, bottom_score, gameId, rows, columns } = requestData;
 	await db.update(gamesTable).set({top_score, bottom_score}).where(eq(gamesTable.id, gameId));
 
   // we need to check top_score and bottom_score
