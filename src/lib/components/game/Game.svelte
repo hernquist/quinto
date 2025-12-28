@@ -6,7 +6,7 @@
 	import { ModalScreen } from "$lib/state/modal-state/types";
     import { GameStatus } from "$lib/state/game/types";
 	import GamePlay from "../game-play/GamePlay.svelte";
-	import { updateScore } from "./updateGame.remote";
+	import { updateScoreOnGameComplete } from "./updateGame.remote";
     
     const gameState = getGameState();
     const modalState = getModalState();
@@ -20,10 +20,13 @@
     $effect(() => {
         if (gameState.game.status === GameStatus.Complete) {
             if (fire) {
-                updateScore({
+                updateScoreOnGameComplete({
                     gameId, 
                     top_score: playerState.player[Top].score,
-                    bottom_score: playerState.player[Bottom].score
+                    bottom_score: playerState.player[Bottom].score,
+                    rows: gameState.game.rows,
+                    columns: gameState.game.columns
+
                 });
                 fire = false
             }

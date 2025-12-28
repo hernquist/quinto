@@ -33,18 +33,18 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     const gameId = Number(params.gameId);
 
     if (isNaN(gameId)) {
-    throw error(400, 'Invalid game ID');
+      throw error(400, 'Invalid game ID');
     }
 
     const [gameData] = await db.select({
-    id: gamesTable.id,
-    rows: gamesTable.rows,
-    columns: gamesTable.columns,
-    skillLevel: gamesTable.skill_level,
-    multiple: gamesTable.multiple
+      id: gamesTable.id,
+      rows: gamesTable.rows,
+      columns: gamesTable.columns,
+      skillLevel: gamesTable.skill_level,
+      multiple: gamesTable.multiple
     })
-    .from(gamesTable)
-    .where(eq(gamesTable.id, gameId));
+      .from(gamesTable)
+      .where(eq(gamesTable.id, gameId));
 
     if (!gameData) {
     throw error(404, 'Game not found');
