@@ -1,6 +1,6 @@
 import { db } from "$lib/server/db";
 import { verifyAuthJWT } from "$lib/server/jwt";
-import { user as usersTable } from "$lib/server/db/schema";
+import { user as usersTable, highscore as highscoresTable } from "$lib/server/db/schema";
 import { eq } from "drizzle-orm";
 import { createNewGame } from "$lib/utils/createNewGame";
 
@@ -22,9 +22,13 @@ export const load = async (event) => {
   })
     .from(usersTable)
     .where(eq(usersTable.id, userPayload.id));
+
+  const highscores = await db.select().from(highscoresTable);
+
+  console.log("[home/page.server.ts].highscores", highscores);
     
   // if there is a token, set user in store on the client
-  return { token, user };
+  return { token, user, highscores };
 }
 
 export const actions = {
