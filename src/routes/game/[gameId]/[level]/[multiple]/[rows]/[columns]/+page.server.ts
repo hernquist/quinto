@@ -47,11 +47,10 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
       .where(eq(gamesTable.id, gameId));
 
     if (!gameData) {
-    throw error(404, 'Game not found');
+      throw error(404, 'Game not found');
     }
 
-    // return { token, user };
-    // // if there is a token, set user in store on the client
+    // if there is a token, set user in store on the client
     return { gameData, gameId, user, token }
 };
 
