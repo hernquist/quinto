@@ -6,6 +6,7 @@ import type { PageServerLoad } from "../../../$types";
 import { eq } from "drizzle-orm";
 import { user as usersTable } from "$lib/server/db/schema";
 import { createNewGame } from "$lib/utils/createNewGame";
+import { getHighscores } from "$lib/utils/getHighscores";
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
     // get the token from the cookie
@@ -50,8 +51,10 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
       throw error(404, 'Game not found');
     }
 
+    const highscores = await getHighscores();  
+
     // if there is a token, set user in store on the client
-    return { gameData, gameId, user, token }
+    return { gameData, gameId, user, token, highscores }
 };
 
 export const actions = {
