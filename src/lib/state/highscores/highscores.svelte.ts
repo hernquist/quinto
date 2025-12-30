@@ -1,18 +1,20 @@
 import { setContext, getContext } from 'svelte';
+import type { IHighscore, IHighscores } from './types';
 
 export class HighscoresState {
-    highscores = $state({
+    highscores = $state<IHighscores>({
         scores: [],
     })
     
     constructor() {
     }
 
-    public getHighscores(): never[] {
+    public getHighscores(): IHighscore[] {
         return this.highscores.scores;
     }
 
-    public setHighscores(scores: []) {
+    public setHighscores(scores: IHighscore[]) {
+        // TODO: filter by highscore types
 		this.highscores.scores = scores;
 	}
 }
