@@ -1,8 +1,9 @@
 import { db } from "$lib/server/db";
 import { verifyAuthJWT } from "$lib/server/jwt";
-import { user as usersTable, highscore as highscoresTable } from "$lib/server/db/schema";
+import { user as usersTable } from "$lib/server/db/schema";
 import { eq } from "drizzle-orm";
 import { createNewGame } from "$lib/utils/createNewGame";
+import { getHighscores } from "$lib/utils/getHighscores";
 
 export const load = async (event) => {
   // get the token from the cookie
@@ -23,10 +24,7 @@ export const load = async (event) => {
     .from(usersTable)
     .where(eq(usersTable.id, userPayload.id));
 
-  const highscores = await db.select().from(highscoresTable);
-
-  console.log("[home/page.server.ts].highscores", highscores);
-    
+  const highscores = await getHighscores();    
   // if there is a token, set user in store on the client
   return { token, user, highscores };
 }
