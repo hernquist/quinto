@@ -6,13 +6,15 @@
 	import { getPlayerState } from "$lib/state/player/player.svelte";
 	import { getToastState } from "$lib/state/toast/toast.svelte";
     import { setUser } from "$lib/utils/setUser";
+	import { getHighscoresState } from "$lib/state/highscores/highscores.svelte.js";
 
+    const highscoresState = getHighscoresState();
     const gameState = getGameState();
     const playerState = getPlayerState();
     const toastState = getToastState();
 
 	const { data } = $props();
-    const { gameData, gameId } = $derived(data);
+    const { gameData, gameId, highscores } = $derived(data);
     
     const options = {
         rows: gameData?.rows,
@@ -29,6 +31,7 @@
     
     $effect(() => {
         setUser(playerState, data);
+        highscoresState.setHighscores(highscores || []);
     });
 </script>
 
