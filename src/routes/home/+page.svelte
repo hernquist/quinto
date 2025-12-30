@@ -8,14 +8,11 @@
     const playerState = $derived(getPlayerState());
     const modalState = getModalState();
     const highscoresState = getHighscoresState();
-    const { highscores } = data;
+    const { highscores } = $derived(data);
 
-    console.log("[src/routes/home/+page.svelte].data", JSON.parse(JSON.stringify(data)));
-    
     $effect(() => {
         setUser(playerState, data);
         modalState.toggleModalOn();
-        // @ts-ignore
         highscoresState.setHighscores(highscores || []);
     });
 </script>
