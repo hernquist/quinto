@@ -16,27 +16,28 @@
 </script>
 
 <div class="game-play__fullscreen">
-    <div class="game-play__gamescreen">
-        <div class="game-play__score">
-            <Score playerPosition={Top} name={playerState.getPlayerName()}/>
-            <PlayerTurnControls 
-                playerPosition={gameState.game.activePlayer} 
-                activePlayer={gameState.game.activePlayer}
+    <div class="game-play__wrapper">
+        <div class="game-play__gamescreen">
+            <div class="game-play__score">
+                <Score playerPosition={Top} name={playerState.getPlayerName()}/>
+                <PlayerTurnControls 
+                    playerPosition={gameState.game.activePlayer} 
+                    activePlayer={gameState.game.activePlayer}
+                />
+                <Score playerPosition={Bottom} name={textLevelTuple[levelIndex]}/>
+            </div>
+            <PlayerRow 
+                playerPosition={Top} 
+                activePlayer={gameState.game.activePlayer} 
+                tiles={playerState.tiles[Top]} 
             />
-            <Score playerPosition={Bottom} name={textLevelTuple[levelIndex]}/>
+            <Board activePlayer={gameState.game.activePlayer}/>
+            <PlayerRow 
+                playerPosition={Bottom} 
+                activePlayer={gameState.game.activePlayer} 
+                tiles={playerState.tiles[Bottom]} 
+            />
         </div>
-
-        <PlayerRow 
-            playerPosition={Top} 
-            activePlayer={gameState.game.activePlayer} 
-            tiles={playerState.tiles[Top]} 
-        />
-        <Board activePlayer={gameState.game.activePlayer}/>
-        <PlayerRow 
-            playerPosition={Bottom} 
-            activePlayer={gameState.game.activePlayer} 
-            tiles={playerState.tiles[Bottom]} 
-        />
     </div>
 </div>
         
