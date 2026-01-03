@@ -16,10 +16,10 @@ export interface ICandidateMove {
     candidateMove: ITurn
 }
 
-function get(arr) {
-    const res = [];
+function get(arr: ITile[]) {
+    const res: any[] = [];
 
-    function help(curr, remain) {
+    function help(curr: string | any[], remain: string | any[]) {
         if (remain.length === 0) {
             if (curr.length > 0) {
                 res.push(curr);
@@ -219,18 +219,20 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
 
     // get computer as player 
     // TODO: do we need?
-    const computerPlayer: IPlayer = playerState.player[Players.Bottom]; // TODO: needs to be dynamic
+    // const computerPlayer: IPlayer = playerState.player[Players.Bottom]; // TODO: needs to be dynamic
     
     // get computer's tiles
     const computerTiles: ITile[] = playerState.getTiles(Players.Bottom); // TODO: needs to be dynamic
 
-    const combinations = get(computerTiles);
-    const permutations: ITile[][] = [];
-    combinations.forEach(combination => {
-        const permuted = permute(combination);
-        permutations.push(...permuted);
-    });
-    // console.log("permutations:", JSON.parse(JSON.stringify(permutations)));
+    // console.log("[computer].getComputerTurn-computerTiles", JSON.parse(JSON.stringify(computerTiles)));
+    // // const combinations = get(computerTiles);
+    // console.log("[computer].getComputerTurn-combinations", JSON.parse(JSON.stringify(combinations)));
+    // const permutations: ITile[][] = [];
+    // combinations.forEach(combination => {
+    //     const permuted = permute(combination);
+    //     permutations.push(...permuted);
+    // });
+    // console.log("[computer].getComputerTurn - permutations", JSON.parse(JSON.stringify(permutations)));
 
     // loop through board try each tile
     const numberOfColumns = board.length;
