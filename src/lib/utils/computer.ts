@@ -16,33 +16,45 @@ export interface ICandidateMove {
     candidateMove: ITurn
 }
 
-function get(arr) {
-    const res = [];
+/**
+ * Generates all possible combinations (subsets) of computer tiles.
+ * Returns all non-empty subsets of the input tiles array.
+ * 
+ * @param tiles - Array of computer tiles to generate combinations from
+ * @returns Array of all possible tile combinations, where each combination is an array of ITile
+ * 
+ * @example
+ * // For tiles [A, B, C], returns:
+ * // [[A], [B], [C], [A, B], [A, C], [B, C], [A, B, C]]
+ */
+export function getAllTileCombinations(tiles: ITile[]): ITile[][] {
+    const combinations: ITile[][] = [];
 
-    function help(curr, remain) {
-        if (remain.length === 0) {
-            if (curr.length > 0) {
-                res.push(curr);
-            }
-            return;
+    function generateCombinations(current: ITile[], remaining: ITile[], startIndex: number) {
+        // Add current combination if it's not empty
+        if (current.length > 0) {
+            combinations.push([...current]);
         }
 
-        help([...curr, remain[0]], remain.slice(1));
-
-        help(curr, remain.slice(1));
+        // Generate combinations by including/excluding each remaining tile
+        for (let i = startIndex; i < remaining.length; i++) {
+            current.push(remaining[i]);
+            generateCombinations(current, remaining, i + 1);
+            current.pop(); // Backtrack
+        }
     }
 
-    help([], arr);
-    return res;
+    generateCombinations([], tiles, 0);
+    return combinations;
 }
 
-function swap(arr, i, j) {
+function swap(arr: ITile[], i: number, j: number): void {
     [arr[i], arr[j]] = [arr[j], arr[i]];
 }
 
 // Function to find the possible permutations.
 // Initial value of idx is 0.
-function permutations(res, arr, idx) {
+function permutations(res: ITile[][], arr: ITile[], idx: number): void {
     if (idx === arr.length) {
         res.push([...arr]);
         return;
@@ -53,11 +65,11 @@ function permutations(res, arr, idx) {
         permutations(res, arr, idx + 1);
         swap(arr, idx, i); // Backtracking
     }
-}
+} 
 
 // Function to get the permutations
-function permute(arr) {
-    const res = [];
+function permute(arr: ITile[]): ITile[][] {
+    const res: ITile[][] = [];
     permutations(res, arr, 0);
     return res;
 }
@@ -217,20 +229,19 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
     // get board
     const { board }: { board: IBoard } = gameState.game;
 
-    // get computer as player 
-    // TODO: do we need?
-    const computerPlayer: IPlayer = playerState.player[Players.Bottom]; // TODO: needs to be dynamic
-    
-    // get computer's tiles
+    // get computer's tiles 
+    // it assumes the computer is on the bottom 
     const computerTiles: ITile[] = playerState.getTiles(Players.Bottom); // TODO: needs to be dynamic
 
-    const combinations = get(computerTiles);
+    console.log("[computer].getComputerTurn-computerTiles", JSON.parse(JSON.stringify(computerTiles)));
+    const combinations = getAllTileCombinations(computerTiles);
+    console.log("[computer].getComputerTurn-combinations", JSON.parse(JSON.stringify(combinations)));
     const permutations: ITile[][] = [];
     combinations.forEach(combination => {
         const permuted = permute(combination);
         permutations.push(...permuted);
     });
-    // console.log("permutations:", JSON.parse(JSON.stringify(permutations)));
+    console.log("[computer].getComputerTurn - permutations", JSON.parse(JSON.stringify(permutations)));
 
     // loop through board try each tile
     const numberOfColumns = board.length;
