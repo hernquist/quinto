@@ -34,7 +34,7 @@ const checkForHighScore = async (
 
   for (let i = 0; i < categoriesLength; i++) {
     const category = highscoreCategories[i];
-    const scores = highscoresByCategory[category];
+    const scores = highscoresByCategory[category] || [];
     
     console.log("[checkForHighScore].scores", scores);
 

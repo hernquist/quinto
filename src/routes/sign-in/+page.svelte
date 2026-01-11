@@ -33,7 +33,7 @@
       <button
         type="submit"
         class="bg-orange-600 hover:bg-orange-500 text-lg text-white rounded-full py-2 px-4"
-        >Submit TEST</button
+        >Submit</button
       >
     </div>
     <div class="w-full flex justify-center mt-8">
