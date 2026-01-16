@@ -4,58 +4,49 @@
     const { highscores = [] } = getHighscoresState();
 </script>
 
-<div>
-    <ul>
-        <li class="highscores-modal__headers">
-            <div>
-                board
-            </div>
-            <div>
-                username
-            </div>
-            <div>
-                score
-            </div>
-            <div>
-                date
-            </div>
-        </li>
-        {#each highscores.scores as highscore}
-            <li class="highscores-modal__item">
-                <div>
-                    {highscore.rows} by {highscore.columns}
-                </div>
-                <div>
-                    {highscore.username}
-                </div>
-                <div>
-                    {highscore.topScore}
-                </div>
-                <div>
-                    {new Date(highscore.created_at).toLocaleDateString()}
-                </div>
-            </li>
-        {/each}
-    </ul>
+<div class="highscores-modal__container">
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    board
+                </th>
+                <th>
+                    username
+                </th>
+                <th>
+                    score
+                </th>
+                <th>
+                    date
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {#each highscores.scores as highscore}
+                <tr>
+                    <td>{highscore.rows} by {highscore.columns}</td>
+                    <td>{highscore.username}</td>
+                    <td>{highscore.topScore}</td>
+                    <td>{new Date(highscore.created_at).toLocaleDateString()}</td>
+                </tr>
+            {/each}
+        </tbody>
+    </table>
 </div>
 
-<style lang="postcss">
-    .highscores-modal__headers {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid #000000;
-        padding: 10px;
-        background-color: #f1f1f1;
+<style lang="postcss"> 
+    .highscores-modal__container {
+        padding-top: 2x;
     }
-    .highscores-modal__item {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid #000000;
-        padding: 10px;
-        background-color: #f1f1f1;
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid #000000;
+        padding: 6px;
+        text-align: left;
+        font-size: 14px;
     }
 </style>
