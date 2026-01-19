@@ -1,3 +1,4 @@
+import { sql } from 'drizzle-orm';
 import { pgTable, serial, text, varchar, integer, timestamp } from 'drizzle-orm/pg-core';
 
 export const user = pgTable('users', {
@@ -5,6 +6,7 @@ export const user = pgTable('users', {
 	username: varchar("username"),
 	email: varchar("email"),  //.uniqueIndex(),
 	password: varchar("password"),
+	created_at: timestamp('created_at', { withTimezone: true, mode: 'date' }).notNull().default(sql`now()`),
 });
 
 export const session = pgTable('session', {
@@ -27,6 +29,8 @@ export const game = pgTable('games', {
 	columns: integer("columns").notNull(),
 	multiple: integer("multiple").notNull(),
 	skill_level: integer("skill_level").notNull(),		
+	created_at: timestamp('created_at', { withTimezone: true, mode: 'date' }).notNull().default(sql`now()`),
+	completed_at: timestamp('completed_at', { withTimezone: true, mode: 'date' }),
 });
 
 export const highscore = pgTable('highscores', {
@@ -34,7 +38,8 @@ export const highscore = pgTable('highscores', {
 	game_id: integer("game_id").notNull().references(() => game.id),
 	category: varchar("category").notNull(),
 	rows: integer("rows").notNull(),
-	columns: integer("columns").notNull()
+	columns: integer("columns").notNull(),
+	created_at: timestamp('created_at', { withTimezone: true, mode: 'date' }).notNull().default(sql`now()`),
 });
 
 export type Session = typeof session.$inferSelect;

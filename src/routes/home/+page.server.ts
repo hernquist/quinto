@@ -20,6 +20,7 @@ export const load = async (event) => {
     email: usersTable.email,
     id: usersTable.id,
     username: usersTable.username,  
+    created_at: usersTable.created_at,
   })
     .from(usersTable)
     .where(eq(usersTable.id, userPayload.id));
