@@ -1,5 +1,9 @@
-
 <script>
+  import { page } from '$app/stores';
+
+  $: formResult = $page.form;
+  $: errorMessage = formResult?.error;
+  $: emailValue = formResult?.email || '';
 </script>
 
 <main class="w-full h-screen flex items-center justify-center bg-neutral-100">
@@ -9,6 +13,14 @@
       <label for="email" class="block font-light text-neutral-800 ml-2"
         >email</label
       >
+      {#if errorMessage}
+        <div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {errorMessage} 
+          {#if emailValue }
+            <span>for {emailValue}</span>
+          {/if}
+        </div>
+      {/if}
       <input
         type="email"
         id="email"
