@@ -1,7 +1,7 @@
 import { db } from "$lib/server/db";
 import { eq } from "drizzle-orm";
 import { user as usersTable } from "$lib/server/db/schema";
-import { error, redirect } from "@sveltejs/kit";
+import { fail, redirect } from "@sveltejs/kit";
 import bcrypt from "bcrypt";
 import { createAuthJWT } from "$lib/server/jwt.js";
 
@@ -22,7 +22,10 @@ export const actions = {
     const password = formData.get("password");
 
     if (!email || !password) {
-      throw error(400, "must provide an email and password");
+      return fail(400, {
+        error: "Must provide an email and password",
+        email: email?.toString() || ""
+      });
     }
 
     // check if the user exists
@@ -31,8 +34,6 @@ export const actions = {
         email: usersTable.email,
         password: usersTable.password,
         username: usersTable.username,
-        // first_name: usersTable.first_name,
-        // last_name: usersTable.last_name,
         id: usersTable.id,
       })
       .from(usersTable)
@@ -40,17 +41,24 @@ export const actions = {
       .limit(1);
 
     if (user.length === 0) {
-      throw error(404, "user account not found");
+      // throw error(404, "user account not found");
+      return fail(401, {
+        error: "user account not found",
+        email: email.toString()
+      });
     }
 
     // check if the password is correct
     const passwordIsRight = await bcrypt.compare(
       password.toString(),
-      user[0].password
+      user[0]?.password || ""
     );
 
     if (!passwordIsRight) {
-      throw error(400, "incorrect password...");
+      return fail(401, {
+        error: "incorrect password",
+        email: email.toString()
+      });
     }
 
     // create the JWT
