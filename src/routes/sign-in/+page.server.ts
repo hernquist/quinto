@@ -41,7 +41,6 @@ export const actions = {
       .limit(1);
 
     if (user.length === 0) {
-      // throw error(404, "user account not found");
       return fail(401, {
         error: "user account not found",
         email: email.toString()
