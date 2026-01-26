@@ -27,6 +27,8 @@ export interface ICandidateMove {
  * // For tiles [A, B, C], returns:
  * // [[A], [B], [C], [A, B], [A, C], [B, C], [A, B, C]]
  */
+
+
 export function getAllTileCombinations(tiles: ITile[]): ITile[][] {
     const combinations: ITile[][] = [];
 
@@ -45,6 +47,23 @@ export function getAllTileCombinations(tiles: ITile[]): ITile[][] {
     }
 
     generateCombinations([], tiles, 0);
+
+    // log combinations
+    let combinationStrings = "";
+    const combinationTotal = combinations.length;
+    let combinationCount = 0;
+    for (const combination of combinations) {
+        combinationCount++;
+        let combinationString = "";
+        for (const tile of combination) {
+            combinationString += tile.text;
+        }
+        combinationStrings += `(${combinationCount})-${combinationString}   `;
+    }
+    console.log("[computer].getAllTileCombinations-total", combinationTotal);
+    console.log("[computer].getAllTileCombinations-combinations");
+    console.log(combinationStrings);
+
     return combinations;
 }
 
