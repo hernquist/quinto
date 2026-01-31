@@ -30,13 +30,30 @@ export interface ICandidateMove {
 
 
 export function getAllTileCombinations(tiles: ITile[]): ITile[][] {
-    const combinations: ITile[][] = [];
+    let combinations: ITile[][] = [];
+    // const setC = new Set()
+    let setC = {}
+    let x: any;
 
     function generateCombinations(current: ITile[], remaining: ITile[], startIndex: number) {
         // Add current combination if it's not empty
         if (current.length > 0) {
-            combinations.push([...current]);
+            // combinations.push([...current]);
+            let combinationString = "";
+            for (const tile of current) {
+                combinationString += tile.text;
+            }
+
+            console.log("s", combinationString, JSON.parse(JSON.stringify(current)));
+            setC[combinationString] = JSON.parse(JSON.stringify(current));
         }
+        
+        x = Object.values(setC);   
+        combinations = Object.values(setC);   
+        console.log("combinations:");
+        console.log(combinations);
+        console.log("x");
+        console.log(x);
 
         // Generate combinations by including/excluding each remaining tile
         for (let i = startIndex; i < remaining.length; i++) {
@@ -47,6 +64,7 @@ export function getAllTileCombinations(tiles: ITile[]): ITile[][] {
     }
 
     generateCombinations([], tiles, 0);
+    console.log("setC", setC);
 
     // log combinations
     let combinationStrings = "";
@@ -64,7 +82,25 @@ export function getAllTileCombinations(tiles: ITile[]): ITile[][] {
     console.log("[computer].getAllTileCombinations-combinations");
     console.log(combinationStrings);
 
+    // return combination 
     return combinations;
+}
+
+/**
+ * Sorts tiles by their value property.
+ * 
+ * @param tiles - Array of tiles to sort
+ * @param ascending - If true, sorts from lowest to highest value (default: true)
+ * @returns A new array of tiles sorted by value
+ * 
+ * @example
+ * const tiles = [{ id: 1, text: 5, value: 10 }, { id: 2, text: 3, value: 5 }];
+ * const sorted = sortTiles(tiles); // [{ id: 2, text: 3, value: 5 }, { id: 1, text: 5, value: 10 }]
+ */
+export function sortTiles(tiles: ITile[], ascending: boolean = true): ITile[] {
+    return [...tiles].sort((a, b) => {
+        return ascending ? a.value - b.value : b.value - a.value;
+    });
 }
 
 function swap(arr: ITile[], i: number, j: number): void {
@@ -253,7 +289,12 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
     const computerTiles: ITile[] = playerState.getTiles(Players.Bottom); // TODO: needs to be dynamic
 
     console.log("[computer].getComputerTurn-computerTiles", JSON.parse(JSON.stringify(computerTiles)));
-    const combinations = getAllTileCombinations(computerTiles);
+    
+    const sortedTiles = sortTiles(computerTiles);
+    
+    console.log("[computer].getComputerTurn-sortedTiles", JSON.parse(JSON.stringify(sortedTiles)));
+    
+    const combinations = getAllTileCombinations(sortedTiles);
     console.log("[computer].getComputerTurn-combinations", JSON.parse(JSON.stringify(combinations)));
     const permutations: ITile[][] = [];
     combinations.forEach(combination => {
