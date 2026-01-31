@@ -27,14 +27,28 @@ export interface ICandidateMove {
  * // For tiles [A, B, C], returns:
  * // [[A], [B], [C], [A, B], [A, C], [B, C], [A, B, C]]
  */
+
+
 export function getAllTileCombinations(tiles: ITile[]): ITile[][] {
-    const combinations: ITile[][] = [];
+    let combinations: ITile[][] = [];
+    // const setC = new Set()
+    let setC = {}
+    let x: any;
 
     function generateCombinations(current: ITile[], remaining: ITile[], startIndex: number) {
         // Add current combination if it's not empty
         if (current.length > 0) {
-            combinations.push([...current]);
+            // combinations.push([...current]);
+            let combinationString = "";
+            for (const tile of current) {
+                combinationString += tile.text;
+            }
+
+            setC[combinationString] = JSON.parse(JSON.stringify(current));
         }
+        
+        x = Object.values(setC);   
+        combinations = Object.values(setC);   
 
         // Generate combinations by including/excluding each remaining tile
         for (let i = startIndex; i < remaining.length; i++) {
@@ -45,14 +59,54 @@ export function getAllTileCombinations(tiles: ITile[]): ITile[][] {
     }
 
     generateCombinations([], tiles, 0);
+
+    // log combinations
+    const log = {
+        level: ""
+    }
+    if (log?.level === "dev") {
+        let combinationStrings = "";
+        const combinationTotal = combinations.length;
+        let combinationCount = 0;
+        for (const combination of combinations) {
+            combinationCount++;
+            let combinationString = "";
+            for (const tile of combination) {
+                combinationString += tile.text;
+            }
+            combinationStrings += `(${combinationCount})-${combinationString}   `;
+        }
+        console.log("[computer].getAllTileCombinations-total", combinationTotal);
+        console.log("[computer].getAllTileCombinations-combinations");
+        console.log(combinationStrings);
+    }
+
+    // return combination 
     return combinations;
+}
+
+/**
+ * Sorts tiles by their value property.
+ * 
+ * @param tiles - Array of tiles to sort
+ * @param ascending - If true, sorts from lowest to highest value (default: true)
+ * @returns A new array of tiles sorted by value
+ * 
+ * @example
+ * const tiles = [{ id: 1, text: 5, value: 10 }, { id: 2, text: 3, value: 5 }];
+ * const sorted = sortTiles(tiles); // [{ id: 2, text: 3, value: 5 }, { id: 1, text: 5, value: 10 }]
+ */
+export function sortTiles(tiles: ITile[], ascending: boolean = true): ITile[] {
+    return [...tiles].sort((a, b) => {
+        return ascending ? a.value - b.value : b.value - a.value;
+    });
 }
 
 function swap(arr: ITile[], i: number, j: number): void {
     [arr[i], arr[j]] = [arr[j], arr[i]];
 }
 
-// Function to find the possible permutations.
+// Function to find the possible permutations with deduplication.
 // Initial value of idx is 0.
 function permutations(res: ITile[][], arr: ITile[], idx: number): void {
     if (idx === arr.length) {
@@ -60,14 +114,26 @@ function permutations(res: ITile[][], arr: ITile[], idx: number): void {
         return;
     }
 
+    // Use a Set to track which tile values we've already swapped at this position
+    const seen = new Set<string>();
+    
     for (let i = idx; i < arr.length; i++) {
+        // Create a unique key for this tile based on text and value
+        const tileKey = `${arr[i].text}-${arr[i].value}`;
+        
+        // Skip if we've already processed a tile with the same text and value at this position
+        if (seen.has(tileKey)) {
+            continue;
+        }
+        
+        seen.add(tileKey);
         swap(arr, idx, i);
         permutations(res, arr, idx + 1);
         swap(arr, idx, i); // Backtracking
     }
 } 
 
-// Function to get the permutations
+// Function to get the permutations with deduplication
 function permute(arr: ITile[]): ITile[][] {
     const res: ITile[][] = [];
     permutations(res, arr, 0);
@@ -83,7 +149,6 @@ function tryTilesHorizontal(gameState: GameState, permutations: ITile[][], x: nu
         const currentPermutation = permutations[permutationIndex];
 
         const currentPermutationLength = currentPermutation.length;
-        // console.log("currentPermutation:", JSON.parse(JSON.stringify(currentPermutation)));
         const candidateTiles: IDroppedTile[] = [];
         let xShift = 1;
 
@@ -92,7 +157,6 @@ function tryTilesHorizontal(gameState: GameState, permutations: ITile[][], x: nu
             if (permutationTileIndex == 0) {
                 const tile = currentPermutation[permutationTileIndex];
                 candidateTiles.push({ tile, x, y });
-                // console.log("candidateTiles {permutationTileIndex: 0} -- ", JSON.parse(JSON.stringify(candidateTiles)));
             } else {
                 let keepChecking = true
                 if (!board[x + (direction * xShift)]?.[y]) {
@@ -115,7 +179,6 @@ function tryTilesHorizontal(gameState: GameState, permutations: ITile[][], x: nu
                           // go back and check in the other direction??                      
                     }
                 }
-                // console.log("candidateTiles { permutationTileIndex: 1+ } -- ", JSON.parse(JSON.stringify(candidateTiles))); 
             }
         }
 
@@ -126,10 +189,8 @@ function tryTilesHorizontal(gameState: GameState, permutations: ITile[][], x: nu
             firstTurnOfRound: false // blarg
         };
 
-        // console.log("candidateTurn:", JSON.parse(JSON.stringify(candidateTurn)));
         // get score
         gameState.updateComputerCandidateTurn(candidateTurn);
-        // console.log("gameState.game.computerCandidateTurn:", JSON.parse(JSON.stringify(gameState.game.computerCandidateTurn)));
         const score = sumTotalScore(gameState);
 
         candidateMoves.push ({
@@ -154,7 +215,6 @@ function tryTilesVertical(gameState: GameState, permutations: ITile[][], x: numb
         const currentPermutation = permutations[permutationIndex];
 
         const currentPermutationLength = currentPermutation.length;
-        // console.log("currentPermutation:", JSON.parse(JSON.stringify(currentPermutation)));
         const candidateTiles: IDroppedTile[] = [];
         let yShift = 1;
 
@@ -163,7 +223,6 @@ function tryTilesVertical(gameState: GameState, permutations: ITile[][], x: numb
             if (permutationTileIndex == 0) {
                 const tile = currentPermutation[permutationTileIndex];
                 candidateTiles.push({ tile, x, y });
-                // console.log("candidateTiles {permutationTileIndex: 0} -- ", JSON.parse(JSON.stringify(candidateTiles)));
             } else {
                 let keepChecking = true
                 if (!board[x]?.[y + (direction * yShift)]) {
@@ -186,7 +245,6 @@ function tryTilesVertical(gameState: GameState, permutations: ITile[][], x: numb
                           // go back and check in the other direction??                      
                     }
                 }
-                // console.log("candidateTiles { permutationTileIndex: 1+ } -- ", JSON.parse(JSON.stringify(candidateTiles))); 
             }
         }
 
@@ -197,11 +255,11 @@ function tryTilesVertical(gameState: GameState, permutations: ITile[][], x: numb
             firstTurnOfRound: false // blarg
         };
 
-        // console.log("candidateTurn:", JSON.parse(JSON.stringify(candidateTurn)));
         // get score
         gameState.updateComputerCandidateTurn(candidateTurn);
-        // console.log("gameState.game.computerCandidateTurn:", JSON.parse(JSON.stringify(gameState.game.computerCandidateTurn)));
         const score = sumTotalScore(gameState);
+
+        // sumTotalScore(gameState);
 
         candidateMoves.push ({
             score,
@@ -216,11 +274,11 @@ function tryTilesVertical(gameState: GameState, permutations: ITile[][], x: numb
     return candidateMoves;
 }
 
-function findSelectedPlay(candidateMoves: ICandidateMove[]): ICandidateMove {
-    return candidateMoves.reduce((prev, current) => {
-        return prev.score > current.score ? prev : current;
-    });
-}
+// function findSelectedPlay(candidateMoves: ICandidateMove[]): ICandidateMove {
+//     return candidateMoves.reduce((prev, current) => {
+//         return prev.score > current.score ? prev : current;
+//     });
+// }
 
 export function getComputerTurn(gameState: GameState, playerState: PlayerState): IComputerTurn  {
     let candidateMoves: ICandidateMove[] = [];
@@ -233,15 +291,14 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
     // it assumes the computer is on the bottom 
     const computerTiles: ITile[] = playerState.getTiles(Players.Bottom); // TODO: needs to be dynamic
 
-    console.log("[computer].getComputerTurn-computerTiles", JSON.parse(JSON.stringify(computerTiles)));
-    const combinations = getAllTileCombinations(computerTiles);
-    console.log("[computer].getComputerTurn-combinations", JSON.parse(JSON.stringify(combinations)));
+    const sortedTiles = sortTiles(computerTiles);
+    
+    const combinations = getAllTileCombinations(sortedTiles);
     const permutations: ITile[][] = [];
     combinations.forEach(combination => {
         const permuted = permute(combination);
         permutations.push(...permuted);
     });
-    console.log("[computer].getComputerTurn - permutations", JSON.parse(JSON.stringify(permutations)));
 
     // loop through board try each tile
     const numberOfColumns = board.length;
@@ -250,7 +307,6 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
         for (let y = 0; y < numberOfRows; y++) {
             // only look at dropzone "available" squares
             if (board[x][y].hasDropzone) {
-                // console.log("hasDropzone at:", x, y);
                 const directions = [-1, 1];
                 const [left, right] =  directions;
                 const [up, down] =  directions;
@@ -266,19 +322,16 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
             }
         }
     }
-    // console.log("number of candidate moves:", candidateMoves.length);
     const sortedCandidateMoves = candidateMoves.sort((a, b) => b.score - a.score);
     const numberOfCandidateMoves = sortedCandidateMoves.length;
-    // console.log("number of candidate moves sorted:", numberOfCandidateMoves);
     
     const slicer = (5 - playLevel) * 0.1;
-    // console.log("slicer:", slicer);
+    // TODO: fix selectedPlay and playlevel
     const percentOfRemovedMoves = Math.floor(numberOfCandidateMoves * slicer);
-    // console.log("percentOfRemovedMoves:", percentOfRemovedMoves);
     const selectedCandidateMoves = sortedCandidateMoves.slice(0, numberOfCandidateMoves - percentOfRemovedMoves);
-    // console.log("selectedCandidateMoves.length:", selectedCandidateMoves.length);
-    // console.log("selectedCandidateMoves:", selectedCandidateMoves);
-    const selectedPlay = findSelectedPlay(selectedCandidateMoves);
+    const selectedPlay = selectedCandidateMoves[0];
+    console.log("selectedPlay", selectedPlay);
+    console.log("candidateMove", JSON.parse(JSON.stringify(selectedPlay.candidateMove)))
 
     return ({
         droppedTiles: selectedPlay.candidateMove.droppedTiles,
