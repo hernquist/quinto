@@ -107,7 +107,7 @@ function swap(arr: ITile[], i: number, j: number): void {
     [arr[i], arr[j]] = [arr[j], arr[i]];
 }
 
-// Function to find the possible permutations.
+// Function to find the possible permutations with deduplication.
 // Initial value of idx is 0.
 function permutations(res: ITile[][], arr: ITile[], idx: number): void {
     if (idx === arr.length) {
@@ -115,14 +115,26 @@ function permutations(res: ITile[][], arr: ITile[], idx: number): void {
         return;
     }
 
+    // Use a Set to track which tile values we've already swapped at this position
+    const seen = new Set<string>();
+    
     for (let i = idx; i < arr.length; i++) {
+        // Create a unique key for this tile based on text and value
+        const tileKey = `${arr[i].text}-${arr[i].value}`;
+        
+        // Skip if we've already processed a tile with the same text and value at this position
+        if (seen.has(tileKey)) {
+            continue;
+        }
+        
+        seen.add(tileKey);
         swap(arr, idx, i);
         permutations(res, arr, idx + 1);
         swap(arr, idx, i); // Backtracking
     }
 } 
 
-// Function to get the permutations
+// Function to get the permutations with deduplication
 function permute(arr: ITile[]): ITile[][] {
     const res: ITile[][] = [];
     permutations(res, arr, 0);
