@@ -1,5 +1,4 @@
 import type { GameState } from "./game.svelte";
-import { orderTilesByDimension } from "./gameUtils";
 import { Direction, type ICalculateScore, type IDroppedTile, type ILineItem } from "./types";
 
 export function getScoredLineValue (line: ILineItem[], gameMultiple: number): number {
@@ -19,67 +18,81 @@ export function sumTotalScore(gameState: GameState): number {
 }
 
 export function synchronousCalculateScore (gameState: GameState, isComputerCandidateMove: boolean): ICalculateScore {
+    // get board and gameMultiple from gameState
     const { gameMultiple, board } = gameState.game;
-     const { direction, droppedTiles} = isComputerCandidateMove? gameState.game.computerCandidateTurn : gameState.game.turn;
+    // pull direction and dropped tiles from candidate turn or game turn
+    const { direction, droppedTiles }: { direction: Direction, droppedTiles: IDroppedTile[]} = isComputerCandidateMove ? gameState.game.computerCandidateTurn : gameState.game.turn;
 
+    // initialize lies
     let lines: ILineItem[][] = [];
     if (direction === Direction.Undecided && droppedTiles.length > 0) {
         // search left
         const [square] = droppedTiles;
         const { x, y, tile: { value }} = square;
         // set up -- shift left
-        let hasAdjacentTile = true
-
+        let hasAdjacentTile = true;
         let line: ILineItem[] = [];
         let shiftLeft = 1;
+
+        // 
         do {
             if (board?.[x - shiftLeft]?.[y]?.tile) {
                 if (line.length === 0) { 
                     line.push({ x, y, value })
                 };
+                // counldn't this be just line.push(board[x - shiftLeft][y].tile)
                 line.push({ 
                     x: x - shiftLeft, 
                     y, 
                     value: board[x - shiftLeft][y].tile?.value || 0 
                 });
+                // go left one more
                 shiftLeft += 1;
             } else {
+                // if no hit set to false
                 hasAdjacentTile = false;
             }
         } while (hasAdjacentTile);
     
+        // now look right
         let shiftRight = 1;
+        // reset adjacent tile
         hasAdjacentTile = true;
+        
         do {
             if (board?.[x + shiftRight]?.[y]?.tile) {
                 if (line.length === 0) {
                     line.push({ x, y, value });
                 }
+                // counldn't this be just line.push(board[x - shiftLeft][y].tile)
                 line.push({ 
                     x: x + shiftRight, 
                     y, 
                     value: board[x + shiftRight][y].tile?.value || 0 
                 });
+                // go one more right
                 shiftRight += 1;
             } else {
                 hasAdjacentTile = false;
             }
         } while (hasAdjacentTile)
                 
+        // after done checking horizontally push line to score 
         if (line.length !== 0) {
             lines.push(line);
         }
     
-        // up and down
+        // reset for vertical
         hasAdjacentTile = true;
-        // shift "up"
         line = [];
+        // shift "up"
         let shiftUp = 1
         do {
             if (board?.[x]?.[y - shiftUp]?.tile) {
                 if (line.length === 0) { 
                     line.push({x, y, value})
                 };
+                // counldn't this be just line.push(board[x - shiftLeft][y].tile)
                 line.push({ 
                     x: x, 
                     y: y - shiftUp, 
@@ -98,6 +111,7 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
                 if (line.length === 0) {
                     line.push({x, y, value});
                 }
+                // counldn't this be just line.push(board[x - shiftLeft][y].tile)
                 line.push({ 
                     x, 
                     y: y + shiftDown, 
@@ -109,6 +123,7 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
             }
         } while (hasAdjacentTile)
                 
+         // after done checking vertically push line to score 
         if (line.length !== 0) {
             lines.push(line);
         }
@@ -121,15 +136,14 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
         return { lines, gameMultiple }
     }
 
-    // horizontal
+    // --- HORIZONTAL ---
     if (direction === Direction.Horizontal) {
-        // order dropped tiles from the left to right
-        let orderedDroppedTiles = droppedTiles.sort((a, b) => orderTilesByDimension(a, b, "x"));
+        let copy = [...droppedTiles];
 
-        const lastIndex = orderedDroppedTiles.length - 1;
-        const lastSquare: IDroppedTile = orderedDroppedTiles[lastIndex];
-        const firstSquare: IDroppedTile = orderedDroppedTiles[0]
-        const middleSquares: IDroppedTile[] = orderedDroppedTiles.slice(1, lastIndex);
+        // get score
+        const board = gameState.game.board;
+
+        const firstSquare: IDroppedTile = copy[0]
         
         // determine "line" for horizontal placement
         // some init
@@ -140,49 +154,69 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
         // add first square to line
         let { x, y, tile: { value }} = firstSquare; 
         line.push({x, y, value});
-        
+
         do {
+            const foundCandidateTileIndex = copy.findIndex(tile => tile.x === x - shiftLeft && tile.y === y);
             if (board?.[x - shiftLeft]?.[y]?.tile) {
                 line.push({
                     x: x - shiftLeft,
                     y,
                     value: board[x - shiftLeft][y].tile?.value || 0
-                });
-                shiftLeft += 1;
+                });   
+            } else if (foundCandidateTileIndex !== -1) {
+                line.push({
+                    x: x - shiftLeft,
+                    y,
+                    value: copy[foundCandidateTileIndex].tile.value
+                })
             } else {
                 hasAdjacentTile = false
             }
+            shiftLeft += 1;
         } while (hasAdjacentTile)
+
 
         let shiftRight = 1;
         hasAdjacentTile = true;
 
         do {
+            const foundCandidateTileIndex = copy.findIndex(tile => tile.x === x + shiftRight && tile.y === y);
             if (board?.[x + shiftRight]?.[y]?.tile) {
                 line.push({ 
                     x: x + shiftRight, 
                     y, 
                     value: board[x + shiftRight][y].tile?.value || 0 
                 });
-                shiftRight += 1;
+
+            } else if (foundCandidateTileIndex !== -1) {
+                line.push({
+                    x: x + shiftRight,
+                    y,
+                    value: copy[foundCandidateTileIndex].tile.value
+                })
             } else {
                 hasAdjacentTile = false;
             }
+            shiftRight += 1;
         } while (hasAdjacentTile)
 
-        lines.push(line);
+        if (line.length > 1) {
+            lines.push(line);
+        }
 
         // check each droppedTiles vertical "line" possibility
-        // orginal droppedTiles 
-        const newConstitutedDroppedTiles = [firstSquare, ...middleSquares, lastSquare];
+        // original droppedTiles 
+        const newConstitutedDroppedTiles = [...copy];
         for (let i = 0; i < newConstitutedDroppedTiles.length; i++) {
             hasAdjacentTile = true;
             line = [];
 
             const { x, y, tile: { value }} = newConstitutedDroppedTiles[i];
+
             // checking above
             let shiftUp = 1;
             do {
+                const foundCandidateTileIndex = copy.findIndex(tile => tile.x === x && tile.y - shiftUp === y);
                 if (board?.[x]?.[y - shiftUp]?.tile) {
                     if (line.length === 0) { 
                         line.push({x, y, value})
@@ -192,15 +226,23 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
                         y: y - shiftUp, 
                         value: board[x][y - shiftUp]?.tile?.value || 0 
                     });
-                    shiftUp += 1;
+                } else if (foundCandidateTileIndex !== -1) {
+                    line.push({
+                        x,
+                        y: y - shiftUp,
+                        value: copy[foundCandidateTileIndex].tile.value
+                    })
                 } else {
                     hasAdjacentTile = false;
                 }
+                shiftUp += 1;
             } while (hasAdjacentTile);
 
             let shiftDown = 1
             hasAdjacentTile = true 
+
             do {
+                const foundCandidateTileIndex = copy.findIndex(tile => tile.x === x && tile.y + shiftDown === y);
                 if (board?.[x]?.[y + shiftDown]?.tile) {
                     if (line.length === 0) {
                         line.push({x, y, value});
@@ -210,11 +252,18 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
                         y: y + shiftDown, 
                         value: board[x][y + shiftDown].tile?.value || 0 
                     });
-                    shiftDown += 1;
+                } else if (foundCandidateTileIndex !== -1) {
+                    line.push({
+                        x,
+                        y: y + shiftDown,
+                        value: copy[foundCandidateTileIndex].tile.value
+                    })
                 } else {
                     hasAdjacentTile = false;
                 }
+                shiftDown += 1;
             } while (hasAdjacentTile);
+
             if (line.length !== 0) {
                 lines.push(line)
             }
@@ -226,12 +275,12 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
     // vertical
     if (direction === Direction.Vertical) {
         // order dropped tiles from top to bottom
-        let orderedDroppedTiles = droppedTiles.sort((a, b) => orderTilesByDimension(a, b, "x"));
+        let copy = [...droppedTiles];
 
-        const lastIndex = orderedDroppedTiles.length - 1;
-        const lastSquare: IDroppedTile = orderedDroppedTiles[lastIndex];
-        const firstSquare: IDroppedTile = orderedDroppedTiles[0]
-        const middleSquares: IDroppedTile[] = orderedDroppedTiles.slice(1, lastIndex);
+        // get score
+        const board = gameState.game.board;
+
+        const firstSquare: IDroppedTile = copy[0]
 
         // determine "line" for vertical placement
         // some init
@@ -243,39 +292,55 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
         let { x, y, tile: { value }} = firstSquare; 
         line.push({x, y, value});
         do {
+            const foundCandidateTileIndex = copy.findIndex(tile => tile.x === x && tile.y - shiftUp === y);
             if (board?.[x]?.[y - shiftUp]?.tile) {
                 line.push({
                     x,
                     y: y - shiftUp,
                     value: board[x][y - shiftUp].tile?.value || 0
                 });
-                shiftUp += 1;
+            } else if (foundCandidateTileIndex !== -1) {
+                line.push({
+                    x,
+                    y: y - shiftUp,
+                    value: copy[foundCandidateTileIndex].tile.value
+                })
             } else {
                 hasAdjacentTile = false
             }
+            shiftUp += 1;
         } while (hasAdjacentTile)
 
         let shiftDown = 1;
         hasAdjacentTile = true;
 
         do {
+            const foundCandidateTileIndex = copy.findIndex(tile => tile.x === x && tile.y + shiftDown === y);
             if (board?.[x]?.[y + shiftDown]?.tile) {
                 line.push({ 
                     x, 
                     y: y + shiftDown, 
                     value: board[x][y + shiftDown].tile?.value || 0 
                 });
-                shiftDown += 1;
+            } else if (foundCandidateTileIndex !== -1) {
+                line.push({
+                    x,
+                    y: y + shiftDown,
+                    value: copy[foundCandidateTileIndex].tile.value
+                })
             } else {
                 hasAdjacentTile = false;
             }
+            shiftDown += 1;
         } while (hasAdjacentTile)
 
-        lines.push(line);
+        if (line.length > 1) {
+            lines.push(line);
+        }
 
         // check each droppedTiles horizontal "line" possibility
-        // orginal droppedTiles 
-        const newConstitutedDroppedTiles = [firstSquare, ...middleSquares, lastSquare];
+        // original droppedTiles 
+        const newConstitutedDroppedTiles = [...copy];
         for (let i = 0; i < newConstitutedDroppedTiles.length; i++) {
             hasAdjacentTile = true;
             line = [];
@@ -283,6 +348,7 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
             // checking left
             let shiftLeft = 1;
             do {
+                const foundCandidateTileIndex = copy.findIndex(tile => tile.x - shiftLeft === x && tile.y === y);
                 if (board?.[x - shiftLeft]?.[y]?.tile) {
                     if (line.length === 0) { 
                         line.push({x, y, value})
@@ -292,15 +358,22 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
                         y: y, 
                         value: board[x - shiftLeft][y]?.tile?.value || 0 
                     });
-                    shiftLeft += 1;
+                } else if (foundCandidateTileIndex !== -1) {
+                    line.push({
+                        x: x - shiftLeft,
+                        y,
+                        value: copy[foundCandidateTileIndex].tile.value
+                    })
                 } else {
                     hasAdjacentTile = false;
                 }
+                shiftLeft += 1;
             } while (hasAdjacentTile);
 
             let shiftRight = 1;
             hasAdjacentTile = true; 
             do {
+                const foundCandidateTileIndex = copy.findIndex(tile => tile.x + shiftRight === x && tile.y === y);
                 if (board?.[x + shiftRight]?.[y]?.tile) {
                     if (line.length === 0) {
                         line.push({x, y, value});
@@ -310,17 +383,23 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
                         y, 
                         value: board[x + shiftRight][y].tile?.value || 0 
                     });
-                    shiftRight += 1;
+                } else if (foundCandidateTileIndex !== -1) {
+                    line.push({
+                        x: x + shiftRight,
+                        y,
+                        value: copy[foundCandidateTileIndex].tile.value
+                    })
                 } else {
                     hasAdjacentTile = false;
                 }
+                shiftRight += 1;
             } while (hasAdjacentTile);
 
             if (line.length !== 0) {
                 lines.push(line)
             }
         }
-
+        
         return { lines, gameMultiple };
     }
     

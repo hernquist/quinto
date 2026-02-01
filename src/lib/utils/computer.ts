@@ -141,17 +141,24 @@ function permute(arr: ITile[]): ITile[][] {
 }
 
 function tryTilesHorizontal(gameState: GameState, permutations: ITile[][], x: number, y: number, direction: number): ICandidateMove[] {
+    // get board TODO: is this working?
     const board: IBoard = gameState.game.board;
+
+    // initialize candidateMoves and number of permutations 
     let candidateMoves = []
     const permuatationsLength = permutations.length;
     
+    // loop through all permuatations
     for (let permutationIndex = 0; permutationIndex < permuatationsLength; permutationIndex++) {        
+        // get current permutation
         const currentPermutation = permutations[permutationIndex];
-
+        // get length of current permuaation
         const currentPermutationLength = currentPermutation.length;
+        // initialize "candidate" set of tiles to be played 
         const candidateTiles: IDroppedTile[] = [];
+        // set X shift 
         let xShift = 1;
-
+        // loop through permutation
         for (let permutationTileIndex = 0; permutationTileIndex < currentPermutationLength; permutationTileIndex++) {
             // if first tile being laid 
             if (permutationTileIndex == 0) {
@@ -159,11 +166,13 @@ function tryTilesHorizontal(gameState: GameState, permutations: ITile[][], x: nu
                 candidateTiles.push({ tile, x, y });
             } else {
                 let keepChecking = true
+                // the "if" and "while" statement could be combined
                 if (!board[x + (direction * xShift)]?.[y]) {
                     keepChecking = false;
                     permutationTileIndex =+ currentPermutationLength
-                    // go back and check in the other direction??
+                    // go back and check in the other direction?
                 }
+                // TODO: not sure this is working 
                 while (keepChecking) {
                     // check if square is available
                     if (board[x + (direction * xShift)]?.[y]?.tile) {
@@ -176,12 +185,13 @@ function tryTilesHorizontal(gameState: GameState, permutations: ITile[][], x: nu
                     } else {
                         permutationTileIndex =+ currentPermutationLength
                         keepChecking = false;  
-                          // go back and check in the other direction??                      
+                        // go back and check in the other direction??                      
                     }
                 }
             }
         }
 
+        // form candidateTurn for score calculation
         const candidateTurn = {
             direction: candidateTiles.length === 1 ? Direction.Undecided : Direction.Horizontal,
             turnStatus: candidateTiles.length === 1 ? TurnStatus.OnePlaced : TurnStatus.MultiPlaced,
@@ -200,7 +210,6 @@ function tryTilesHorizontal(gameState: GameState, permutations: ITile[][], x: nu
 
         // reset
         gameState.resetComputerCandidateTurn();  // needed?
-        // candidateTiles = [];
     }
 
     return candidateMoves;
@@ -212,12 +221,14 @@ function tryTilesVertical(gameState: GameState, permutations: ITile[][], x: numb
     const permuatationsLength = permutations.length;
     
     for (let permutationIndex = 0; permutationIndex < permuatationsLength; permutationIndex++) {        
+        // get current permuatation 
         const currentPermutation = permutations[permutationIndex];
-
+        // init values
         const currentPermutationLength = currentPermutation.length;
         const candidateTiles: IDroppedTile[] = [];
         let yShift = 1;
 
+        // loop through current permutation
         for (let permutationTileIndex = 0; permutationTileIndex < currentPermutationLength; permutationTileIndex++) {
             // if first tile being laid 
             if (permutationTileIndex == 0) {
@@ -259,8 +270,6 @@ function tryTilesVertical(gameState: GameState, permutations: ITile[][], x: numb
         gameState.updateComputerCandidateTurn(candidateTurn);
         const score = sumTotalScore(gameState);
 
-        // sumTotalScore(gameState);
-
         candidateMoves.push ({
             score,
             candidateMove: gameState.game.computerCandidateTurn
@@ -274,26 +283,27 @@ function tryTilesVertical(gameState: GameState, permutations: ITile[][], x: numb
     return candidateMoves;
 }
 
-// function findSelectedPlay(candidateMoves: ICandidateMove[]): ICandidateMove {
-//     return candidateMoves.reduce((prev, current) => {
-//         return prev.score > current.score ? prev : current;
-//     });
-// }
-
 export function getComputerTurn(gameState: GameState, playerState: PlayerState): IComputerTurn  {
+    // start with game state and player state
+
+    // initialize candidateMoves array which will get 
     let candidateMoves: ICandidateMove[] = [];
+
+    // get play level
     const playLevel = gameState.game.playLevel;
     
-    // get board
+    // get board 
     const { board }: { board: IBoard } = gameState.game;
 
     // get computer's tiles 
     // it assumes the computer is on the bottom 
     const computerTiles: ITile[] = playerState.getTiles(Players.Bottom); // TODO: needs to be dynamic
 
+    // return sorted tiles
     const sortedTiles = sortTiles(computerTiles);
-    
+    // find combinations from 1 to total tiles with no duplications
     const combinations = getAllTileCombinations(sortedTiles);
+    // find permuations will not duplications
     const permutations: ITile[][] = [];
     combinations.forEach(combination => {
         const permuted = permute(combination);
