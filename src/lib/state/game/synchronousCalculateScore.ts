@@ -23,7 +23,7 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
     // pull direction and dropped tiles from candidate turn or game turn
     const { direction, droppedTiles }: { direction: Direction, droppedTiles: IDroppedTile[]} = isComputerCandidateMove ? gameState.game.computerCandidateTurn : gameState.game.turn;
 
-    // initialize lies
+    // initialize lines
     let lines: ILineItem[][] = [];
     if (direction === Direction.Undecided && droppedTiles.length > 0) {
         // search left
@@ -34,7 +34,7 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
         let line: ILineItem[] = [];
         let shiftLeft = 1;
 
-        // 
+        // check left
         do {
             if (board?.[x - shiftLeft]?.[y]?.tile) {
                 if (line.length === 0) { 
@@ -175,7 +175,6 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
             shiftLeft += 1;
         } while (hasAdjacentTile)
 
-
         let shiftRight = 1;
         hasAdjacentTile = true;
 
@@ -187,7 +186,6 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
                     y, 
                     value: board[x + shiftRight][y].tile?.value || 0 
                 });
-
             } else if (foundCandidateTileIndex !== -1) {
                 line.push({
                     x: x + shiftRight,
@@ -272,7 +270,7 @@ export function synchronousCalculateScore (gameState: GameState, isComputerCandi
         return { lines, gameMultiple }
     }
 
-    // vertical
+    // VERTICAL
     if (direction === Direction.Vertical) {
         // order dropped tiles from top to bottom
         let copy = [...droppedTiles];
