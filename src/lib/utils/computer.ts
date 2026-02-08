@@ -338,6 +338,7 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
     console.log("-----sortedCandidateMoves------");
     console.log("_______________________________");
     console.log(JSON.parse(JSON.stringify(sortedCandidateMoves)));
+    console.log("number of candidate moves:", sortedCandidateMoves);
 
     const pluckedCandidateMovesDict = sortedCandidateMoves.reduce<Record<number, typeof sortedCandidateMoves[number]>>(
         (acc, curr) => acc.hasOwnProperty(curr.score) || Object.keys(acc).length === 5 ? acc : { ...acc, [curr.score]: curr },
@@ -353,7 +354,7 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
     console.log("keys", keys)
     keys.sort((a, b) => Number(a) - Number(b));
     console.log("keys", keys)
-    const selectedPlay = pluckedCandidateMovesDict[keys[playLevel - 1]] || pluckedCandidateMovesDict[keys[keys.length -1]];
+    const selectedPlay = pluckedCandidateMovesDict[keys[playLevel - 1]] || pluckedCandidateMovesDict[keys[keys.length - 1]];
 
     console.log("_______________________________");
     console.log("oldSelectedPlay", sortedCandidateMoves[0]);
