@@ -338,7 +338,7 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
     console.log("-----sortedCandidateMoves------");
     console.log("_______________________________");
     console.log(JSON.parse(JSON.stringify(sortedCandidateMoves)));
-    console.log("number of candidate moves:", sortedCandidateMoves);
+    console.log("number of candidate moves:", sortedCandidateMoves.length);
 
     const pluckedCandidateMovesDict = sortedCandidateMoves.reduce<Record<number, typeof sortedCandidateMoves[number]>>(
         (acc, curr) => acc.hasOwnProperty(curr.score) || Object.keys(acc).length === 5 ? acc : { ...acc, [curr.score]: curr },
