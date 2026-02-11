@@ -333,13 +333,31 @@ export function getComputerTurn(gameState: GameState, playerState: PlayerState):
         }
     }
     const sortedCandidateMoves = candidateMoves.sort((a, b) => b.score - a.score);
-    const numberOfCandidateMoves = sortedCandidateMoves.length;
     
-    const slicer = (5 - playLevel) * 0.1;
-    // TODO: fix selectedPlay and playlevel
-    const percentOfRemovedMoves = Math.floor(numberOfCandidateMoves * slicer);
-    const selectedCandidateMoves = sortedCandidateMoves.slice(0, numberOfCandidateMoves - percentOfRemovedMoves);
-    const selectedPlay = selectedCandidateMoves[0];
+    console.log("_______________________________");
+    console.log("-----sortedCandidateMoves------");
+    console.log("_______________________________");
+    console.log(JSON.parse(JSON.stringify(sortedCandidateMoves)));
+    console.log("number of candidate moves:", sortedCandidateMoves.length);
+
+    const pluckedCandidateMovesDict = sortedCandidateMoves.reduce<Record<number, typeof sortedCandidateMoves[number]>>(
+        (acc, curr) => acc.hasOwnProperty(curr.score) || Object.keys(acc).length === 5 ? acc : { ...acc, [curr.score]: curr },
+        {}
+    );
+
+    console.log("_______________________________");
+    console.log("---pluckedCandidateMovesDict--_");
+    console.log("_______________________________");
+    console.log(JSON.parse(JSON.stringify(pluckedCandidateMovesDict)));
+
+    const keys = Object.keys(pluckedCandidateMovesDict);
+    console.log("keys", keys)
+    keys.sort((a, b) => Number(a) - Number(b));
+    console.log("keys", keys)
+    const selectedPlay = pluckedCandidateMovesDict[keys[playLevel - 1]] || pluckedCandidateMovesDict[keys[keys.length - 1]];
+
+    console.log("_______________________________");
+    console.log("oldSelectedPlay", sortedCandidateMoves[0]);
     console.log("selectedPlay", selectedPlay);
     console.log("candidateMove", JSON.parse(JSON.stringify(selectedPlay.candidateMove)))
 

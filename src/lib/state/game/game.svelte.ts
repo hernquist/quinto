@@ -66,6 +66,7 @@ export class GameState {
 	}
 
 	public updateComputerCandidateTurn (update: ITurn): void {
+		// the spread is not necessary here
 		this.game.computerCandidateTurn = { ...this.game.computerCandidateTurn, ...update };
 	}
 
