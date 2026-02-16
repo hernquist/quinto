@@ -18,10 +18,6 @@
 </script>
 
 <div class="home__fullscreen">
-    HOME {playerState?.humanPlayer.user?.username}
-    - {playerState?.humanPlayer.user}
-    - {JSON.stringify(playerState?.humanPlayer.user)}
-    - date {new Date(playerState?.humanPlayer.user?.created_at).toDateString()}
 </div>
 
 <style lang="postcss">
