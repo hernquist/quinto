@@ -1,4 +1,8 @@
 <script>
+  import { page } from '$app/stores';
+
+  $: formResult = $page.form;
+  $: errorMessage = formResult?.error;
 </script>
 
 <main class="w-full h-screen flex items-center justify-center bg-neutral-100">
@@ -8,11 +12,16 @@
       <label for="username" class="block font-light text-neutral-800 ml-2"
         >username</label
       >
+      {#if errorMessage}
+        <div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {errorMessage} 
+        </div>
+      {/if}
       <input
         type="username"
         id="username"
         name="username"
-        placeholder="RexTheDog"
+        placeholder="select a unique username"
         class="w-full p-2 border border-neutral-800 rounded-lg"
       />
     </div>
