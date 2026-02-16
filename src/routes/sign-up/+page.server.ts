@@ -1,7 +1,8 @@
 import bcrypt from "bcrypt";
 import { db } from "$lib/server/db";
+import { eq } from "drizzle-orm";
 import { user as usersTable } from "$lib/server/db/schema";
-import { redirect } from "@sveltejs/kit";
+import { fail, redirect } from "@sveltejs/kit";
 import { createAuthJWT } from "$lib/server/jwt";
 
 export const load = async (event) => {
@@ -16,30 +17,84 @@ export const load = async (event) => {
 
 export const actions = {
   default: async (event) => {
-    // TODO: THIS SHOULD BE VALIDATEDx
+    // TODO: THIS SHOULD BE VALIDATED
     const formData = await event.request.formData();
     const email = formData.get("email") || "";
     const password = formData.get("password") || "";
     const username = formData.get("username") || "";
 
+    // TODO: could optimize to do username and email together
+    // Check if username already exists
+    const existingUser = await db
+      .select({ username: usersTable.username })
+      .from(usersTable)
+      .where(eq(usersTable.username, username.toString()))
+      .limit(1);
+
+    // Check if username already exists
+    if (existingUser.length > 0) {
+      return fail(409, {
+        error: "Username already taken",
+        username: username.toString(),
+        email: email.toString()
+      });
+    }
+
+    // Check if email already exists
+    const existingEmail = await db
+    .select({ email: usersTable.email })
+    .from(usersTable)
+    .where(eq(usersTable.email, email.toString()))
+    .limit(1);
+
+    // Check if email already exists
+    if (existingEmail.length > 0) {
+      return fail(409, {
+        error: "Email already taken",
+        username: username.toString(),
+        email: email.toString()
+      });
+    }
+
     const hash = bcrypt.hashSync(password?.toString(), 10);
 
-    const [nUser] = await db.insert(usersTable).values({
-      username: username.toString(),
-      email: email.toString(),
-      password: hash,
-    }).returning();
+    try {
+      const [nUser] = await db.insert(usersTable).values({
+        username: username.toString(),
+        email: email.toString(),
+        password: hash,
+      }).returning();
 
-    const token = await createAuthJWT({
-      username: username.toString(),
-      email: email.toString(),
-      id: parseInt(nUser?.id),
-    });
+      if (!nUser) {
+        return fail(500, {
+          error: "Failed to create user",
+          username: username.toString(),
+          email: email.toString()
+        });
+      }
 
-    event.cookies.set("auth_token", token, {
-      path: "/",
-    });
+      const token = await createAuthJWT({
+        username: username.toString(),
+        email: email.toString(),
+        id: nUser.id,
+      });
 
-    throw redirect(301, "/home");
+      event.cookies.set("auth_token", token, {
+        path: "/",
+      });
+
+      throw redirect(301, "/home");
+    } catch (error: any) {
+      // Handle database-level unique constraint violations as a fallback
+      if (error?.code === "23505" || error?.message?.includes("unique") || error?.message?.includes("duplicate")) {
+        return fail(409, {
+          error: "Username or email already taken",
+          username: username.toString(),
+          email: email.toString()
+        });
+      }
+      // Re-throw other errors
+      throw error;
+    }
   }
 };
