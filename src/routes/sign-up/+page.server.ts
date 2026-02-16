@@ -23,6 +23,7 @@ export const actions = {
     const password = formData.get("password") || "";
     const username = formData.get("username") || "";
 
+    // TODO: could optimize to do username and email together
     // Check if username already exists
     const existingUser = await db
       .select({ username: usersTable.username })
@@ -30,9 +31,26 @@ export const actions = {
       .where(eq(usersTable.username, username.toString()))
       .limit(1);
 
+    // Check if username already exists
     if (existingUser.length > 0) {
       return fail(409, {
         error: "Username already taken",
+        username: username.toString(),
+        email: email.toString()
+      });
+    }
+
+    // Check if email already exists
+    const existingEmail = await db
+    .select({ email: usersTable.email })
+    .from(usersTable)
+    .where(eq(usersTable.email, email.toString()))
+    .limit(1);
+
+    // Check if email already exists
+    if (existingEmail.length > 0) {
+      return fail(409, {
+        error: "Email already taken",
         username: username.toString(),
         email: email.toString()
       });
