@@ -19,14 +19,16 @@
 
     $effect(() => {
         if (gameState.game.status === GameStatus.Complete) {
+
             if (fire) {
                 updateScoreOnGameComplete({
                     gameId, 
                     top_score: playerState.player[Top].score,
                     bottom_score: playerState.player[Bottom].score,
                     rows: gameState.game.rows,
-                    columns: gameState.game.columns
-
+                    columns: gameState.game.columns,
+                    // brittle based on position on assumption of computer player
+                    winner: playerState.player[Top].winner && playerState.humanPlayer.position === 'TOP' ? "H" : "C",
                 });
                 fire = false
             }

@@ -88,9 +88,10 @@ export const updateScoreOnGameComplete = command(v.object({
     bottom_score: v.number(),
     rows: v.number(),
     columns: v.number(),
+    winner: v.string()
   }), async (requestData) => {
-  const { top_score, bottom_score, gameId, rows, columns } = requestData;
-	await db.update(gamesTable).set({top_score, bottom_score}).where(eq(gamesTable.id, gameId));
+  const { top_score, bottom_score, gameId, rows, columns, winner } = requestData;
+	await db.update(gamesTable).set({top_score, bottom_score, winner}).where(eq(gamesTable.id, gameId));
 
   // we need to check top_score and bottom_score
   await checkForHighScore(rows, columns, gameId, top_score);
