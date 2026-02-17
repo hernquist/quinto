@@ -29,15 +29,27 @@
         "H": "Won",
         "C": "Lost",
         "T": "Tie"
+    };
+
+    type ITallyRecord = { T: number; W: number; L: number };
+
+    function tallyRecord(): ITallyRecord {
+        return userGames.reduce((acc: ITallyRecord, game: { winner: string | null }) => {
+            if (game.winner === "T") acc.T = acc.T + 1;
+            if (game.winner === "H") acc.W = acc.W + 1;
+            if (game.winner === "C") acc.L = acc.L + 1;
+            return acc;
+        }, { T: 0, W: 0, L: 0 });
     }
 
+    const tally: ITallyRecord = tallyRecord()
 </script>
 
 <div class="user__page">
     <h1> {playerState.humanPlayer.user?.username}</h1>
 
     <div class="games-section">
-        <h2>Games played ({userGames?.length || 0})</h2>
+        <h2>Games played {userGames?.length || 0} | {tally.W}-{tally.L}-{tally.T}</h2>
         {#if userGames && userGames.length > 0}
             <div class="games-list">
                 {#each userGames as game}
@@ -88,7 +100,7 @@
     }
 
     h1 {
-        padding: 60px 0 20px 0;
+        padding: 60px 0 0 0;
         font-size: 3rem;
     }
 
@@ -108,7 +120,11 @@
     .games-list {
         display: grid;
         gap: 16px;
-        margin-top: 20px;
+        margin-top: 16px;
+        max-height: 60vh;
+        overflow-y: auto;
+        padding-right: 8px;
+        margin-bottom: 16px;
     }
 
     .game-card {
