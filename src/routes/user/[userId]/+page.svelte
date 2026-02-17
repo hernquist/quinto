@@ -24,7 +24,13 @@
         if (!date) return 'N/A';
         return new Date(date).toLocaleDateString();
     }
-    console.log("playerstate. humanPlayer", JSON.parse(JSON.stringify(playerState.humanPlayer)));
+
+    const textMap = {
+        "H": "Won",
+        "C": "Lost",
+        "T": "Tie"
+    }
+
 </script>
 
 <div class="user__page">
@@ -38,7 +44,9 @@
                     <div class="game-card">
                         <div class="game-header">
                             <span class="game-id">Game #{game.id}</span>
-                            <span class="game-status">{game.winner ? `Winner: ${game.winner}` : 'In Progress'}</span>
+                            {#if game.winner}
+                                <span class={`game-status game-status_${String(textMap[game.winner])}`}>{textMap[game.winner] || "-"}</span>
+                            {/if}
                         </div>
                         <div class="game-details">
                             <div class="game-info">
@@ -50,12 +58,8 @@
                                 <span>Top Score: {game.top_score}</span>
                                 <span>Bottom Score: {game.bottom_score}</span>
                             </div>
-                            <div class="game-players">
-                                <span>Top: {game.top_player}</span>
-                                <span>Bottom: {game.bottom_player}</span>
-                            </div>
                             <div class="game-dates">
-                                <span>Created: {formatDate(game.created_at)}</span>
+                                <span>Played: {formatDate(game.created_at)}</span>
                                 {#if game.completed_at}
                                     <span>Completed: {formatDate(game.completed_at)}</span>
                                 {/if}
@@ -134,6 +138,20 @@
         padding: 4px 12px;
         border-radius: 4px;
         font-size: 0.9rem;
+    }
+
+    .game-status_Won {
+        background-color: #559944;
+    }
+
+    .game-status_Lost {
+        background-color: #e24d43;
+
+    }
+
+    .game-status_Tie { 
+        background-color: rgb(163, 163, 163);
+
     }
 
     .game-details {
