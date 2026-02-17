@@ -19,14 +19,20 @@
 
     $effect(() => {
         if (gameState.game.status === GameStatus.Complete) {
+            const determineWinner = () => {
+                if (playerState.isTie) return "T";
+                return playerState.player[Top].winner && playerState.humanPlayer.position === 'TOP' ? "H" : "C"
+            }
+
             if (fire) {
                 updateScoreOnGameComplete({
                     gameId, 
                     top_score: playerState.player[Top].score,
                     bottom_score: playerState.player[Bottom].score,
                     rows: gameState.game.rows,
-                    columns: gameState.game.columns
-
+                    columns: gameState.game.columns,
+                    // brittle based on position on assumption of computer player
+                    winner: determineWinner(),
                 });
                 fire = false
             }
