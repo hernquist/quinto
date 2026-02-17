@@ -20,8 +20,9 @@ export interface ISetWinner {
 
 export interface IPlayerState {
     tiles: IPlayerTiles;
-    player: IPlayers
+    player: IPlayers;
     humanPlayer: IHumanPlayer;
+    isTie: boolean;
 } 
 
 export class PlayerState {
@@ -44,6 +45,8 @@ export class PlayerState {
         },
         isLoggedIn: false,
     });
+
+    isTie = $state<boolean>(false);
 
     constructor() {
     }
@@ -85,7 +88,8 @@ export class PlayerState {
 
         if (gameState.status === GameStatus.Complete) {
             if (this.player[Top].score === this.player[Bottom].score) {
-                tieGameStatus.isTieGame = true
+                tieGameStatus.isTieGame = true;
+                this.isTie = true;
                 return tieGameStatus;
             }
 
