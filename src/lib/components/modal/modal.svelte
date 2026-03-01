@@ -101,7 +101,7 @@
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
-		margin: 26px 0 0 0;
+		margin: 12px 0 0 0;
 		gap: 1em;
 	}
 
