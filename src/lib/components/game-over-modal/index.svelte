@@ -30,6 +30,7 @@
         padding: 20px;
         background-color: #f9f9f9;
         flex: 1;
+        height: 180px;
     }
 
     .gameOverModal__title {

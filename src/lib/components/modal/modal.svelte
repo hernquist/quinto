@@ -1,5 +1,7 @@
 <script>
 	import { getModalState } from "$lib/state/modal-state/modal-state.svelte";
+	import { ModalScreen } from "$lib/state/modal-state/types";
+	import { goto } from "$app/navigation";
 
 	let { header, children } = $props();
 
@@ -10,6 +12,11 @@
 	$effect(() => {
 		if (modalState.showModal) dialog.showModal();
 	});
+
+	function goToDirections() {
+		modalState.toggleModalOff();
+		goto("/directions");
+	}
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
@@ -21,14 +28,23 @@
 	<div>
 		{@render header?.()}
 		{@render children?.()}
-		<!-- svelte-ignore a11y_autofocus -->
-		<button 
-			autofocus 
-			class="modal__close-button"
-			aria-label="Close modal"
-			aria-keyshortcuts="Escape"
-			onclick={(e) => {e.preventDefault();modalState.toggleModalOff();}}
-		>CLOSE</button>
+		{#if modalState.screen.name !== ModalScreen.Settings}
+			<div class="modal__buttons">
+				<button
+					class="modal__close-button"
+					aria-label="Go to directions"
+					onclick={(e) => {e.preventDefault(); goToDirections();}}
+				>DIRECTIONS</button>
+				<!-- svelte-ignore a11y_autofocus -->
+				<button 
+					autofocus 
+					class="modal__close-button"
+					aria-label="Close modal"
+					aria-keyshortcuts="Escape"
+					onclick={(e) => {e.preventDefault();modalState.toggleModalOff();}}
+				>CLOSE</button>
+			</div>
+		{/if}
 	</div>
 </dialog>
 
@@ -80,8 +96,17 @@
 		}
 	}
 	
-	button {
-		display: block;
+	.modal__buttons {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		margin: 12px 0 0 0;
+		gap: 1em;
+	}
+
+	.modal__buttons:has(button:only-of-type) {
+		justify-content: flex-end;
 	}
 
 	.modal__close-button {
@@ -95,6 +120,5 @@
         background-color: tan;
         cursor: pointer;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-		margin: 26px 0 0 0;
 	}
 </style>
