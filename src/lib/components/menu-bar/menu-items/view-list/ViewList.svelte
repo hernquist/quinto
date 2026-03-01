@@ -2,15 +2,18 @@
 	import ViewListIcon from "$lib/components/icons/ViewListIcon.svelte";
 	import { getModalState } from "$lib/state/modal-state/modal-state.svelte";
 
+	export let inactive = false;
+
     const modalState = getModalState()
 
     const handleClick = (e: MouseEvent) => {
+        if (inactive) return;
         e.preventDefault();
         modalState.toggleModalOn();
     };
 </script>
 
-<button class="view-list" on:click={handleClick} >
+<button class="view-list" class:inactive disabled={inactive} on:click={handleClick} >
     <ViewListIcon  />
 </button>
 
@@ -30,5 +33,11 @@
 
     .view-list:active {
         opacity: 0.6;
+    }
+
+    .view-list.inactive {
+        cursor: default;
+        opacity: 0.5;
+        pointer-events: none;
     }
 </style>

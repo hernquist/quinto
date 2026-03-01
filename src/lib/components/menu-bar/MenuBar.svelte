@@ -1,4 +1,5 @@
 <script>
+    import { page } from '$app/stores';
     import ViewList from './menu-items/view-list/ViewList.svelte';
     import MenuBarTiles from './menu-items/menu-bar-tiles/MenuBarTiles.svelte';
     import GameMultiple from './menu-items/game-multiple/GameMultiple.svelte';
@@ -7,7 +8,7 @@
 </script>
 
 <ul>
-    <li><ViewList /></li>
+    <li class:inactive={$page.url.pathname === '/directions'}><ViewList inactive={$page.url.pathname === '/directions'} /></li>
     <li><MenuBarTiles /> </li>
     <li><GameMultiple /></li>
     <li><Level /></li>
@@ -43,6 +44,11 @@
     li:hover {
         background-color: #e0e0e0;
         color: black;
+    }
+
+    li.inactive {
+        opacity: 0.6;
+        pointer-events: none;
     }
 </style>
     
