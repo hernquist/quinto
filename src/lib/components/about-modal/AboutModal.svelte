@@ -2,16 +2,16 @@
 </script>
 
 <div class="about-modal__container">
-    <p>Quinto – a numbers puzzle game.</p>
-    <p>Developed By David Hernquist</p>
-    <p>Game Played By David Hernquist</p>
-    <p>Design By David Hernquist</p>
-    <p>Engineered By David Hernquist</p>
+    <h3>Quinto </h3>
+    <p>Quinto is a numbers puzzle game where you need to place tiles to form vertical and horizontal sums. To score your sums must be a multiple of the game multiple (which defaults to 5). You gain points to if the sum is a multiple but you lose points if the sum is not a multiple.</p>
+
+    <p>Developed, Designed, and Engineered By David Hernquist</p>
 </div>
 
 <style lang="postcss">
     .about-modal__container {
         padding: 1rem 0;
+        max-width: 392px;
     }
     h2 {
         margin: 0 0 0.5rem;
