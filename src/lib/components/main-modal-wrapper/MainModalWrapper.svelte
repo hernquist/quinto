@@ -1,10 +1,10 @@
 <script lang="ts">
     import SettingsModal from "$lib/components/settings-modal/index.svelte";
     import GameOverModal from "$lib/components/game-over-modal/index.svelte";
-	import { getModalState } from "$lib/state/modal-state/modal-state.svelte";
-	import { ModalScreen } from "$lib/state/modal-state/types";
 	import HighscoresModal from "../highscores-modal/HighscoresModal.svelte";
 	import AboutModal from "$lib/components/about-modal/AboutModal.svelte";
+	import { getModalState } from "$lib/state/modal-state/modal-state.svelte";
+	import { ModalScreen } from "$lib/state/modal-state/types";
     
     const modalState = getModalState();
     const { Settings, GameOver, HighScores, About} = ModalScreen;
