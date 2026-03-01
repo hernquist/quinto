@@ -28,23 +28,23 @@
 	<div>
 		{@render header?.()}
 		{@render children?.()}
-		<div class="modal__buttons">
-			{#if modalState.screen.name !== ModalScreen.Settings}
+		{#if modalState.screen.name !== ModalScreen.Settings}
+			<div class="modal__buttons">
 				<button
 					class="modal__close-button"
 					aria-label="Go to directions"
 					onclick={(e) => {e.preventDefault(); goToDirections();}}
 				>DIRECTIONS</button>
-			{/if}
-			<!-- svelte-ignore a11y_autofocus -->
-			<button 
-				autofocus 
-				class="modal__close-button"
-				aria-label="Close modal"
-				aria-keyshortcuts="Escape"
-				onclick={(e) => {e.preventDefault();modalState.toggleModalOff();}}
-			>CLOSE</button>
-		</div>
+				<!-- svelte-ignore a11y_autofocus -->
+				<button 
+					autofocus 
+					class="modal__close-button"
+					aria-label="Close modal"
+					aria-keyshortcuts="Escape"
+					onclick={(e) => {e.preventDefault();modalState.toggleModalOff();}}
+				>CLOSE</button>
+			</div>
+		{/if}
 	</div>
 </dialog>
 
