@@ -15,11 +15,11 @@
   </div>
 
   <div class="directions__content">
-    <p><strong>Quinto</strong> is a numbers puzzle game. Place tiles on the board to form horizontal and vertical lines. Your score depends on whether each line’s sum is a multiple of the game multiple (default is 5).</p>
+    <p><strong>Quinto</strong> is a numbers puzzle game. Place tiles on the board to form horizontal and vertical lines. Your score depends on whether each line’s sum is a multiple of the game multiple (defaulted to 5).</p>
 
     <h2>How to play</h2>
     <ul>
-      <li><strong>Starting square:</strong> On the first move of the game, place one of your tiles on the starting square (the square with the dashed border in the center of the board).</li>
+      <li><strong>Starting square:</strong> On the first move of the game, place one or more of your tiles adjacent to the starting square (the square with the dashed border in the center of the board).</li>
       <li><strong>Placing tiles:</strong> On your turn, place one or more tiles from your hand onto empty squares. New tiles must be placed next to tiles already on the board (horizontally or vertically adjacent).</li>
       <li><strong>Scoring:</strong> When you finish your turn, every new horizontal and vertical line that includes your placed tiles is scored. If a line’s sum is a multiple of the game multiple (e.g. 5), you gain that sum as points. If it is not a multiple, you lose that sum as points.</li>
       <li><strong>Finish turn:</strong> When you’re done placing tiles for the turn, tap “Finish turn” to score and pass play to your opponent.</li>
