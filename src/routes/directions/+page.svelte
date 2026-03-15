@@ -1,7 +1,17 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
+
+  // Access the parameter named 'paramName'
+  const firstLogin = $page.url.searchParams.get('firstLogin');
+
   function handleBack() {
     if (typeof window !== 'undefined') {
-      window.history.back();
+      if (firstLogin) {
+        goto('/home');
+      } else {
+        window.history.back();
+      }
     }
   }
 </script>
@@ -10,7 +20,7 @@
   <div class="directions__header">
     <h1>Directions</h1>
     <button type="button" class="directions__back" aria-label="Return to previous page" on:click={handleBack}>
-      ← Back
+      ← {firstLogin ? 'Start Playing' : 'Back'}
     </button>
   </div>
 
