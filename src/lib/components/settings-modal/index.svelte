@@ -65,7 +65,7 @@
             {/each}
         </div>
         <div class="settings-modal__buttons">
-            <button formaction="?/createNewGame" class="settings-modal__button">SAVE</button>
+            <button formaction="?/createNewGame" class="settings-modal__button">PLAY</button>
             <button
                 type="button"
                 class="settings-modal__button"
@@ -118,7 +118,7 @@
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        margin: 20px 0 10px;
+        margin: 30px 0 0;
         gap: 1em;
     }
 
