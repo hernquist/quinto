@@ -39,14 +39,27 @@
     .highscores-modal__container {
         padding-top: 2x;
     }
+
     table {
         width: 100%;
         border-collapse: collapse;
     }
+
+    thead {
+        padding-top: 4px;
+    }
+    
     th, td {
-        border: 1px solid #000000;
         padding: 6px;
-        text-align: left;
+        text-align: center;
         font-size: 14px;
+    }
+
+    th {
+        padding: 6px 6px 6px;
+    }
+
+   td {
+        border: 1px solid #000000;
     }
 </style>
