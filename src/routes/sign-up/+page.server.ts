@@ -42,10 +42,10 @@ export const actions = {
 
     // Check if email already exists
     const existingEmail = await db
-    .select({ email: usersTable.email })
-    .from(usersTable)
-    .where(eq(usersTable.email, email.toString()))
-    .limit(1);
+      .select({ email: usersTable.email })
+      .from(usersTable)
+      .where(eq(usersTable.email, email.toString()))
+      .limit(1);
 
     // Check if email already exists
     if (existingEmail.length > 0) {
@@ -83,7 +83,8 @@ export const actions = {
         path: "/",
       });
 
-      throw redirect(301, "/home");
+      throw redirect(301, "/directions?firstLogin=true");
+
     } catch (error: any) {
       // Handle database-level unique constraint violations as a fallback
       if (error?.code === "23505" || error?.message?.includes("unique") || error?.message?.includes("duplicate")) {
