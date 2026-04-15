@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import MenuBar from "$lib/components/menu-bar/MenuBar.svelte";
 	import Modal from "$lib/components/modal/modal.svelte";
 	import MainModalWrapper from "$lib/components/main-modal-wrapper/MainModalWrapper.svelte";
@@ -21,6 +22,16 @@
 
     const modalState = getModalState();
 </script>
+
+<svelte:head>
+	<meta property="og:image" content={`${$page.url.origin}/og-image.png`} />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+	<meta property="og:image:type" content="image/png" />
+	<meta property="og:image:alt" content="Quinto — teal tile mark" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:image" content={`${$page.url.origin}/og-image.png`} />
+</svelte:head>
 
 <Toaster />
 
