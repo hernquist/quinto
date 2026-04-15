@@ -208,7 +208,114 @@
     }
 
     .board__square-hasDropzone {
+        position: relative;
+        overflow: hidden;
         border: 2px solid var(--color-board-dropzone-border);
         background-color: var(--color-board-dropzone);
+        /* Quiet fabric + depth: stays still while layers above move */
+        background-image:
+            radial-gradient(ellipse 130% 90% at 50% 110%, rgba(15, 118, 110, 0.2) 0%, transparent 52%),
+            radial-gradient(ellipse 70% 55% at 75% 25%, rgba(255, 255, 255, 0.07) 0%, transparent 55%),
+            repeating-linear-gradient(
+                118deg,
+                transparent 0,
+                transparent 4px,
+                rgba(255, 255, 255, 0.035) 4px,
+                rgba(255, 255, 255, 0.035) 5px
+            ),
+            repeating-linear-gradient(
+                32deg,
+                transparent 0,
+                transparent 5px,
+                rgba(13, 148, 136, 0.04) 5px,
+                rgba(13, 148, 136, 0.04) 6px
+            );
+        background-size: 100% 100%, 100% 100%, 9px 14px, 11px 13px;
+        background-position: 0 0, 0 0, 0 0, 3px 1px;
+    }
+
+    /* Primary veil: broad soft highlight */
+    .board__square-hasDropzone::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            98deg,
+            transparent 0%,
+            transparent 36%,
+            rgba(255, 255, 255, 0.06) 44%,
+            rgba(255, 255, 255, 0.38) 49.5%,
+            rgba(255, 255, 255, 0.1) 52%,
+            transparent 60%,
+            transparent 100%
+        );
+        background-size: 240% 100%;
+        background-position: 100% 50%;
+        animation: dropzone-shimmer-primary 4.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+        pointer-events: none;
+    }
+
+    /* Secondary: crossing glint + teal undertow, out of sync for a caustic feel */
+    .board__square-hasDropzone::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        opacity: 0.72;
+        background:
+            linear-gradient(
+                156deg,
+                transparent 0%,
+                rgba(13, 148, 136, 0.14) 45%,
+                transparent 50%,
+                transparent 100%
+            ),
+            linear-gradient(
+                64deg,
+                transparent 0%,
+                transparent 38%,
+                rgba(255, 255, 255, 0.22) 50%,
+                rgba(167, 243, 208, 0.12) 51%,
+                transparent 62%,
+                transparent 100%
+            );
+        background-size: 200% 100%, 280% 100%;
+        background-position: 0% 48%, 100% 52%;
+        animation:
+            dropzone-shimmer-depth 5.8s cubic-bezier(0.4, 0, 0.2, 1) infinite,
+            dropzone-shimmer-glint 3.4s cubic-bezier(0.45, 0, 0.55, 1) infinite reverse;
+        pointer-events: none;
+    }
+
+    @keyframes dropzone-shimmer-primary {
+        0%,
+        100% {
+            background-position: 108% 50%;
+        }
+        50% {
+            background-position: -8% 50%;
+        }
+    }
+
+    @keyframes dropzone-shimmer-depth {
+        0%,
+        100% {
+            background-position: 0% 55%, 96% 45%;
+        }
+        50% {
+            background-position: 100% 40%, 4% 60%;
+        }
+    }
+
+    @keyframes dropzone-shimmer-glint {
+        0%,
+        100% {
+            opacity: 0.45;
+        }
+        35% {
+            opacity: 0.78;
+        }
+        70% {
+            opacity: 0.55;
+        }
     }
 </style>
