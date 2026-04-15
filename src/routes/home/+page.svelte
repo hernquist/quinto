@@ -26,6 +26,6 @@
         top: 64px;
         width: 100%;
         height: 100vh;
-        background: #447799;
+        background: linear-gradient(165deg, var(--color-shell) 0%, var(--color-shell-deep) 100%);
     }    
 </style>

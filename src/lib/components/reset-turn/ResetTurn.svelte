@@ -22,16 +22,16 @@
 
 <style>
     button {
-        color: rgb(239, 244, 239);
-        background-color: cornflowerblue;
+        color: var(--color-play-control-icon);
+        background-color: var(--color-play-control);
         padding: 4px;
-        border: 2px solid gray;
+        border: 2px solid var(--color-play-control-border);
         border-radius: 8px;
         height: 40px;
         margin: 2px 2px 2px 8px;
 
         &:disabled {
-            background-color: lightslategray;
+            background-color: var(--color-play-control-disabled);
         }
 
         &:hover {

@@ -1,3 +1,137 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+/*
+  Quinto theme — teal shell, clay board, mint/teal highlights.
+  Adjust colors here to retheme the whole app.
+*/
+:root {
+	/* Shell (fullscreen areas under the menu) */
+	--color-shell: #0f766e;
+	--color-shell-deep: #115e59;
+
+	/* Brand & interactive */
+	--color-brand: #14b8a6;
+	--color-brand-dark: #0f766e;
+	--color-link: #0d9488;
+	--color-focus-ring: #0f766e;
+	--color-focus-ring-soft: rgba(15, 118, 110, 0.22);
+
+	/* Text */
+	--color-text: #1c1917;
+	--color-text-muted: #57534e;
+
+	/* Surfaces */
+	--color-surface: #fafaf9;
+	--color-surface-elevated: #ffffff;
+	--color-border-subtle: #e7e5e4;
+	--color-border-strong: #292524;
+
+	/* Menu bar */
+	--color-menu-bar: #134e4a;
+	--color-menu-item: #ccfbf1;
+	--color-menu-item-hover: #99f6e4;
+	--color-menu-item-text: #134e4a;
+
+	/* Primary controls (formerly “tan” buttons) */
+	--color-control: #d6d3d1;
+	--color-control-hover: #a8a29e;
+	--color-control-shadow: rgba(0, 0, 0, 0.12);
+
+	/* Forms */
+	--color-error-bg: #fef2f2;
+	--color-error-border: #fecaca;
+	--color-error-text: #b91c1c;
+
+	/* Board — default cell */
+	--color-board-cell: #d4c4b0;
+	--color-board-border: #78716c;
+	--color-board-hover-border: #292524;
+
+	/* Board — interaction */
+	--color-board-hovering-border: #b45309;
+	--color-board-hovering-bg: #fde68a;
+	--color-board-hovering-dot: #78350f;
+
+	--color-board-dropped-border: #6ee7b7;
+	--color-board-dropped-bg: #047857;
+	--color-board-dropped-dot: #ecfdf5;
+
+	--color-board-gap-border: #dc2626;
+	--color-board-gap-bg: #fecaca;
+	--color-board-gap-dot: #fef2f2;
+
+	--color-board-highlight-border: #1c1917;
+	--color-board-starting-border: #a8a29e;
+	--color-board-starting-bg: #fb923c;
+
+	/* Valid drop targets — teal tint (reads with shell/menu, not amber) */
+	--color-board-dropzone: #99f6e4;
+	--color-board-dropzone-border: #14b8a6;
+
+	/* Score highlight animations */
+	--color-score-gain-1: #5eead4;
+	--color-score-gain-2: #2dd4bf;
+	--color-score-gain-3: #14b8a6;
+	--color-score-gain-4: #0d9488;
+	--color-score-gain-5: #0f766e;
+	--color-score-gain-6: #115e59;
+
+	--color-score-loss-1: #fca5a5;
+	--color-score-loss-2: #f87171;
+	--color-score-loss-3: #ef4444;
+	--color-score-loss-4: #dc2626;
+	--color-score-loss-5: #b91c1c;
+	--color-score-loss-6: #991b1b;
+
+	/* Tiles */
+	--color-tile: #0d9488;
+	--color-tile-border: #57534e;
+	--color-tile-disabled-bg: #44403c;
+	--color-tile-disabled-text: #e7e5e4;
+	--color-tile-dropped: #d97706;
+
+	/* Semantic chips (user page, etc.) */
+	--color-success: #15803d;
+	--color-danger: #dc2626;
+	--color-neutral: #78716c;
+
+	/* Toasts & messages */
+	--color-toast-border: #57534e;
+	--color-toast-bg: #e7e5e4;
+	--color-total-score-border: #0ea5e9;
+	--color-total-score-bg: #f0fdfa;
+	--color-player-message: #b45309;
+
+	/* Modal chrome */
+	--color-modal-header-bg: #e7e5e4;
+	--color-modal-header-border: #1c1917;
+	--color-modal-tab: #d6d3d1;
+	--color-modal-tab-hover: #a8a29e;
+	--color-modal-tab-active: #99f6e4;
+	--color-radio-checked: #99f6e4;
+	--color-game-over-bg: #fafaf9;
+
+	/* User / account */
+	--color-user-page-bg: #e7e5e4;
+
+	/* Overlays */
+	--color-overlay: rgba(15, 23, 42, 0.42);
+	--color-modal-backdrop: rgba(15, 23, 42, 0.5);
+
+	/* Glass buttons on shell pages */
+	--color-glass-bg: rgba(255, 255, 255, 0.12);
+	--color-glass-border: rgba(255, 255, 255, 0.28);
+	--color-glass-hover: rgba(255, 255, 255, 0.22);
+
+	/* Avatar gradient */
+	--color-avatar-a: #5eead4;
+	--color-avatar-b: #0d9488;
+
+	/* In-game controls (finish / reset) */
+	--color-play-control: #0ea5e9;
+	--color-play-control-disabled: #64748b;
+	--color-play-control-border: #57534e;
+	--color-play-control-icon: #f0fdfa;
+}

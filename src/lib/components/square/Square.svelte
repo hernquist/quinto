@@ -85,8 +85,8 @@
 <style>
     .board__square {
         flex-grow: 1;
-        background-color: #FFA07A;
-        border: 2px solid gray;
+        background-color: var(--color-board-cell);
+        border: 2px solid var(--color-board-border);
         border-radius: 1px;
         margin: 2px;
         display: flex;
@@ -114,39 +114,39 @@
         }
 
         &:hover {
-            border: 2px solid #040404;
+            border: 2px solid var(--color-board-hover-border);
         }
     }
 
     .board__square.hovering {
-        border: 3px solid darkslategrey;
-        background-color: burlywood;
-        background-image: radial-gradient(black 0.5px, transparent 0.5px),
-                        radial-gradient(black 0.5px, transparent 0.5px);
+        border: 3px solid var(--color-board-hovering-border);
+        background-color: var(--color-board-hovering-bg);
+        background-image: radial-gradient(var(--color-board-hovering-dot) 0.5px, transparent 0.5px),
+                        radial-gradient(var(--color-board-hovering-dot) 0.5px, transparent 0.5px);
         background-size: 5px 5px;
         background-position: 0 0, 2.5px 2.5px;
     }
 
     .board__square.hasDroppedTile {
-        border: 3px solid peachpuff;
-        background-color: limegreen;
-        background-image: radial-gradient(whitesmoke 0.5px, transparent 0.5px),
-                        radial-gradient(whitesmoke 0.5px, transparent 0.5px);
+        border: 3px solid var(--color-board-dropped-border);
+        background-color: var(--color-board-dropped-bg);
+        background-image: radial-gradient(var(--color-board-dropped-dot) 0.5px, transparent 0.5px),
+                        radial-gradient(var(--color-board-dropped-dot) 0.5px, transparent 0.5px);
         background-size: 5px 5px;
         background-position: 0 0, 2.5px 2.5px;
     }
 
     .board__square.isGapSquare {
-        border: 6px solid red;
-        background-color: lightcoral;
-        background-image: radial-gradient(antiquewhite 0.5px, transparent 0.5px),
-                        radial-gradient(antiquewhite 0.5px, transparent 0.5px);
+        border: 6px solid var(--color-board-gap-border);
+        background-color: var(--color-board-gap-bg);
+        background-image: radial-gradient(var(--color-board-gap-dot) 0.5px, transparent 0.5px),
+                        radial-gradient(var(--color-board-gap-dot) 0.5px, transparent 0.5px);
         background-size: 5px 5px;
         background-position: 0 0, 2.5px 2.5px;
     }
 
     .board__square.isHighlighted {
-        border: 2px dashed black;
+        border: 2px dashed var(--color-board-highlight-border);
     }
 
     .board__square.isHighlighted.gain {
@@ -155,22 +155,22 @@
 
     @keyframes rotate-bg-color-gain {
         0% {
-            background-color: #9dffa8;
+            background-color: var(--color-score-gain-1);
         }
         20% {
-            background-color: #89ff9b;
+            background-color: var(--color-score-gain-2);
         }
         40% {
-            background-color: #6fff81;
+            background-color: var(--color-score-gain-3);
         }
         60% {
-            background-color: #4fff67;
+            background-color: var(--color-score-gain-4);
         }
         80% {
-            background-color: #34ff47;
+            background-color: var(--color-score-gain-5);
         }
         100% {
-            background-color: #00ff00;
+            background-color: var(--color-score-gain-6);
         }
     }
     
@@ -180,35 +180,35 @@
 
     @keyframes rotate-bg-color-loss {
         0% {
-            background-color: #ff0000;
+            background-color: var(--color-score-loss-1);
         }
         16.7% {
-            background-color: #e60000;
+            background-color: var(--color-score-loss-2);
         }
         33.3% {
-            background-color: #cc0000;
+            background-color: var(--color-score-loss-3);
         }
         50% {
-            background-color: #b30000;
+            background-color: var(--color-score-loss-4);
         }
         66.7% {
-            background-color: #990000;
+            background-color: var(--color-score-loss-5);
         }
         83.3% {
-            background-color: #800000;
+            background-color: var(--color-score-loss-6);
         }
         100% {
-            background-color: #660000;
+            background-color: var(--color-score-loss-6);
         }
     }
     
     .startingSquare {
-        border: 6px dashed lightgrey;
-        background-color: salmon;
+        border: 6px dashed var(--color-board-starting-border);
+        background-color: var(--color-board-starting-bg);
     }
 
     .board__square-hasDropzone {
-        border: 2px solid lightgray; 
-        background-color: #FFAA33;
+        border: 2px solid var(--color-board-dropzone-border);
+        background-color: var(--color-board-dropzone);
     }
 </style>

@@ -60,6 +60,6 @@
     }
 
    td {
-        border: 1px solid #000000;
+        border: 1px solid var(--color-border-strong);
     }
 </style>

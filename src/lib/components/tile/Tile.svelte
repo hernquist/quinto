@@ -44,10 +44,10 @@
 
 <style>
     .tile {
-        background-color: cadetblue;
+        background-color: var(--color-tile);
         height: 40px;
         width: 40px;
-        border: 2px solid gray;
+        border: 2px solid var(--color-tile-border);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -57,14 +57,14 @@
     }
 
     .tile.disabled {
-        background-color: dimgrey;
-        color: linen;
+        background-color: var(--color-tile-disabled-bg);
+        color: var(--color-tile-disabled-text);
         opacity: 1;
         font-size: 40px;
     }
 
     .tile.hasDroppedTile {
-        background-color: orange;
+        background-color: var(--color-tile-dropped);
     }
 
     .highlighted {

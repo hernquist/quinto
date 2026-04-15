@@ -17,17 +17,17 @@
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #FFA07A 0%, #1EB2AA 100%);
+        background: linear-gradient(135deg, var(--color-avatar-a) 0%, var(--color-avatar-b) 100%);
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: bold;
-        color: white;
+        color: #f0fdfa;
         flex-shrink: 0;
     }
 
     .avatar__letter {
-        color: black;
+        color: var(--color-text);
         font-size: 20px;
         line-height: 1;
         user-select: none;

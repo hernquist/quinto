@@ -97,15 +97,16 @@
         font-size: 14px;
         line-height: 14px;
         padding: 1px 2px;
-        border: 1px solid black;
+        border: 1px solid var(--color-border-strong);
         border-radius: 2px;
-        background-color: tan;
+        background-color: var(--color-control);
+        color: var(--color-text);
         cursor: pointer;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 1px 2px var(--color-control-shadow);
     }
 
     input[type="radio"]:checked + label {
-        background-color: lightblue;
+        background-color: var(--color-radio-checked);
         font-weight: 900;
     }   
 
@@ -128,10 +129,11 @@
         font-size: 16px;
         line-height: 16px;
         padding: 6px 12px;
-        border: 1px solid black;
+        border: 1px solid var(--color-border-strong);
         border-radius: 2px;
-        background-color: tan;
+        background-color: var(--color-control);
+        color: var(--color-text);
         cursor: pointer;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 1px 2px var(--color-control-shadow);
     }
 </style>

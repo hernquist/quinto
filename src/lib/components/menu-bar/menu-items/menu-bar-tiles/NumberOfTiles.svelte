@@ -46,10 +46,10 @@
         aspect-ratio : 1 / 1;
         max-width: 20px;
         border-radius: 2px;
-        border: 1px solid black;
+        border: 1px solid var(--color-border-strong);
         margin: 0 1px;
         flex-grow: 1;
-        background-color: cadetblue
+        background-color: var(--color-tile);
     }
 
     .number-of-tiles__count--none {

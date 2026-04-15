@@ -37,8 +37,8 @@
   /* Style the header with a grey background and some padding */
   .header {
     overflow: hidden;
-    background-color: #f1f1f1;
-    border: 2px solid #000000;
+    background-color: var(--color-modal-header-bg);
+    border: 2px solid var(--color-modal-header-border);
     border-radius: 4px;
     margin: 0px;
     display: flex;
@@ -48,14 +48,14 @@
   /* Style the header links */
   .header button {
     float: left;
-    color: black;
+    color: var(--color-text);
     text-align: center;
     font-size: 12px;
     line-height: 16px;
     padding: 10px;
     text-decoration: none;
-    border-right:#000000 2px solid;
-    background-color: tan;
+    border-right: var(--color-modal-header-border) 2px solid;
+    background-color: var(--color-modal-tab);
 
     &:last-child {
       border-right: none; 
@@ -74,13 +74,13 @@
 
   /* Change the background color on mouse-over */
   .header button:hover {
-    background-color: #ddd;
-    color: black;
+    background-color: var(--color-modal-tab-hover);
+    color: var(--color-text);
   }
 
   /* Style the active/current link*/
   .header button.active {
-    background-color: #ADD8E6;
-    color: black;
+    background-color: var(--color-modal-tab-active);
+    color: var(--color-text);
   }
 </style>

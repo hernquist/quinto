@@ -17,7 +17,8 @@
 
 <style>
     .message__noTiles {
-       background-color: darkgoldenrod; 
+       background-color: var(--color-player-message);
+       color: #fffbeb;
        font-size: 20px;
        border-radius: 4px;
        padding: 0 4px;

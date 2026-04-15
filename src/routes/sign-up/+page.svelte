@@ -60,7 +60,7 @@
     top: 64px;
     width: 100%;
     height: 100vh;
-    background: #447799;
+    background: linear-gradient(165deg, var(--color-shell) 0%, var(--color-shell-deep) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -73,10 +73,10 @@
   }
 
   .sign-up__form {
-    background: white;
+    background: var(--color-surface-elevated);
     padding: 32px;
     border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 8px var(--color-control-shadow);
   }
 
   .sign-up__title {
@@ -85,15 +85,15 @@
     font-size: 24px;
     text-align: center;
     margin: 0 0 24px 0;
-    color: #333;
+    color: var(--color-text);
   }
 
   .sign-up__error {
     margin-bottom: 16px;
     padding: 12px;
-    background-color: #fee;
-    border: 1px solid #fcc;
-    color: #c33;
+    background-color: var(--color-error-bg);
+    border: 1px solid var(--color-error-border);
+    color: var(--color-error-text);
     border-radius: 2px;
     font-size: 14px;
   }
@@ -107,7 +107,7 @@
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-weight: 400;
     font-size: 14px;
-    color: #333;
+    color: var(--color-text);
     margin-bottom: 4px;
     margin-left: 2px;
   }
@@ -115,7 +115,7 @@
   .sign-up__input {
     width: 100%;
     padding: 8px;
-    border: 1px solid #333;
+    border: 1px solid var(--color-border-strong);
     border-radius: 2px;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 14px;
@@ -124,8 +124,8 @@
 
   .sign-up__input:focus {
     outline: none;
-    border-color: #447799;
-    box-shadow: 0 0 0 2px rgba(68, 119, 153, 0.2);
+    border-color: var(--color-focus-ring);
+    box-shadow: 0 0 0 2px var(--color-focus-ring-soft);
   }
 
   .sign-up__actions {
@@ -140,15 +140,16 @@
     font-size: 16px;
     line-height: 16px;
     padding: 6px 12px;
-    border: 1px solid black;
+    border: 1px solid var(--color-border-strong);
     border-radius: 2px;
-    background-color: tan;
+    background-color: var(--color-control);
     cursor: pointer;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 2px var(--color-control-shadow);
+    color: var(--color-text);
   }
 
   .sign-up__button:hover {
-    background-color: #d2b48c;
+    background-color: var(--color-control-hover);
   }
 
   .sign-up__link-container {
@@ -160,7 +161,7 @@
   .sign-up__link {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 14px;
-    color: #447799;
+    color: var(--color-link);
     text-decoration: none;
   }
 

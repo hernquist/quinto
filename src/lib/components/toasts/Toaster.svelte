@@ -35,7 +35,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: var(--color-overlay);
     backdrop-filter: blur(3px);
   }
 </style>

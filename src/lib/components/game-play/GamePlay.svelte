@@ -47,7 +47,7 @@
         top: 64px;
         width: 100%;
         height: 100vh;
-        background: #1EB2AA;
+        background: linear-gradient(160deg, var(--color-shell) 0%, var(--color-shell-deep) 100%);
     }
 
     .game-play__gamescreen {

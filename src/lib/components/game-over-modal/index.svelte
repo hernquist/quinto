@@ -28,7 +28,7 @@
         align-items: center;
         justify-content: center;
         padding: 20px;
-        background-color: #f9f9f9;
+        background-color: var(--color-game-over-bg);
         flex: 1;
         height: 180px;
     }
@@ -45,11 +45,12 @@
         font-size: 16px;
         line-height: 16px;
         padding: 6px 12px;
-        border: 1px solid black;
+        border: 1px solid var(--color-border-strong);
         border-radius: 2px;
-        background-color: tan;
+        background-color: var(--color-control);
+        color: var(--color-text);
         cursor: pointer;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 1px 2px var(--color-control-shadow);
 		margin: 26px 0 0 0;
 	}
 </style>

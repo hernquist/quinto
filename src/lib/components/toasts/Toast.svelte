@@ -32,7 +32,7 @@
   {/if}
 {:else}
   <div
-    class="relative flex h-16 w-60 flex-col justify-center rounded-md border border-gray-500 bg-gray-300 p-2 shadow-md"
+    class="toast-default relative flex h-16 w-60 flex-col justify-center rounded-md border p-2 shadow-md"
   >
     <span class="text-sm font-medium">{toast.title}</span>
     <span class="text-xs">{toast.message}</span>
@@ -44,12 +44,19 @@
 {/if}
 
 <style>
+  .toast-default {
+    border-color: var(--color-toast-border);
+    background-color: var(--color-toast-bg);
+    color: var(--color-text);
+  }
+
   .totalLine__score {
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    border: 12px double cornflowerblue;
+    border: 12px double var(--color-total-score-border);
     font-size: 96px;
     padding: 0 16px;
-    background-color: azure;
+    background-color: var(--color-total-score-bg);
+    color: var(--color-text);
   }
 </style>
 

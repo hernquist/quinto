@@ -95,7 +95,7 @@
 <style lang="postcss">
     .user__page {
         min-height: 100vh;
-        background-color: #E0D268;
+        background-color: var(--color-user-page-bg);
         padding: 0 24px;
     }
 
@@ -105,8 +105,8 @@
     }
 
     button {
-        background-color: #447799;
-        color: white;
+        background-color: var(--color-brand-dark);
+        color: #f0fdfa;
         padding: 10px 20px;
         border-radius: 5px;
         border: none;
@@ -128,7 +128,7 @@
     }
 
     .game-card {
-        background-color: white;
+        background-color: var(--color-surface-elevated);
         border-radius: 8px;
         padding: 16px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -140,7 +140,7 @@
         align-items: center;
         margin-bottom: 12px;
         padding-bottom: 8px;
-        border-bottom: 1px solid #e0e0e0;
+        border-bottom: 1px solid var(--color-border-subtle);
     }
 
     .game-id {
@@ -149,24 +149,24 @@
     }
 
     .game-status {
-        background-color: #447799;
-        color: white;
+        background-color: var(--color-brand-dark);
+        color: #f0fdfa;
         padding: 4px 12px;
         border-radius: 4px;
         font-size: 0.9rem;
     }
 
     .game-status_Won {
-        background-color: #559944;
+        background-color: var(--color-success);
     }
 
     .game-status_Lost {
-        background-color: #e24d43;
+        background-color: var(--color-danger);
 
     }
 
     .game-status_Tie { 
-        background-color: rgb(163, 163, 163);
+        background-color: var(--color-neutral);
 
     }
 
@@ -189,12 +189,12 @@
     .game-scores span,
     .game-players span,
     .game-dates span {
-        color: #555;
+        color: var(--color-text-muted);
     }
 
     .no-games {
         margin-top: 20px;
-        color: #666;
+        color: var(--color-text-muted);
         font-style: italic;
     }
 </style>

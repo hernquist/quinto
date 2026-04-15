@@ -23,7 +23,7 @@
         list-style-type: none;
         padding: 0;
         margin: 0;
-        background-color: #333; /* Example background color */
+        background-color: var(--color-menu-bar);
         overflow: hidden; /* Handles content overflow */
         position: fixed; /* Makes the navbar fixed at the top */
         top: 0; /* Positions the navbar at the top */
@@ -32,7 +32,8 @@
     }
 
     li {
-        background-color: lemonchiffon;
+        background-color: var(--color-menu-item);
+        color: var(--color-menu-item-text);
         border-radius: 5px;
         display: block; /* Allows for padding and margin */
         text-align: center;
@@ -42,8 +43,8 @@
     }
 
     li:hover {
-        background-color: #e0e0e0;
-        color: black;
+        background-color: var(--color-menu-item-hover);
+        color: var(--color-menu-item-text);
     }
 
     li.inactive {
