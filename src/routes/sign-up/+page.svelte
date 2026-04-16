@@ -80,7 +80,6 @@
   }
 
   .sign-up__title {
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-weight: 700;
     font-size: 24px;
     text-align: center;
@@ -104,7 +103,6 @@
 
   .sign-up__label {
     display: block;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-weight: 400;
     font-size: 14px;
     color: var(--color-text);
@@ -117,7 +115,6 @@
     padding: 8px;
     border: 1px solid var(--color-border-strong);
     border-radius: 2px;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 14px;
     box-sizing: border-box;
   }
@@ -135,7 +132,6 @@
   }
 
   .sign-up__button {
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-weight: 700;
     font-size: 16px;
     line-height: 16px;
@@ -159,7 +155,6 @@
   }
 
   .sign-up__link {
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 14px;
     color: var(--color-link);
     text-decoration: none;

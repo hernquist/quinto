@@ -5,15 +5,17 @@
     interface TileComponentProps {
         tile: ITile, 
         isActive: boolean, 
-        hasDroppedTile: boolean 
+        hasDroppedTile: boolean,
+        isHighlighted?: boolean,
+        scoredValue?: number
     }
 
     const { 
         tile, 
         isActive, 
         hasDroppedTile, 
-        isHighlighted, 
-        scoredValue 
+        isHighlighted = false, 
+        scoredValue = 0 
     }: TileComponentProps= $props();
 
     let scoreText = $derived(scoredValue > 0 ? `+${scoredValue}` : scoredValue)
@@ -52,7 +54,6 @@
         justify-content: center;
         align-items: center;
         margin: 2px; 
-        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
         font-size: 42px;
     }
 
@@ -69,7 +70,8 @@
 
     .highlighted {
         border: none;
-        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-family: var(--font-serif);
+        font-family: var(--font-sans);
     }
 
     /* .tile.highlighted {

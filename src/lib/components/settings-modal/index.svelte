@@ -92,7 +92,6 @@
     }
 
     .options__button {
-        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
         font-weight: 700;
         font-size: 14px;
         line-height: 14px;
@@ -124,7 +123,6 @@
     }
 
     .settings-modal__button {
-        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
         font-weight: 700;
         font-size: 16px;
         line-height: 16px;

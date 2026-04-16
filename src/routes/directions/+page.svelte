@@ -63,7 +63,6 @@
   }
 
   .directions__back {
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 16px;
     font-weight: 600;
     color: #f0fdfa;
@@ -82,7 +81,6 @@
 
   .directions__fullscreen h1 {
     margin: 0 0 20px;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-weight: 700;
     font-size: 28px;
     color: #f0fdfa;
@@ -92,7 +90,6 @@
     flex: 1;
     min-height: 0;
     overflow-y: auto;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 16px;
     line-height: 1.5;
     color: #f0fdfa;

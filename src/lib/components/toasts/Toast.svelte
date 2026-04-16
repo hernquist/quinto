@@ -10,7 +10,7 @@
 	};
 
 	let { toast }: Props = $props();
-	const toastState: IToastState = getToastState();
+	const toastState = getToastState();
   let off = $state(false);
 
   $effect(() => {
@@ -51,7 +51,7 @@
   }
 
   .totalLine__score {
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-family: var(--font-sans);
     border: 12px double var(--color-total-score-border);
     font-size: 96px;
     padding: 0 16px;
