@@ -12,6 +12,7 @@
 	let { toast }: Props = $props();
 	const toastState = getToastState();
   let off = $state(false);
+  const THINKING_MESSAGE = "Computer is thinking...";
 
   $effect(() => {
     setTimeout(() => {
@@ -21,9 +22,20 @@
 </script>
 
 {#if toast.type === ToastType.PLAYER_MESSGAGE}
-  <div >
-    {toast.message}
-  </div>
+  {#if toast.message === THINKING_MESSAGE}
+    <div class="thinking" role="status" aria-live="polite">
+      <span class="sr-only">{THINKING_MESSAGE}</span>
+      <span class="thinking__dots" aria-hidden="true">
+        <span class="thinking__dot"></span>
+        <span class="thinking__dot"></span>
+        <span class="thinking__dot"></span>
+      </span>
+    </div>
+  {:else}
+    <div>
+      {toast.message}
+    </div>
+  {/if}
 {:else if toast.type === ToastType.TOTAL_LINE_SCORE}
   {#if !off}
     <div class="totalLine__score" out:fade={{ duration: 1000 }}>
@@ -57,6 +69,52 @@
     padding: 0 16px;
     background-color: var(--color-total-score-bg);
     color: var(--color-text);
+  }
+
+  .thinking {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 5rem;
+    min-height: 2.25rem;
+    border-radius: 9999px;
+    border: 1px solid var(--color-glass-border);
+    background: var(--color-glass-bg);
+    backdrop-filter: blur(4px);
+  }
+
+  .thinking__dots {
+    display: inline-flex;
+    gap: 0.35rem;
+    padding: 0.25rem 0.75rem;
+  }
+
+  .thinking__dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 9999px;
+    background: #f0fdfa;
+    opacity: 0.55;
+    animation: thinking-bounce 900ms infinite ease-in-out;
+  }
+
+  .thinking__dot:nth-child(2) {
+    animation-delay: 150ms;
+  }
+  .thinking__dot:nth-child(3) {
+    animation-delay: 300ms;
+  }
+
+  @keyframes thinking-bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.5;
+    }
+    50% {
+      transform: translateY(-4px);
+      opacity: 0.95;
+    }
   }
 </style>
 
