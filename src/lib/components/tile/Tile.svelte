@@ -19,17 +19,19 @@
     }: TileComponentProps= $props();
 
     let scoreText = $derived(scoredValue > 0 ? `+${scoredValue}` : scoredValue)
+    let isDoubleDigit = $derived(String(isHighlighted ? scoreText : tile.text).length >= 3);
 
 </script>
 
 {#if isHighlighted}
-    <div class="tile highlighted {scoredValue > 0 ? 'gain' : 'loss'}">
+    <div class="tile highlighted {scoredValue > 0 ? 'gain' : 'loss'}" class:double-digit={isDoubleDigit}>
         {scoreText}
     </div>
 {:else if isActive}
     <div 
         class="tile"
         class:hasDroppedTile
+        class:double-digit={isDoubleDigit}
         id={String(tile.id)} 
         use:draggable={tile.id}
     >
@@ -38,6 +40,7 @@
 {:else}
     <div 
         class="tile disabled"
+        class:double-digit={isDoubleDigit}
         id={String(tile.id)} 
     >
         {tile.text}
@@ -64,13 +67,21 @@
         font-size: 40px;
     }
 
+    @media (max-width: 420px) {
+        .tile.double-digit {
+            font-size: 32px;
+        }
+        .tile.disabled.double-digit {
+            font-size: 30px;
+        }
+    }
+
     .tile.hasDroppedTile {
         background-color: var(--color-tile-dropped);
     }
 
     .highlighted {
         border: none;
-        font-family: var(--font-serif);
         font-family: var(--font-sans);
     }
 
