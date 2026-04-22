@@ -2,8 +2,9 @@
 	import { type IToast, type IToastState, ToastType } from '$lib/state/toast/types';
 	import X from 'phosphor-svelte/lib/X';
 	import { getToastState } from '$lib/state/toast/toast.svelte';
-  import { fade } from 'svelte/transition';
-  import { elasticOut } from 'svelte/easing';
+  import { fade, scale } from 'svelte/transition';
+  import { cubicOut } from 'svelte/easing';
+  import { onDestroy } from 'svelte';
 
 	type Props = {
 		toast: IToast;
@@ -13,11 +14,63 @@
 	const toastState = getToastState();
   let off = $state(false);
   const THINKING_MESSAGE = "Computer is thinking...";
+  type BoardRect = { top: number; left: number; width: number; height: number };
+  let boardRect = $state<BoardRect | null>(null);
+  let ro: ResizeObserver | null = null;
+
+  const updateBoardRect = () => {
+    const el = document.querySelector('.board__container') as HTMLElement | null;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    boardRect = {
+      top: Math.round(rect.top),
+      left: Math.round(rect.left),
+      width: Math.round(rect.width),
+      height: Math.round(rect.height)
+    };
+  };
 
   $effect(() => {
-    setTimeout(() => {
-      off = true
-    }, 100);
+    // Only track layout while we're showing the big score toast.
+    if (toast.type !== ToastType.TOTAL_LINE_SCORE || off) return;
+
+    updateBoardRect();
+    const el = document.querySelector('.board__container') as HTMLElement | null;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+
+    const onLayout = () => updateBoardRect();
+    window.addEventListener('resize', onLayout);
+    window.addEventListener('scroll', onLayout, true);
+
+    ro?.disconnect();
+    ro = new ResizeObserver(() => updateBoardRect());
+    ro.observe(el);
+    return () => {
+      ro?.disconnect();
+      window.removeEventListener('resize', onLayout);
+      window.removeEventListener('scroll', onLayout, true);
+    };
+  });
+
+  onDestroy(() => ro?.disconnect());
+  const parsedTotalScore = $derived(() => {
+    const raw = String(toast?.message ?? '').trim();
+    const match = raw.match(/-?\d+/);
+    return match ? Number(match[0]) : 0;
+  });
+  const scoreTone = $derived((): 'gain' | 'loss' | 'neutral' => {
+    const n = parsedTotalScore();
+    if (n > 0) return 'gain';
+    if (n < 0) return 'loss';
+    return 'neutral';
+  });
+
+  $effect(() => {
+    off = false;
+    const timeout = setTimeout(() => {
+      off = true;
+    }, 1200);
+    return () => clearTimeout(timeout);
   });
 </script>
 
@@ -38,8 +91,19 @@
   {/if}
 {:else if toast.type === ToastType.TOTAL_LINE_SCORE}
   {#if !off}
-    <div class="totalLine__score" out:fade={{ duration: 1000 }}>
-      {toast.message}
+    <div
+      class="totalLine {scoreTone}"
+      style:top={boardRect ? `${boardRect.top}px` : undefined}
+      style:left={boardRect ? `${boardRect.left}px` : undefined}
+      style:width={boardRect ? `${boardRect.width}px` : undefined}
+      style:height={boardRect ? `${boardRect.height}px` : undefined}
+      role="status"
+      aria-live="polite"
+      in:scale={{ duration: 160, start: 0.96, easing: cubicOut }}
+      out:fade={{ duration: 220 }}
+    >
+      <div class="totalLine__label">Turn score</div>
+      <div class="totalLine__value">{toast.message}</div>
     </div>
   {/if}
 {:else}
@@ -62,13 +126,56 @@
     color: var(--color-text);
   }
 
-  .totalLine__score {
-    font-family: var(--font-sans);
-    border: 12px double var(--color-total-score-border);
-    font-size: 96px;
-    padding: 0 16px;
-    background-color: var(--color-total-score-bg);
+  .totalLine {
+    /* Viewport-fixed so the score sits exactly on the game board. */
+    position: fixed;
+    z-index: 1001;
+    box-sizing: border-box;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0.85rem 1.25rem;
+    border-radius: 1rem;
+    border: 2px solid var(--color-glass-border);
+    background: var(--color-glass-bg);
+    backdrop-filter: blur(4px);
+    box-shadow:
+      0 10px 30px rgba(0, 0, 0, 0.25),
+      0 0 0 1px rgba(255, 255, 255, 0.05) inset;
     color: var(--color-text);
+    font-family: var(--font-sans);
+    /* Until we measure the board, match its responsive size from Board.svelte */
+    width: min(calc(100vw - 24px), 496px);
+    height: min(calc(100vw - 24px), 496px);
+    /* Visual overlay only — don’t block board interaction for this brief toast */
+    pointer-events: none;
+  }
+
+  .totalLine.gain {
+    border-color: color-mix(in srgb, var(--color-score-gain-3) 70%, var(--color-glass-border));
+    background: color-mix(in srgb, var(--color-score-gain-6) 22%, var(--color-glass-bg));
+  }
+
+  .totalLine.loss {
+    border-color: color-mix(in srgb, var(--color-score-loss-3) 70%, var(--color-glass-border));
+    background: color-mix(in srgb, var(--color-score-loss-6) 22%, var(--color-glass-bg));
+  }
+
+  .totalLine__label {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+
+  .totalLine__value {
+    font-size: clamp(44px, 7vw, 68px);
+    line-height: 1;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
   }
 
   .thinking {
