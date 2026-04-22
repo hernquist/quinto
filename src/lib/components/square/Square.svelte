@@ -52,6 +52,7 @@
         <Tile 
             tile={tile} 
             isActive 
+            cellScaled
             {hasDroppedTile} 
             {isHighlighted} 
             {scoredValue}
@@ -85,6 +86,8 @@
 <style>
     .board__square {
         flex-grow: 1;
+        /* Lets tiles scale type and box with the actual cell size (dense boards on desktop). */
+        container-type: size;
         background-color: var(--color-board-cell);
         border: 2px solid var(--color-board-border);
         border-radius: 1px;
