@@ -16,16 +16,24 @@
 </div>
 
 <style lang="postcss">
+  /* No transform here — it creates a containing block and breaks `position: fixed`
+     + viewport `top`/`left` in Toast (board overlays). Center with flex instead. */
   .toaster {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    margin-top: 1rem;
+    inset: 0;
     display: flex;
     justify-content: center;
+    align-items: center;
     flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0;
+    padding-top: 1rem;
     z-index: 1000;
+    pointer-events: none;
+  }
+
+  .toaster :global(.toast-default) {
+    pointer-events: auto;
   }
 
   .blurWrapper {

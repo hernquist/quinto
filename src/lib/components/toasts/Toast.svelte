@@ -18,24 +18,55 @@
   let boardRect = $state<BoardRect | null>(null);
   let ro: ResizeObserver | null = null;
 
+  /** Union of all playing squares (matches the visible cell area; `.board__container` is often wider). */
   const updateBoardRect = () => {
-    const el = document.querySelector('.board__container') as HTMLElement | null;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
+    const squares = document.querySelectorAll<HTMLElement>('.board__square');
+    if (squares.length === 0) {
+      const el = document.querySelector('.board__container') as HTMLElement | null;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      boardRect = {
+        top: Math.round(rect.top),
+        left: Math.round(rect.left),
+        width: Math.round(rect.width),
+        height: Math.round(rect.height)
+      };
+      return;
+    }
+
+    let minLeft = Infinity;
+    let minTop = Infinity;
+    let maxRight = -Infinity;
+    let maxBottom = -Infinity;
+
+    for (const el of squares) {
+      const r = el.getBoundingClientRect();
+      minLeft = Math.min(minLeft, r.left);
+      minTop = Math.min(minTop, r.top);
+      maxRight = Math.max(maxRight, r.right);
+      maxBottom = Math.max(maxBottom, r.bottom);
+    }
+
     boardRect = {
-      top: Math.round(rect.top),
-      left: Math.round(rect.left),
-      width: Math.round(rect.width),
-      height: Math.round(rect.height)
+      top: Math.round(minTop),
+      left: Math.round(minLeft),
+      width: Math.round(maxRight - minLeft),
+      height: Math.round(maxBottom - minTop)
     };
   };
 
+  const needsBoardOverlay = $derived(
+    (toast.type === ToastType.TOTAL_LINE_SCORE && !off) ||
+      (toast.type === ToastType.PLAYER_MESSGAGE && toast.message === THINKING_MESSAGE)
+  );
+
   $effect(() => {
-    // Only track layout while we're showing the big score toast.
-    if (toast.type !== ToastType.TOTAL_LINE_SCORE || off) return;
+    if (!needsBoardOverlay) return;
 
     updateBoardRect();
-    const el = document.querySelector('.board__container') as HTMLElement | null;
+    // Observe the grid: layout changes when squares resize. Square rects are read in the callback/updates.
+    const el = document.querySelector('.outerBoard__container') as HTMLElement | null
+      ?? (document.querySelector('.board__container') as HTMLElement | null);
     if (!el || typeof ResizeObserver === 'undefined') return;
 
     const onLayout = () => updateBoardRect();
@@ -66,6 +97,7 @@
   });
 
   $effect(() => {
+    if (toast.type !== ToastType.TOTAL_LINE_SCORE) return;
     off = false;
     const timeout = setTimeout(() => {
       off = true;
@@ -76,7 +108,16 @@
 
 {#if toast.type === ToastType.PLAYER_MESSGAGE}
   {#if toast.message === THINKING_MESSAGE}
-    <div class="thinking" role="status" aria-live="polite">
+    <div
+      class="thinking thinking--board"
+      style:top={boardRect ? `${boardRect.top}px` : undefined}
+      style:left={boardRect ? `${boardRect.left}px` : undefined}
+      style:width={boardRect ? `${boardRect.width}px` : undefined}
+      style:height={boardRect ? `${boardRect.height}px` : undefined}
+      role="status"
+      aria-live="polite"
+      in:fade={{ duration: 180 }}
+    >
       <span class="sr-only">{THINKING_MESSAGE}</span>
       <span class="thinking__dots" aria-hidden="true">
         <span class="thinking__dot"></span>
@@ -138,7 +179,7 @@
     gap: 0.25rem;
     margin: 0;
     padding: 0.85rem 1.25rem;
-    border-radius: 1rem;
+    border-radius: 0;
     border: 2px solid var(--color-glass-border);
     background: var(--color-glass-bg);
     backdrop-filter: blur(4px);
@@ -188,6 +229,35 @@
     border: 1px solid var(--color-glass-border);
     background: var(--color-glass-bg);
     backdrop-filter: blur(4px);
+  }
+
+  .thinking.thinking--board {
+    position: fixed;
+    z-index: 1001;
+    box-sizing: border-box;
+    margin: 0;
+    min-width: unset;
+    min-height: unset;
+    width: min(calc(100vw - 24px), 496px);
+    height: min(calc(100vw - 24px), 496px);
+    border-radius: 0;
+    border-width: 2px;
+    border-color: var(--color-glass-border);
+    background: var(--color-glass-bg);
+    box-shadow:
+      0 10px 30px rgba(0, 0, 0, 0.25),
+      0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    pointer-events: none;
+  }
+
+  .thinking--board .thinking__dots {
+    gap: 0.55rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .thinking--board .thinking__dot {
+    width: 0.6rem;
+    height: 0.6rem;
   }
 
   .thinking__dots {
