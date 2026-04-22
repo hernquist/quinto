@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { type IToast, type IToastState, ToastType } from '$lib/state/toast/types';
 	import X from 'phosphor-svelte/lib/X';
-	import { getToastState } from '$lib/state/toast/toast.svelte';
+	import { getToastState, TOTAL_LINE_SCORE_DISPLAY_MS, TOTAL_LINE_SCORE_FADE_MS } from '$lib/state/toast/toast.svelte';
   import { fade, scale } from 'svelte/transition';
   import { cubicOut } from 'svelte/easing';
   import { onDestroy } from 'svelte';
@@ -84,13 +84,14 @@
   });
 
   onDestroy(() => ro?.disconnect());
-  const parsedTotalScore = $derived(() => {
+  /* Use $derived.by — a plain `$derived(() => …)` value IS the function, not its return. */
+  const parsedTotalScore = $derived.by(() => {
     const raw = String(toast?.message ?? '').trim();
     const match = raw.match(/-?\d+/);
     return match ? Number(match[0]) : 0;
   });
-  const scoreTone = $derived((): 'gain' | 'loss' | 'neutral' => {
-    const n = parsedTotalScore();
+  const scoreTone = $derived.by((): 'gain' | 'loss' | 'neutral' => {
+    const n = parsedTotalScore;
     if (n > 0) return 'gain';
     if (n < 0) return 'loss';
     return 'neutral';
@@ -101,7 +102,7 @@
     off = false;
     const timeout = setTimeout(() => {
       off = true;
-    }, 1200);
+    }, TOTAL_LINE_SCORE_DISPLAY_MS);
     return () => clearTimeout(timeout);
   });
 </script>
@@ -141,7 +142,7 @@
       role="status"
       aria-live="polite"
       in:scale={{ duration: 160, start: 0.96, easing: cubicOut }}
-      out:fade={{ duration: 220 }}
+      out:fade={{ duration: TOTAL_LINE_SCORE_FADE_MS }}
     >
       <div class="totalLine__label">Turn score</div>
       <div class="totalLine__value">{toast.message}</div>
@@ -197,14 +198,88 @@
     pointer-events: none;
   }
 
+  /*
+   * Positive toast = emerald green (reads clearly as “good”).
+   * Board / tile score pulses stay teal via --color-score-gain-* elsewhere.
+   */
   .totalLine.gain {
-    border-color: color-mix(in srgb, var(--color-score-gain-3) 70%, var(--color-glass-border));
-    background: color-mix(in srgb, var(--color-score-gain-6) 22%, var(--color-glass-bg));
+    --toast-pos-mid: #34d399;
+    --toast-pos-rich: #10b981;
+    --toast-pos-deep: #047857;
+    --toast-pos-shadow: #064e3b;
+    --toast-pos-shadow2: #065f46;
+    --toast-pos-hi: #6ee7b7;
+    --toast-pos-bloom: #86efac;
+    border-width: 3px;
+    border-color: var(--toast-pos-rich);
+    backdrop-filter: blur(3px);
+    background:
+      radial-gradient(
+        ellipse 90% 80% at 50% 38%,
+        color-mix(in srgb, var(--toast-pos-mid) 58%, transparent) 0%,
+        color-mix(in srgb, #059669 72%, transparent) 52%,
+        color-mix(in srgb, var(--toast-pos-deep) 88%, transparent) 100%
+      ),
+      linear-gradient(
+        165deg,
+        color-mix(in srgb, var(--toast-pos-shadow) 55%, rgba(0, 0, 0, 0.5)) 0%,
+        color-mix(in srgb, var(--toast-pos-shadow2) 40%, rgba(0, 0, 0, 0.45)) 100%
+      );
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--toast-pos-hi) 38%, transparent) inset,
+      0 14px 44px rgba(0, 0, 0, 0.38),
+      0 0 72px color-mix(in srgb, var(--toast-pos-rich) 58%, transparent),
+      0 0 120px color-mix(in srgb, var(--toast-pos-mid) 26%, transparent);
   }
 
+  .totalLine.gain .totalLine__label {
+    color: #ecfdf5;
+    opacity: 0.92;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  }
+
+  .totalLine.gain .totalLine__value {
+    color: #f0fdf4;
+    text-shadow:
+      0 2px 0 rgba(0, 0, 0, 0.25),
+      0 0 48px color-mix(in srgb, var(--toast-pos-bloom) 75%, transparent);
+  }
+
+  /* Strong red “loss” wash + glow. */
   .totalLine.loss {
-    border-color: color-mix(in srgb, var(--color-score-loss-3) 70%, var(--color-glass-border));
-    background: color-mix(in srgb, var(--color-score-loss-6) 22%, var(--color-glass-bg));
+    border-width: 3px;
+    border-color: var(--color-score-loss-2);
+    backdrop-filter: blur(3px);
+    background:
+      radial-gradient(
+        ellipse 90% 80% at 50% 38%,
+        color-mix(in srgb, var(--color-score-loss-2) 52%, transparent) 0%,
+        color-mix(in srgb, var(--color-score-loss-4) 78%, transparent) 52%,
+        color-mix(in srgb, var(--color-score-loss-6) 90%, transparent) 100%
+      ),
+      linear-gradient(
+        165deg,
+        color-mix(in srgb, var(--color-score-loss-6) 58%, rgba(0, 0, 0, 0.55)) 0%,
+        color-mix(in srgb, var(--color-score-loss-5) 42%, rgba(0, 0, 0, 0.5)) 100%
+      );
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-score-loss-1) 28%, transparent) inset,
+      0 14px 44px rgba(0, 0, 0, 0.4),
+      0 0 72px color-mix(in srgb, var(--color-score-loss-3) 58%, transparent),
+      0 0 120px color-mix(in srgb, var(--color-score-loss-2) 24%, transparent);
+  }
+
+  .totalLine.loss .totalLine__label {
+    color: #fef2f2;
+    opacity: 0.92;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  }
+
+  .totalLine.loss .totalLine__value {
+    color: #fff1f2;
+    text-shadow:
+      0 2px 0 rgba(0, 0, 0, 0.3),
+      0 0 40px color-mix(in srgb, var(--color-score-loss-1) 65%, transparent);
   }
 
   .totalLine__label {

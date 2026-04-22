@@ -6,7 +6,13 @@ import { Players } from '$lib/state/player/types';
 import type { IPlayerState, PlayerState } from "../player/player.svelte";
 import type { ITile, IBoard, ICoordTuple } from "$lib/components/game/types";
 import { ToastType, type IToastState } from '$lib/state/toast/types';
-import { COMPUTER_THINKING_DURATION, HIGHLIGHT_DURATION, MAIN_TOAST_DURATION, type ToastState } from '../toast/toast.svelte';
+import {
+	COMPUTER_THINKING_DURATION,
+	HIGHLIGHT_DURATION,
+	MAIN_TOAST_DURATION,
+	TOTAL_LINE_SCORE_REMOVE_MS,
+	type ToastState
+} from '../toast/toast.svelte';
 import { getComputerTurn, type IComputerTurn } from '$lib/utils/computer';
 
 const { Top, Bottom} = Players;
@@ -618,9 +624,14 @@ export class GameState {
 	public async finishTurn(playerState: PlayerState, toastState: ToastState): Promise<void> {
 		this.finishTurnActivePlayer = this.game.activePlayer;
 
+		/* After scoring, wait for the total-line score toast to clear before turn-end logic
+		 * (e.g. computer “thinking”) so toasts do not overlap. */
+		let turnEndDelayMs = HIGHLIGHT_DURATION * toastState.numberOfLines + MAIN_TOAST_DURATION;
+
 		if (!this.skippedTurn) {
-			this.updateScore(playerState, toastState);
+			await this.updateScore(playerState, toastState);
 			this.replenishTiles(playerState);
+			turnEndDelayMs = TOTAL_LINE_SCORE_REMOVE_MS;
 		} else {
 			this.skippedTurn = false;
 		}
@@ -651,7 +662,7 @@ export class GameState {
 			} else {
 				this.captureBoard();
 			}
-		},  HIGHLIGHT_DURATION * toastState.numberOfLines + MAIN_TOAST_DURATION);
+		}, turnEndDelayMs);
 
 		toastState.fireMessages();
 	}
