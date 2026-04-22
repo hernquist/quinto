@@ -1,7 +1,7 @@
 import type { IBoard, ICoordTuple } from "$lib/components/game/types";
 import { ToastType } from "$lib/state/toast/types";
 import type { PlayerState } from "../player/player.svelte";
-import { HIGHLIGHT_DURATION, ToastState } from "../toast/toast.svelte";
+import { HIGHLIGHT_DURATION, ToastState, TOTAL_LINE_SCORE_REMOVE_MS } from "../toast/toast.svelte";
 import { dependentKeyMap, independentKeyMap } from "./constants";
 import type { GameState } from "./game.svelte";
 import { sumScores } from "./synchronousCalculateScore";
@@ -42,7 +42,7 @@ export async function readLinesForScore(lines: ILineItem[][], gameMultiple: numb
         toastState.addHighlights(lines, gameMultiple);
         setTimeout(() => { 
             resolve(totalLineScore);
-            toastState.add("", `${totalLineScore}`, ToastType.TOTAL_LINE_SCORE); 
+            toastState.add("", `${totalLineScore}`, ToastType.TOTAL_LINE_SCORE, TOTAL_LINE_SCORE_REMOVE_MS); 
         }, lines.length * HIGHLIGHT_DURATION)
     });
 }
