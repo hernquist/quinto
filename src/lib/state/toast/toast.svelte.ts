@@ -8,6 +8,13 @@ export const HIGHLIGHT_DURATION = 1400; // remember to tie to Square.svelte anim
 export const MAIN_TOAST_DURATION = 1000;
 export const COMPUTER_THINKING_DURATION = 800; // duration for computer thinking toast
 
+/** How long the score stays up before fade-out in `Toast.svelte` (must be ≤ remove delay). */
+export const TOTAL_LINE_SCORE_DISPLAY_MS = 1500;
+/** Fade-out duration in `Toast.svelte` — keep `REMOVE_MS` in sync. */
+export const TOTAL_LINE_SCORE_FADE_MS = 50;
+/** Remove toast from state after display + fade buffer so the out transition can finish. */
+export const TOTAL_LINE_SCORE_REMOVE_MS = TOTAL_LINE_SCORE_DISPLAY_MS + TOTAL_LINE_SCORE_FADE_MS + 80;
+
 export class ToastState {
 	toasts = $state<IToast[]>([]);
 	toastToTimeoutMap = new Map<string, ReturnType<typeof setTimeout>>();
