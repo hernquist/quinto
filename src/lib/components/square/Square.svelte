@@ -149,7 +149,8 @@
     }
 
     .board__square.isHighlighted {
-        border: 2px dashed var(--color-board-highlight-border);
+        /* No stipple (e.g. from hasDroppedTile) behind the score pulse; no dashed frame under the turn-score overlay. */
+        background-image: none;
     }
 
     .board__square.isHighlighted.gain {
