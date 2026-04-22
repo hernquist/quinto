@@ -168,6 +168,8 @@
   }
 
   .totalLine {
+    /* Size container: score text scales with overlay (board) dimensions via cq* units. */
+    container-type: size;
     /* Viewport-fixed so the score sits exactly on the game board. */
     position: fixed;
     z-index: 1001;
@@ -176,9 +178,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.25rem;
+    gap: min(0.75rem, 3cqmin);
     margin: 0;
-    padding: 0.85rem 1.25rem;
+    padding: min(1.25rem, 5cqmin) min(1.5rem, 6cqmin);
     border-radius: 0;
     border: 2px solid var(--color-glass-border);
     background: var(--color-glass-bg);
@@ -206,17 +208,22 @@
   }
 
   .totalLine__label {
-    font-size: 0.75rem;
+    font-size: clamp(0.7rem, min(6cqmin, 4.5cqw), 1.35rem);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     opacity: 0.75;
   }
 
   .totalLine__value {
-    font-size: clamp(44px, 7vw, 68px);
+    /* Large score, bounded by board so multi-digit values still fit. */
+    font-size: clamp(2.75rem, min(52cqmin, 34cqw, 62cqh), 14rem);
     line-height: 1;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
+    max-width: 95%;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .thinking {
